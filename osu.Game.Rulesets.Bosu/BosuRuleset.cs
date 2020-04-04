@@ -16,6 +16,8 @@ using osu.Game.Rulesets.Bosu.Scoring;
 using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Bosu.Difficulty;
 using osu.Game.Rulesets.Bosu.Beatmaps;
+using osu.Game.Beatmaps.Legacy;
+using osu.Game.Rulesets.Bosu.Mods;
 
 namespace osu.Game.Rulesets.Bosu
 {
@@ -34,7 +36,26 @@ namespace osu.Game.Rulesets.Bosu
             new KeyBinding(InputKey.Space, BosuAction.Jump),
         };
 
-        public override IEnumerable<Mod> GetModsFor(ModType type) => Array.Empty<Mod>();
+        public override IEnumerable<Mod> ConvertFromLegacyMods(LegacyMods mods)
+        {
+            if (mods.HasFlag(LegacyMods.SuddenDeath))
+                yield return new BosuModSuddenDeath();
+        }
+
+        public override IEnumerable<Mod> GetModsFor(ModType type)
+        {
+            switch (type)
+            {
+                case ModType.DifficultyIncrease:
+                    return new Mod[]
+                    {
+                        new BosuModSuddenDeath()
+                    };
+
+                default:
+                    return Array.Empty<Mod>();
+            }
+        }
 
         public override string Description => "bosu!";
 
