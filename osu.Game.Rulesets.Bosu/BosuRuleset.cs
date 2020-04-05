@@ -47,12 +47,21 @@ namespace osu.Game.Rulesets.Bosu
 
             if (mods.HasFlag(LegacyMods.SuddenDeath))
                 yield return new BosuModSuddenDeath();
+
+            if (mods.HasFlag(LegacyMods.NoFail))
+                yield return new BosuModNoFail();
         }
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
             switch (type)
             {
+                case ModType.DifficultyReduction:
+                    return new Mod[]
+                    {
+                        new BosuModNoFail(),
+                    };
+
                 case ModType.DifficultyIncrease:
                     return new Mod[]
                     {
