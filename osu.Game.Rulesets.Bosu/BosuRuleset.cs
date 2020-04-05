@@ -38,6 +38,11 @@ namespace osu.Game.Rulesets.Bosu
 
         public override IEnumerable<Mod> ConvertFromLegacyMods(LegacyMods mods)
         {
+            if (mods.HasFlag(LegacyMods.Nightcore))
+                yield return new BosuModNightcore();
+            else if (mods.HasFlag(LegacyMods.DoubleTime))
+                yield return new BosuModDoubleTime();
+
             if (mods.HasFlag(LegacyMods.SuddenDeath))
                 yield return new BosuModSuddenDeath();
         }
@@ -49,7 +54,8 @@ namespace osu.Game.Rulesets.Bosu
                 case ModType.DifficultyIncrease:
                     return new Mod[]
                     {
-                        new BosuModSuddenDeath()
+                        new BosuModSuddenDeath(),
+                        new MultiMod(new BosuModDoubleTime(), new BosuModNightcore()),
                     };
 
                 default:
