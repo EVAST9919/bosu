@@ -33,7 +33,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             if (comboData?.NewCombo ?? false)
                 index++;
 
-            List<Bullet> bullets = new List<Bullet>();
+            List<Cherry> bullets = new List<Cherry>();
 
             switch (obj)
             {
@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 case IHasCurve _:
                     for (int i = 0; i < bullets_per_slider; i++)
                     {
-                        bullets.Add(new Bullet
+                        bullets.Add(new Cherry
                         {
                             Angle = getBulletDistribution(bullets_per_slider, 360f, i),
                             StartTime = obj.StartTime,
@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     {
                         for (int j = 0; j < bullets_per_spinner_span; j++)
                         {
-                            bullets.Add(new Bullet
+                            bullets.Add(new Cherry
                             {
                                 Angle = getBulletDistribution(bullets_per_spinner_span, 360f, j) + (i * 2),
                                 StartTime = obj.StartTime + i * spinner_span_delay,
@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 default:
                     for (int i = 0; i < bullets_per_hitcircle; i++)
                     {
-                        bullets.Add(new Bullet
+                        bullets.Add(new Cherry
                         {
                             Angle = getBulletDistribution(bullets_per_hitcircle, 100, i),
                             StartTime = obj.StartTime,

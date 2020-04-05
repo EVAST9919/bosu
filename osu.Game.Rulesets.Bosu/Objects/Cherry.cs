@@ -3,7 +3,7 @@ using osu.Game.Rulesets.Judgements;
 
 namespace osu.Game.Rulesets.Bosu.Objects
 {
-    public class Bullet : BosuHitObject
+    public class Cherry : BosuHitObject
     {
         public float Angle { get; set; }
 

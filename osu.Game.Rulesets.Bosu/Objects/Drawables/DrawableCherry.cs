@@ -10,23 +10,21 @@ using osu.Framework.Graphics.Containers;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableBullet : DrawableBosuHitObject
+    public class DrawableCherry : DrawableBosuHitObject
     {
-        private const int bullet_size = 12;
-
         private bool isMoving;
         private readonly float angle;
 
         private readonly Sprite sprite;
         private readonly Sprite overlay;
 
-        public DrawableBullet(Bullet h)
+        public DrawableCherry(Cherry h)
             : base(h)
         {
             angle = h.Angle;
 
             Origin = Anchor.Centre;
-            Size = new Vector2(bullet_size);
+            Size = new Vector2(12);
             Position = h.Position;
             Scale = Vector2.Zero;
             Alpha = 0;
@@ -58,8 +56,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         [BackgroundDependencyLoader]
         private void load(TextureStore textures)
         {
-            sprite.Texture = textures.Get("apple");
-            overlay.Texture = textures.Get("apple-overlay");
+            sprite.Texture = textures.Get("cherry");
+            overlay.Texture = textures.Get("cherry-overlay");
 
             AccentColour.BindValueChanged(accent => sprite.Colour = accent.NewValue, true);
         }
@@ -108,8 +106,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             var playerPosition = player.PlayerPositionInPlayfieldSpace();
 
-            if (playerPosition.X + player.PlayerDrawSize().X / 2 > Position.X - bullet_size / 2 && playerPosition.X - player.PlayerDrawSize().X / 2 < Position.X + bullet_size / 2
-                && playerPosition.Y + player.PlayerDrawSize().Y / 2 > Position.Y - bullet_size / 2 && playerPosition.Y - player.PlayerDrawSize().Y / 2 < Position.Y + bullet_size / 2)
+            if (playerPosition.X + player.PlayerDrawSize().X / 2 > Position.X - DrawWidth / 2 && playerPosition.X - player.PlayerDrawSize().X / 2 < Position.X + DrawWidth / 2
+                && playerPosition.Y + player.PlayerDrawSize().Y / 2 > Position.Y - DrawHeight / 2 && playerPosition.Y - player.PlayerDrawSize().Y / 2 < Position.Y + DrawHeight / 2)
                 return true;
 
             return false;
