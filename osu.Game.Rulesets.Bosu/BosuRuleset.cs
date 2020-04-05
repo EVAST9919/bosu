@@ -27,6 +27,8 @@ namespace osu.Game.Rulesets.Bosu
 
         public override ScoreProcessor CreateScoreProcessor() => new BosuScoreProcessor();
 
+        public override HealthProcessor CreateHealthProcessor(double drainStartTime) => new BosuHealthProcessor();
+
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new BosuBeatmapConverter(beatmap, this);
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]

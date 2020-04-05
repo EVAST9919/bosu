@@ -7,6 +7,21 @@ namespace osu.Game.Rulesets.Bosu.Judgements
     {
         public override HitResult MaxResult => HitResult.Perfect;
 
+        protected override double HealthIncreaseFor(HitResult result)
+        {
+            switch (result)
+            {
+                case HitResult.Perfect:
+                    return 0.001f;
+
+                case HitResult.Miss:
+                    return -0.1f;
+
+                default:
+                    return 0;
+            }
+        }
+
         protected override int NumericResultFor(HitResult result)
         {
             switch (result)
