@@ -12,6 +12,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableCherry : DrawableBosuHitObject
     {
+        private const float base_size = 25;
+
         private bool isMoving;
         private readonly float angle;
 
@@ -24,7 +26,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             angle = h.Angle;
 
             Origin = Anchor.Centre;
-            Size = new Vector2(12);
+            Size = new Vector2(base_size * ((1.0f - 0.7f * (h.CircleSize - 5) / 5) / 2));
             Position = h.Position;
             Scale = Vector2.Zero;
             Alpha = 0;
