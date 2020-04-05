@@ -18,6 +18,10 @@ using osu.Game.Rulesets.Bosu.Difficulty;
 using osu.Game.Rulesets.Bosu.Beatmaps;
 using osu.Game.Beatmaps.Legacy;
 using osu.Game.Rulesets.Bosu.Mods;
+using osu.Game.Rulesets.Configuration;
+using osu.Game.Configuration;
+using osu.Game.Rulesets.Bosu.Configuration;
+using osu.Game.Overlays.Settings;
 
 namespace osu.Game.Rulesets.Bosu
 {
@@ -86,5 +90,9 @@ namespace osu.Game.Rulesets.Bosu
         };
 
         public override DifficultyCalculator CreateDifficultyCalculator(WorkingBeatmap beatmap) => new BosuDifficultyCalculator(this, beatmap);
+
+        public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new BosuRulesetConfigManager(settings, RulesetInfo);
+
+        public override RulesetSettingsSubsection CreateSettings() => new BosuSettingsSubsection(this);
     }
 }

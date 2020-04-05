@@ -7,12 +7,19 @@ using osu.Framework.Input.Bindings;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Textures;
+using osu.Game.Rulesets.Bosu.Configuration;
+using osu.Framework.Bindables;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
         private const double base_speed = 1.0 / 2048;
+
+        [Resolved]
+        private TextureStore textures { get; set; }
+
+        private readonly Bindable<PlayerModel> playerModel = new Bindable<PlayerModel>();
 
         private int horizontalDirection;
 
@@ -38,9 +45,32 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         }
 
         [BackgroundDependencyLoader]
-        private void load(TextureStore textures)
+        private void load(BosuRulesetConfigManager config)
         {
-            drawablePlayer.Texture = textures.Get("bosu");
+            config.BindWith(BosuRulesetSetting.PlayerModel, playerModel);
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            playerModel.BindValueChanged(model =>
+            {
+                switch (model.NewValue)
+                {
+                    case PlayerModel.Boshy:
+                        drawablePlayer.Texture = textures.Get("Player/boshy");
+                        return;
+
+                    case PlayerModel.Kid:
+                        drawablePlayer.Texture = textures.Get("Player/kid");
+                        return;
+
+                    default:
+                        drawablePlayer.Texture = textures.Get("Player/bosu");
+                        return;
+                }
+            }, true);
         }
 
         public Vector2 PlayerPositionInPlayfieldSpace() => player.Position * BosuPlayfield.BASE_SIZE;
