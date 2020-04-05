@@ -13,6 +13,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
     public class DrawableCherry : DrawableBosuHitObject
     {
         private const float base_size = 25;
+        private readonly float speedMultiplier;
 
         private bool isMoving;
         private readonly float angle;
@@ -24,6 +25,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             : base(h)
         {
             angle = h.Angle;
+            speedMultiplier = h.ApproachRate * 0.025f;
 
             Origin = Anchor.Centre;
             Size = new Vector2(base_size * ((1.0f - 0.7f * (h.CircleSize - 5) / 5) / 2));
@@ -79,8 +81,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             if (!isMoving)
                 return;
 
-            var xDelta = Clock.ElapsedFrameTime * Math.Sin(angle * Math.PI / 180) / 5f;
-            var yDelta = Clock.ElapsedFrameTime * -Math.Cos(angle * Math.PI / 180) / 5f;
+            var xDelta = Clock.ElapsedFrameTime * Math.Sin(angle * Math.PI / 180) * speedMultiplier;
+            var yDelta = Clock.ElapsedFrameTime * -Math.Cos(angle * Math.PI / 180) * speedMultiplier;
 
             Position = new Vector2(Position.X + (float)xDelta, Position.Y + (float)yDelta);
         }
