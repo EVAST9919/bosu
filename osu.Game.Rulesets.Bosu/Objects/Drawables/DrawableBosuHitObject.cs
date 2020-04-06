@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             if (!shouldCheckCollision)
                 return;
 
-            if (Position.X > BosuPlayfield.BASE_SIZE.X || Position.X < 0 || Position.Y > BosuPlayfield.BASE_SIZE.Y || Position.Y < 0)
+            if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f || Position.X < -DrawSize.X / 2f || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f || Position.Y < -DrawSize.Y / 2f)
             {
                 ApplyResult(r => r.Type = HitResult.Perfect);
                 shouldCheckCollision = false;

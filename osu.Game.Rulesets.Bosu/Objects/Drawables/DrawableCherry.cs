@@ -96,11 +96,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 case ArmedState.Idle:
                     break;
 
-                case ArmedState.Hit:
-                    this.FadeOut(200);
-                    break;
-
-                case ArmedState.Miss:
+                default:
                     this.FadeOut();
                     break;
             }
@@ -110,8 +106,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             var playerPosition = player.PlayerPositionInPlayfieldSpace();
 
-            if (playerPosition.X + player.PlayerDrawSize().X / 2 > Position.X - DrawWidth / 2 && playerPosition.X - player.PlayerDrawSize().X / 2 < Position.X + DrawWidth / 2
-                && playerPosition.Y + player.PlayerDrawSize().Y / 2 > Position.Y - DrawHeight / 2 && playerPosition.Y - player.PlayerDrawSize().Y / 2 < Position.Y + DrawHeight / 2)
+            if (playerPosition.X + player.PlayerDrawSize().X / 2f > Position.X - DrawSize.X / 2f && playerPosition.X - player.PlayerDrawSize().X / 2f < Position.X + DrawSize.X / 2f
+                && playerPosition.Y + player.PlayerDrawSize().Y / 2f > Position.Y - DrawSize.Y / 2f && playerPosition.Y - player.PlayerDrawSize().Y / 2f < Position.Y + DrawSize.Y / 2f)
                 return true;
 
             return false;
