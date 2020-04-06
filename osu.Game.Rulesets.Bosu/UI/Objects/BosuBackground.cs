@@ -20,6 +20,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         public BosuBackground()
         {
             RelativeSizeAxes = Axes.Both;
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
         }
 
         [BackgroundDependencyLoader]
@@ -44,6 +46,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                     newBackground = new Sprite
                     {
                         Texture = textures.Get("Backgrounds/Red"),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre
                     };
                     break;
 
@@ -51,6 +55,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                     newBackground = new Sprite
                     {
                         Texture = textures.Get("Backgrounds/White"),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre
                     };
                     break;
 
