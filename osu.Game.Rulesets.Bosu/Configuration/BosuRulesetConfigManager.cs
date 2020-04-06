@@ -14,12 +14,14 @@ namespace osu.Game.Rulesets.Bosu.Configuration
         {
             base.InitialiseDefaults();
             Set(BosuRulesetSetting.PlayerModel, PlayerModel.Bosu);
+            Set(BosuRulesetSetting.Background, BackgroundType.None);
         }
     }
 
     public enum BosuRulesetSetting
     {
-        PlayerModel
+        PlayerModel,
+        Background
     }
 
     public enum PlayerModel
@@ -27,5 +29,12 @@ namespace osu.Game.Rulesets.Bosu.Configuration
         Bosu,
         Boshy,
         Kid
+    }
+
+    public enum BackgroundType
+    {
+        None,
+        Red,
+        White
     }
 }

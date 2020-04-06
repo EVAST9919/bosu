@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
@@ -18,38 +17,7 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             InternalChildren = new Drawable[]
             {
-                new Box
-                {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.TopCentre,
-                    RelativeSizeAxes = Axes.X,
-                    Height = 1,
-                    EdgeSmoothness = Vector2.One
-                },
-                new Box
-                {
-                    Anchor = Anchor.TopCentre,
-                    Origin = Anchor.BottomCentre,
-                    RelativeSizeAxes = Axes.X,
-                    Height = 1,
-                    EdgeSmoothness = Vector2.One
-                },
-                new Box
-                {
-                    Anchor = Anchor.CentreLeft,
-                    Origin = Anchor.CentreRight,
-                    RelativeSizeAxes = Axes.Y,
-                    Width = 1,
-                    EdgeSmoothness = Vector2.One
-                },
-                new Box
-                {
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreLeft,
-                    RelativeSizeAxes = Axes.Y,
-                    Width = 1,
-                    EdgeSmoothness = Vector2.One
-                },
+                new BosuBackground(),
                 HitObjectContainer,
                 Player = new BosuPlayer()
             };

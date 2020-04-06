@@ -25,6 +25,11 @@ namespace osu.Game.Rulesets.Bosu.UI
                 {
                     LabelText = "Player model",
                     Bindable = config.GetBindable<PlayerModel>(BosuRulesetSetting.PlayerModel)
+                },
+                new SettingsEnumDropdown<BackgroundType>
+                {
+                    LabelText = "Background type",
+                    Bindable = config.GetBindable<BackgroundType>(BosuRulesetSetting.Background)
                 }
             };
         }
