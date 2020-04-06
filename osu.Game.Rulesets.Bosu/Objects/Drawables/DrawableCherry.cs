@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Graphics;
-using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osuTK;
 using System;
@@ -16,7 +15,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private readonly float speedMultiplier;
 
         private bool isMoving;
-        private readonly float angle;
+        protected float Angle { get; set; }
 
         private readonly Sprite sprite;
         private readonly Sprite overlay;
@@ -24,7 +23,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         public DrawableCherry(Cherry h)
             : base(h)
         {
-            angle = h.Angle;
+            Angle = h.Angle;
             speedMultiplier = h.ApproachRate * 0.025f;
 
             Origin = Anchor.Centre;
@@ -71,7 +70,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             base.UpdateInitialTransforms();
 
             this.ScaleTo(Vector2.One, HitObject.TimePreempt);
-            this.FadeIn(HitObject.TimePreempt).Finally(_ => isMoving = true);
+            this.FadeIn(HitObject.TimePreempt).Finally(_ => OnObjectReady());
         }
 
         protected override void Update()
@@ -81,10 +80,15 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             if (!isMoving)
                 return;
 
-            var xDelta = Clock.ElapsedFrameTime * Math.Sin(angle * Math.PI / 180) * speedMultiplier;
-            var yDelta = Clock.ElapsedFrameTime * -Math.Cos(angle * Math.PI / 180) * speedMultiplier;
+            var xDelta = Clock.ElapsedFrameTime * Math.Sin(Angle * Math.PI / 180) * speedMultiplier;
+            var yDelta = Clock.ElapsedFrameTime * -Math.Cos(Angle * Math.PI / 180) * speedMultiplier;
 
             Position = new Vector2(Position.X + (float)xDelta, Position.Y + (float)yDelta);
+        }
+
+        protected virtual void OnObjectReady()
+        {
+            isMoving = true;
         }
 
         protected override void UpdateStateTransforms(ArmedState state)
@@ -100,17 +104,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                     this.FadeOut();
                     break;
             }
-        }
-
-        protected override bool CheckCollision(BosuPlayer player)
-        {
-            var playerPosition = player.PlayerPositionInPlayfieldSpace();
-
-            if (playerPosition.X + player.PlayerDrawSize().X / 2f > Position.X - DrawSize.X / 2f && playerPosition.X - player.PlayerDrawSize().X / 2f < Position.X + DrawSize.X / 2f
-                && playerPosition.Y + player.PlayerDrawSize().Y / 2f > Position.Y - DrawSize.Y / 2f && playerPosition.Y - player.PlayerDrawSize().Y / 2f < Position.Y + DrawSize.Y / 2f)
-                return true;
-
-            return false;
         }
     }
 }

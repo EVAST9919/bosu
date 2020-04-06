@@ -26,8 +26,11 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             switch (h)
             {
-                case Cherry bullet:
-                    return new DrawableCherry(bullet);
+                case BouncyCherry bouncyCherry:
+                    return new DrawableBouncyCherry(bouncyCherry);
+
+                case Cherry cherry:
+                    return new DrawableCherry(cherry);
             }
 
             return null;
