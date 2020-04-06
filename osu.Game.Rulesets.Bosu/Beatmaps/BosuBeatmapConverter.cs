@@ -16,6 +16,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         private const int bullets_per_spinner_span = 50;
 
         private const float spinner_span_delay = 250f;
+        private const float spinner_angle_per_span = 8f;
 
         public BosuBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -70,7 +71,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         {
                             bullets.Add(new Cherry
                             {
-                                Angle = getBulletDistribution(bulletCount, 360f, j) + (i * 2),
+                                Angle = getBulletDistribution(bulletCount, 360f, j) + (i * spinner_angle_per_span),
                                 StartTime = obj.StartTime + i * spinner_span_delay,
                                 Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
                                 NewCombo = comboData?.NewCombo ?? false,
