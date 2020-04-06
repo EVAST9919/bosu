@@ -9,19 +9,29 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Bosu.Configuration;
 using osu.Framework.Bindables;
+using osu.Framework.Audio.Sample;
+using osu.Framework.Audio.Track;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
-        private const double base_speed = 1.0 / 2048;
+        private const double base_speed = 1.0 / 2500;
 
         [Resolved]
         private TextureStore textures { get; set; }
 
+        private SampleChannel jump;
+        private SampleChannel doubleJump;
+
         private readonly Bindable<PlayerModel> playerModel = new Bindable<PlayerModel>();
 
         private int horizontalDirection;
+        private Action jumpPressed;
+        private Action jumpReleased;
+        private int availableJumpCount = 2;
+        private int verticalSpeed;
+        private bool midAir;
 
         private readonly Container player;
         private readonly Sprite drawablePlayer;
@@ -45,9 +55,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         }
 
         [BackgroundDependencyLoader]
-        private void load(BosuRulesetConfigManager config)
+        private void load(BosuRulesetConfigManager config, ISampleStore samples)
         {
             config.BindWith(BosuRulesetSetting.PlayerModel, playerModel);
+
+            jump = samples.Get("jump");
+            doubleJump = samples.Get("double-jump");
         }
 
         protected override void LoadComplete()
@@ -71,6 +84,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                         return;
                 }
             }, true);
+
+            jumpPressed += onJumpPressed;
+            jumpReleased += onJumpReleased;
         }
 
         public Vector2 PlayerPositionInPlayfieldSpace() => player.Position * BosuPlayfield.BASE_SIZE;
@@ -95,6 +111,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                     return true;
 
                 case BosuAction.Jump:
+                    jumpPressed?.Invoke();
                     return true;
             }
 
@@ -114,6 +131,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                     return;
 
                 case BosuAction.Jump:
+                    jumpReleased?.Invoke();
                     return;
             }
         }
@@ -121,6 +139,21 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         protected override void Update()
         {
             base.Update();
+
+            // Collided with the ground, reset jump logic
+            if (player.Y > 1)
+            {
+                availableJumpCount = 2;
+                verticalSpeed = 0;
+                midAir = false;
+                player.Y = 1;
+            }
+
+            if (midAir)
+            {
+                verticalSpeed--;
+                player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.00001);
+            }
 
             if (horizontalDirection != 0)
             {
@@ -133,6 +166,37 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
                 player.X = (float)position;
             }
+        }
+
+        private void onJumpPressed()
+        {
+            if (availableJumpCount == 0)
+                return;
+
+            midAir = true;
+
+            availableJumpCount--;
+
+            switch (availableJumpCount)
+            {
+                case 1:
+                    jump?.Play();
+                    verticalSpeed = 100;
+                    break;
+
+                case 0:
+                    doubleJump?.Play();
+                    verticalSpeed = 70;
+                    break;
+            }
+        }
+
+        private void onJumpReleased()
+        {
+            if (verticalSpeed < 0)
+                return;
+
+            verticalSpeed /= 2;
         }
     }
 }
