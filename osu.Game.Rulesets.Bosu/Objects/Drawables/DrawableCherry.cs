@@ -6,6 +6,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Containers;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
@@ -71,6 +72,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
             this.ScaleTo(Vector2.One, HitObject.TimePreempt);
             this.FadeIn(HitObject.TimePreempt).Finally(_ => OnObjectReady());
+
+            Scheduler.AddDelayed(() =>
+            {
+                sprite.FlashColour(Color4.White, 150);
+                overlay.FlashColour(Color4.White, 150);
+            }, HitObject.TimePreempt);
         }
 
         protected override void Update()
