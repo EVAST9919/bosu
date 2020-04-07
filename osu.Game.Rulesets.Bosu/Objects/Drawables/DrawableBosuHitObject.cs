@@ -16,7 +16,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         protected Action<Wall> OnWallCollided;
 
-        private BosuPlayer player;
+        protected BosuPlayer Player;
         private bool shouldCheckCollision;
 
         protected DrawableBosuHitObject(BosuHitObject hitObject)
@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
 
-        public void GetPlayerToTrace(BosuPlayer player) => this.player = player;
+        public void GetPlayerToTrace(BosuPlayer player) => Player = player;
 
         protected override Color4 GetComboColour(IReadOnlyList<Color4> comboColours) =>
             comboColours[(HitObject.IndexInBeatmap + 1) % comboColours.Count];
@@ -47,9 +47,9 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             if (!shouldCheckCollision)
                 return;
 
-            if (checkCollision(player) && shouldCheckCollision)
+            if (checkCollision(Player) && shouldCheckCollision)
             {
-                player.PlayMissAnimation();
+                Player.PlayMissAnimation();
                 ApplyResult(r => r.Type = HitResult.Miss);
                 shouldCheckCollision = false;
             }

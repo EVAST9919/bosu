@@ -29,6 +29,9 @@ namespace osu.Game.Rulesets.Bosu.UI
                 case BouncyCherry bouncyCherry:
                     return new DrawableBouncyCherry(bouncyCherry);
 
+                case TargetedCherry tergetedCherry:
+                    return new DrawableTargetedCherry(tergetedCherry);
+
                 case Cherry cherry:
                     return new DrawableCherry(cherry);
             }
