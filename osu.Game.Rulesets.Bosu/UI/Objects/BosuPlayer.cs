@@ -141,7 +141,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             base.Update();
 
             // Collided with the ground, reset jump logic
-            if (player.Y > 1)
+            if (player.Y > 1 || player.Y < 0)
             {
                 availableJumpCount = 2;
                 verticalSpeed = 0;

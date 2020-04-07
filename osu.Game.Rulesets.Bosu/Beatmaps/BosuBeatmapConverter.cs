@@ -11,11 +11,10 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
     public class BosuBeatmapConverter : BeatmapConverter<BosuHitObject>
     {
-        private const int bullets_per_hitcircle = 20;
-
-        private const float slider_span_delay = 150;
-
+        private const int bullets_per_hitcircle = 10;
+        private const int bullets_per_slider = 20;
         private const int bullets_per_spinner_span = 50;
+
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
@@ -43,17 +42,16 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             switch (obj)
             {
                 // Slider
-                case IHasCurve curve:
-                    var cherriesPerSlider = curve.Duration / slider_span_delay;
+                case IHasCurve _:
+                    bulletCount = getAdjustedObjectCount(bullets_per_slider, difficulty);
 
-                    for (int i = 0; i < cherriesPerSlider; i++)
+                    for (int i = 0; i < bulletCount; i++)
                     {
-                        var position = curve.CurvePositionAt(curve.ProgressAt(i * slider_span_delay / curve.Duration));
-
-                        bullets.Add(new TargetedCherry
+                        bullets.Add(new Cherry
                         {
-                            StartTime = obj.StartTime + i * slider_span_delay,
-                            Position = new Vector2(positionData.X + position.X, (position.Y + positionData.Y) * 0.5f),
+                            Angle = getBulletDistribution(bulletCount, 360f, i),
+                            StartTime = obj.StartTime,
+                            Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
@@ -92,7 +90,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     {
                         bullets.Add(new Cherry
                         {
-                            Angle = getBulletDistribution(bulletCount, 360, i),
+                            Angle = getBulletDistribution(bulletCount, 100, i),
                             StartTime = obj.StartTime,
                             Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
                             NewCombo = comboData?.NewCombo ?? false,
