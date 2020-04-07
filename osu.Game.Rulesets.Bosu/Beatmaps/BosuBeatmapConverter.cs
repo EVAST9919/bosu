@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             if (comboData?.NewCombo ?? false)
                 index++;
 
-            List<Cherry> bullets = new List<Cherry>();
+            List<BosuHitObject> bullets = new List<BosuHitObject>();
             int bulletCount;
 
             switch (obj)
@@ -57,6 +57,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             IndexInBeatmap = index
                         });
                     }
+
+                    bullets.Add(new GhostCherry
+                    {
+                        StartTime = obj.StartTime,
+                        Samples = obj.Samples
+                    });
 
                     return bullets;
 
@@ -98,6 +104,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             IndexInBeatmap = index
                         });
                     }
+
+                    bullets.Add(new GhostCherry
+                    {
+                        StartTime = obj.StartTime,
+                        Samples = obj.Samples
+                    });
 
                     return bullets;
             }
