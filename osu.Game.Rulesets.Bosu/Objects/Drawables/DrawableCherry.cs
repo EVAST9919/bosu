@@ -20,6 +20,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         private readonly Sprite sprite;
         private readonly Sprite overlay;
+        private readonly Sprite branch;
 
         public DrawableCherry(Cherry h)
             : base(h)
@@ -52,6 +53,13 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         RelativeSizeAxes = Axes.Both,
+                    },
+                    branch = new Sprite
+                    {
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Position = new Vector2(1, -1)
                     }
                 }
             });
@@ -62,6 +70,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             sprite.Texture = textures.Get("cherry");
             overlay.Texture = textures.Get("cherry-overlay");
+            branch.Texture = textures.Get("cherry-branch");
 
             AccentColour.BindValueChanged(accent => sprite.Colour = accent.NewValue, true);
         }
