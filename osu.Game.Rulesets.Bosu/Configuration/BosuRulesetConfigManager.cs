@@ -15,13 +15,15 @@ namespace osu.Game.Rulesets.Bosu.Configuration
             base.InitialiseDefaults();
             Set(BosuRulesetSetting.PlayerModel, PlayerModel.Bosu);
             Set(BosuRulesetSetting.Background, BackgroundType.None);
+            Set(BosuRulesetSetting.PlayfieldDim, 0.5, 0, 1);
         }
     }
 
     public enum BosuRulesetSetting
     {
         PlayerModel,
-        Background
+        Background,
+        PlayfieldDim
     }
 
     public enum PlayerModel

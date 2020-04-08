@@ -30,6 +30,13 @@ namespace osu.Game.Rulesets.Bosu.UI
                 {
                     LabelText = "Background type",
                     Bindable = config.GetBindable<BackgroundType>(BosuRulesetSetting.Background)
+                },
+                new SettingsSlider<double>
+                {
+                    LabelText = "Playfield dim",
+                    Bindable = config.GetBindable<double>(BosuRulesetSetting.PlayfieldDim),
+                    KeyboardStep = 0.01f,
+                    DisplayAsPercentage = true
                 }
             };
         }

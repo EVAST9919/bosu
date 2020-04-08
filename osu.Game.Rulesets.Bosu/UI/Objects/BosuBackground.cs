@@ -7,33 +7,63 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Bosu.Configuration;
 using osuTK;
+using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects
 {
     public class BosuBackground : CompositeDrawable
     {
         private readonly Bindable<BackgroundType> bgType = new Bindable<BackgroundType>();
+        private readonly Bindable<double> bgDim = new Bindable<double>();
 
         [Resolved]
         private TextureStore textures { get; set; }
+
+        private readonly Container bgContainer;
+        private readonly Container dimContainer;
 
         public BosuBackground()
         {
             RelativeSizeAxes = Axes.Both;
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
+            InternalChildren = new Drawable[]
+            {
+                bgContainer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre
+                },
+                dimContainer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = new Box
+                    {
+                        RelativeSizeAxes = Axes.Both,
+                        Colour = Color4.Black
+                    }
+                }
+            };
         }
 
         [BackgroundDependencyLoader]
         private void load(BosuRulesetConfigManager config)
         {
             config.BindWith(BosuRulesetSetting.Background, bgType);
+            config.BindWith(BosuRulesetSetting.PlayfieldDim, bgDim);
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
             bgType.BindValueChanged(bg => onBackgroundChanged(bg.NewValue), true);
+            bgDim.BindValueChanged(dim => onDimChanged(dim.NewValue), true);
+        }
+
+        private void onDimChanged(double newDim)
+        {
+            dimContainer.Alpha = (float)newDim;
         }
 
         private void onBackgroundChanged(BackgroundType background)
@@ -104,7 +134,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                     break;
             }
 
-            InternalChild = newBackground;
+            bgContainer.Child = newBackground;
         }
     }
 }
