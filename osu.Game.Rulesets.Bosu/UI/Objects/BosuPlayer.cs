@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         private Action jumpPressed;
         private Action jumpReleased;
         private int availableJumpCount = 2;
-        private int verticalSpeed;
+        private float verticalSpeed;
         private bool midAir;
 
         private readonly Container player;
@@ -151,7 +151,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
             if (midAir)
             {
-                verticalSpeed--;
+                verticalSpeed -= (float)Clock.ElapsedFrameTime / 3.5f;
                 player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.00001);
             }
 
@@ -186,7 +186,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
                 case 0:
                     doubleJump?.Play();
-                    verticalSpeed = 70;
+                    verticalSpeed = 90;
                     break;
             }
         }
