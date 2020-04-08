@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
     public class BosuBeatmapConverter : BeatmapConverter<BosuHitObject>
     {
         private const int bullets_per_hitcircle = 10;
-        private const int bullets_per_slider = 20;
+        private const int bullets_per_slider = 18;
         private const int bullets_per_spinner_span = 50;
 
         private const float spinner_span_delay = 250f;
@@ -42,9 +42,10 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             switch (obj)
             {
                 // Slider
-                case IHasCurve _:
+                case IHasCurve curve:
                     bulletCount = getAdjustedObjectCount(bullets_per_slider, difficulty);
 
+                    // head
                     for (int i = 0; i < bulletCount; i++)
                     {
                         bullets.Add(new Cherry
@@ -61,6 +62,28 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     bullets.Add(new GhostCherry
                     {
                         StartTime = obj.StartTime,
+                        Samples = obj.Samples
+                    });
+
+                    // tail
+                    var tailPosition = curve.CurvePositionAt(curve.ProgressAt(1));
+
+                    for (int i = 0; i < bulletCount; i++)
+                    {
+                        bullets.Add(new Cherry
+                        {
+                            Angle = getBulletDistribution(bulletCount, 360f, i),
+                            StartTime = curve.EndTime,
+                            Position = new Vector2(tailPosition.X + positionData.X, (tailPosition.Y + positionData.Y) * 0.5f),
+                            NewCombo = comboData?.NewCombo ?? false,
+                            ComboOffset = comboData?.ComboOffset ?? 0,
+                            IndexInBeatmap = index
+                        });
+                    }
+
+                    bullets.Add(new GhostCherry
+                    {
+                        StartTime = curve.EndTime,
                         Samples = obj.Samples
                     });
 
