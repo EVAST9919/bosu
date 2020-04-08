@@ -91,7 +91,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
         public Vector2 PlayerPositionInPlayfieldSpace() => player.Position * BosuPlayfield.BASE_SIZE;
 
-        public Vector2 PlayerDrawSize() => player.DrawSize * 0.7f;
+        public Vector2 PlayerDrawSize() => player.DrawSize;
 
         public void PlayMissAnimation()
         {

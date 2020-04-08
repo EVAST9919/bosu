@@ -81,10 +81,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         private bool checkCollision(BosuPlayer player)
         {
-            var playerPosition = player.PlayerPositionInPlayfieldSpace();
+            // Let's assume that player is a circle for simplicity
 
-            if (playerPosition.X + player.PlayerDrawSize().X / 2f > Position.X - DrawSize.X / 2f && playerPosition.X - player.PlayerDrawSize().X / 2f < Position.X + DrawSize.X / 2f
-                && playerPosition.Y + player.PlayerDrawSize().Y / 2f > Position.Y - DrawSize.Y / 2f && playerPosition.Y - player.PlayerDrawSize().Y / 2f < Position.Y + DrawSize.Y / 2f)
+            var playerPosition = player.PlayerPositionInPlayfieldSpace();
+            var distance = Math.Sqrt(Math.Pow(Math.Abs(playerPosition.X - Position.X), 2) + Math.Pow(Math.Abs(playerPosition.Y - Position.Y), 2));
+            var playerRadius = player.PlayerDrawSize().X / 2f;
+            var cherryRadius = DrawSize.X / 2f;
+
+            if (distance < playerRadius + cherryRadius)
                 return true;
 
             return false;
