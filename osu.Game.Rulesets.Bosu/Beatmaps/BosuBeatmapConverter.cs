@@ -6,6 +6,8 @@ using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Bosu.Objects;
 using osuTK;
 using System;
+using osu.Game.Audio;
+using osu.Game.Beatmaps.ControlPoints;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -31,7 +33,8 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         {
             var positionData = obj as IHasPosition;
             var comboData = obj as IHasCombo;
-            var difficulty = beatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty;
+            var difficulty = beatmap.BeatmapInfo.BaseDifficulty;
+            var od = difficulty.OverallDifficulty;
 
             if (comboData?.NewCombo ?? false)
                 index++;
@@ -43,7 +46,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             {
                 // Slider
                 case IHasCurve curve:
-                    bulletCount = getAdjustedObjectCount(bullets_per_slider, difficulty);
+                    bulletCount = getAdjustedObjectCount(bullets_per_slider, od);
 
                     // head
                     for (int i = 0; i < bulletCount; i++)
@@ -64,6 +67,43 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         StartTime = obj.StartTime,
                         Samples = obj.Samples
                     });
+
+                    // ticks
+
+                    var controlPointInfo = beatmap.ControlPointInfo;
+
+                    TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(obj.StartTime);
+                    DifficultyControlPoint difficultyPoint = controlPointInfo.DifficultyPointAt(obj.StartTime);
+
+                    double scoringDistance = 100 * beatmap.BeatmapInfo.BaseDifficulty.SliderMultiplier * difficultyPoint.SpeedMultiplier;
+
+                    var velocity = scoringDistance / timingPoint.BeatLength;
+                    var tickDistance = scoringDistance / difficulty.SliderTickRate;
+
+                    foreach (var e in SliderEventGenerator.Generate(obj.StartTime, curve.Duration / (curve.RepeatCount + 1), velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, (obj as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0))
+                    {
+                        switch (e.Type)
+                        {
+                            case SliderEventType.Tick:
+                                var tickPosition = curve.CurvePositionAt(e.PathProgress);
+
+                                bullets.Add(new TargetedCherry
+                                {
+                                    StartTime = e.Time,
+                                    Position = new Vector2(tickPosition.X + positionData.X, (tickPosition.Y + positionData.Y) * 0.5f),
+                                    NewCombo = comboData?.NewCombo ?? false,
+                                    ComboOffset = comboData?.ComboOffset ?? 0,
+                                    IndexInBeatmap = index
+                                });
+
+                                bullets.Add(new GhostCherry
+                                {
+                                    StartTime = e.Time,
+                                    Samples = getTickSamples(obj.Samples)
+                                });
+                                break;
+                        }
+                    }
 
                     // tail
                     var tailPosition = curve.CurvePositionAt(curve.ProgressAt(1));
@@ -92,7 +132,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 // Spinner
                 case IHasEndTime endTime:
                     var spansPerSpinner = endTime.Duration / spinner_span_delay;
-                    bulletCount = getAdjustedObjectCount(bullets_per_spinner_span, difficulty);
+                    bulletCount = getAdjustedObjectCount(bullets_per_spinner_span, od);
 
                     for (int i = 0; i < spansPerSpinner; i++)
                     {
@@ -113,7 +153,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     return bullets;
 
                 default:
-                    bulletCount = getAdjustedObjectCount(bullets_per_hitcircle, difficulty);
+                    bulletCount = getAdjustedObjectCount(bullets_per_hitcircle, od);
 
                     for (int i = 0; i < bulletCount; i++)
                     {
@@ -150,5 +190,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         }
 
         private int getAdjustedObjectCount(int baseValue, float difficulty) => (int)Math.Floor(baseValue * Math.Clamp(difficulty, 4, 10) * 0.05f);
+
+        private List<HitSampleInfo> getTickSamples(IList<HitSampleInfo> objSamples) => objSamples.Select(s => new HitSampleInfo
+        {
+            Bank = s.Bank,
+            Name = @"slidertick",
+            Volume = s.Volume
+        }).ToList();
     }
 }
