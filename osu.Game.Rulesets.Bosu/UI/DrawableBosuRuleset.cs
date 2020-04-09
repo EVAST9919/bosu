@@ -26,6 +26,9 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             switch (h)
             {
+                case Spike spike:
+                    return new DrawableSpike(spike);
+
                 case GhostCherry ghostCherry:
                     return new DrawableGhostCherry(ghostCherry);
 

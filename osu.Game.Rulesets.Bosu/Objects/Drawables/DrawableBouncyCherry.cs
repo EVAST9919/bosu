@@ -2,12 +2,12 @@
 {
     public class DrawableBouncyCherry : DrawableCherry
     {
-        private readonly float lifeTime;
+        private readonly float bounceTime;
 
         public DrawableBouncyCherry(BouncyCherry h)
             : base(h)
         {
-            lifeTime = h.LifeTime;
+            bounceTime = h.LifeTime;
             WallPassIsBlocked = true;
 
             OnWallCollided += onWallCollided;
@@ -20,7 +20,7 @@
             Scheduler.AddDelayed(() =>
             {
                 WallPassIsBlocked = false;
-            }, lifeTime);
+            }, bounceTime);
         }
 
         private void onWallCollided(Wall wall)

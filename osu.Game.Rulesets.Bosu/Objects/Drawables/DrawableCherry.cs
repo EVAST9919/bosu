@@ -92,13 +92,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             base.UpdateInitialTransforms();
 
             this.ScaleTo(Vector2.One, HitObject.TimePreempt);
-            this.FadeIn(HitObject.TimePreempt).Finally(_ => OnObjectReady());
-
-            Scheduler.AddDelayed(() =>
-            {
-                sprite.FlashColour(Color4.White, 150);
-                overlay.FlashColour(Color4.White, 150);
-            }, HitObject.TimePreempt);
+            this.FadeIn(HitObject.TimePreempt);
         }
 
         protected override void Update()
@@ -122,9 +116,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             Position = new Vector2(Position.X + (float)xDelta, Position.Y + (float)yDelta);
         }
 
-        protected virtual void OnObjectReady()
+        protected override void OnObjectReady()
         {
+            base.OnObjectReady();
+
             isMoving = true;
+
+            sprite.FlashColour(Color4.White, 150);
+            overlay.FlashColour(Color4.White, 150);
         }
 
         protected override void UpdateStateTransforms(ArmedState state)

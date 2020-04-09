@@ -10,10 +10,10 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
         }
 
-        protected override void LoadComplete()
+        protected override void OnObjectReady()
         {
-            base.LoadComplete();
-            Scheduler.AddDelayed(() => ApplyResult(r => r.Type = HitResult.Perfect), HitObject.TimePreempt);
+            base.OnObjectReady();
+            ApplyResult(r => r.Type = HitResult.Perfect);
         }
 
         protected override bool CheckPlayerCollision(BosuPlayer player) => false;

@@ -17,7 +17,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            Scheduler.AddDelayed(() => ShouldCheckCollision = true, HitObject.TimePreempt);
+            Scheduler.AddDelayed(OnObjectReady, HitObject.TimePreempt);
+        }
+
+        protected virtual void OnObjectReady()
+        {
+            ShouldCheckCollision = true;
         }
 
         protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
