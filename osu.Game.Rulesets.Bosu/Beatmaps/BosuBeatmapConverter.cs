@@ -5,7 +5,6 @@ using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Bosu.Objects;
 using osuTK;
-using System;
 using osu.Game.Audio;
 using osu.Game.Beatmaps.ControlPoints;
 
@@ -13,9 +12,9 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
     public class BosuBeatmapConverter : BeatmapConverter<BosuHitObject>
     {
-        private const int bullets_per_hitcircle = 10;
-        private const int bullets_per_slider = 18;
-        private const int bullets_per_spinner_span = 50;
+        private const int bullets_per_hitcircle = 4;
+        private const int bullets_per_slider = 7;
+        private const int bullets_per_spinner_span = 20;
 
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
@@ -40,20 +39,17 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 index++;
 
             List<BosuHitObject> bullets = new List<BosuHitObject>();
-            int bulletCount;
 
             switch (obj)
             {
                 // Slider
                 case IHasCurve curve:
-                    bulletCount = getAdjustedObjectCount(bullets_per_slider, od);
-
                     // head
-                    for (int i = 0; i < bulletCount; i++)
+                    for (int i = 0; i < bullets_per_slider; i++)
                     {
                         bullets.Add(new Cherry
                         {
-                            Angle = getBulletDistribution(bulletCount, 360f, i),
+                            Angle = getBulletDistribution(bullets_per_slider, 360f, i),
                             StartTime = obj.StartTime,
                             Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
                             NewCombo = comboData?.NewCombo ?? false,
@@ -108,11 +104,11 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     // tail
                     var tailPosition = curve.CurvePositionAt(curve.ProgressAt(1));
 
-                    for (int i = 0; i < bulletCount; i++)
+                    for (int i = 0; i < bullets_per_slider; i++)
                     {
                         bullets.Add(new Cherry
                         {
-                            Angle = getBulletDistribution(bulletCount, 360f, i),
+                            Angle = getBulletDistribution(bullets_per_slider, 360f, i),
                             StartTime = curve.EndTime,
                             Position = new Vector2(tailPosition.X + positionData.X, (tailPosition.Y + positionData.Y) * 0.5f),
                             NewCombo = comboData?.NewCombo ?? false,
@@ -132,15 +128,14 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 // Spinner
                 case IHasEndTime endTime:
                     var spansPerSpinner = endTime.Duration / spinner_span_delay;
-                    bulletCount = getAdjustedObjectCount(bullets_per_spinner_span, od);
 
                     for (int i = 0; i < spansPerSpinner; i++)
                     {
-                        for (int j = 0; j < bulletCount; j++)
+                        for (int j = 0; j < bullets_per_spinner_span; j++)
                         {
                             bullets.Add(new Cherry
                             {
-                                Angle = getBulletDistribution(bulletCount, 360f, j) + (i * spinner_angle_per_span),
+                                Angle = getBulletDistribution(bullets_per_spinner_span, 360f, j) + (i * spinner_angle_per_span),
                                 StartTime = obj.StartTime + i * spinner_span_delay,
                                 Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
                                 NewCombo = comboData?.NewCombo ?? false,
@@ -152,14 +147,13 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
                     return bullets;
 
+                // Hitcircle
                 default:
-                    bulletCount = getAdjustedObjectCount(bullets_per_hitcircle, od);
-
-                    for (int i = 0; i < bulletCount; i++)
+                    for (int i = 0; i < bullets_per_hitcircle; i++)
                     {
                         bullets.Add(new Cherry
                         {
-                            Angle = getBulletDistribution(bulletCount, 100, i),
+                            Angle = getBulletDistribution(bullets_per_hitcircle, 100, i),
                             StartTime = obj.StartTime,
                             Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
                             NewCombo = comboData?.NewCombo ?? false,
@@ -188,8 +182,6 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
             static float getPerBulletAngle(int bulletsPerObject, float angleRange) => angleRange / bulletsPerObject;
         }
-
-        private int getAdjustedObjectCount(int baseValue, float difficulty) => (int)Math.Floor(baseValue * Math.Clamp(difficulty, 4, 10) * 0.05f);
 
         private List<HitSampleInfo> getTickSamples(IList<HitSampleInfo> objSamples) => objSamples.Select(s => new HitSampleInfo
         {
