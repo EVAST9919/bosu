@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Bosu.UI.Objects;
+using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
@@ -38,7 +39,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             : base(h)
         {
             Angle = h.Angle;
-            speedMultiplier = (float)Math.Clamp(h.SpeedMultiplier, 0.9f, 1.15f) / 4f;
+            speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.7f, 1.4f) / 4f;
 
             Origin = Anchor.Centre;
             Size = new Vector2(GetBaseSize() * ((1.0f - 0.7f * (h.CircleSize - 5) / 5) / 2));
