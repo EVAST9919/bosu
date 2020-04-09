@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Bosu.Judgements
             switch (result)
             {
                 case HitResult.Perfect:
-                    return 0.001f;
+                    return 0.0007f;
 
                 case HitResult.Miss:
                     return -0.1f;
