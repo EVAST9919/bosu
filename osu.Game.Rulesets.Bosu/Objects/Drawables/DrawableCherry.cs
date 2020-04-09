@@ -7,12 +7,23 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Containers;
 using osuTK.Graphics;
+using System.Collections.Generic;
+using osu.Game.Rulesets.Bosu.UI;
+using osu.Game.Rulesets.Scoring;
+using osu.Game.Rulesets.Bosu.UI.Objects;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableCherry : DrawableBosuHitObject
     {
+        protected bool WallPassIsBlocked;
+
+        protected Action<Wall> OnWallCollided;
+
         private readonly float speedMultiplier;
+
+        protected override Color4 GetComboColour(IReadOnlyList<Color4> comboColours) =>
+            comboColours[(HitObject.IndexInBeatmap + 1) % comboColours.Count];
 
         private bool isMoving;
         protected float Angle { get; set; }
@@ -94,6 +105,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.Update();
 
+            if (ShouldCheckCollision)
+            {
+                if (WallPassIsBlocked)
+                    checkWallCollision();
+                else
+                    checkWallPass();
+            }
+
             if (!isMoving)
                 return;
 
@@ -121,6 +140,50 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                     this.FadeOut();
                     break;
             }
+        }
+
+        protected override bool CheckPlayerCollision(BosuPlayer player)
+        {
+            // Let's assume that player is a circle for simplicity
+
+            var playerPosition = player.PlayerPositionInPlayfieldSpace();
+            var distance = Math.Sqrt(Math.Pow(Math.Abs(playerPosition.X - Position.X), 2) + Math.Pow(Math.Abs(playerPosition.Y - Position.Y), 2));
+            var playerRadius = player.PlayerDrawSize().X / 2f;
+            var cherryRadius = DrawSize.X / 2f;
+
+            if (distance < playerRadius + cherryRadius)
+                return true;
+
+            return false;
+        }
+
+        private void checkWallCollision()
+        {
+            if (Position.X >= BosuPlayfield.BASE_SIZE.X - DrawSize.X / 2f)
+                OnWallCollided?.Invoke(Wall.Right);
+            else if (Position.X <= DrawSize.X / 2f)
+                OnWallCollided?.Invoke(Wall.Left);
+            else if (Position.Y >= BosuPlayfield.BASE_SIZE.Y - DrawSize.Y / 2f)
+                OnWallCollided?.Invoke(Wall.Down);
+            else if (Position.Y <= DrawSize.Y / 2f)
+                OnWallCollided?.Invoke(Wall.Up);
+        }
+
+        private void checkWallPass()
+        {
+            if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f || Position.X < -DrawSize.X / 2f || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f || Position.Y < -DrawSize.Y / 2f)
+            {
+                ApplyResult(r => r.Type = HitResult.Perfect);
+                ShouldCheckCollision = false;
+            }
+        }
+
+        protected enum Wall
+        {
+            Left,
+            Right,
+            Up,
+            Down
         }
     }
 }

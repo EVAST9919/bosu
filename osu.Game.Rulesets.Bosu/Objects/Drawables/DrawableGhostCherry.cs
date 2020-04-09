@@ -1,4 +1,5 @@
-﻿using osu.Game.Rulesets.Scoring;
+﻿using osu.Game.Rulesets.Bosu.UI.Objects;
+using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
@@ -14,5 +15,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             base.LoadComplete();
             Scheduler.AddDelayed(() => ApplyResult(r => r.Type = HitResult.Perfect), HitObject.TimePreempt);
         }
+
+        protected override bool CheckPlayerCollision(BosuPlayer player) => false;
     }
 }
