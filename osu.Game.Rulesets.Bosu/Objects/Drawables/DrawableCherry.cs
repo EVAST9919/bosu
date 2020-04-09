@@ -12,11 +12,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableCherry : DrawableBosuHitObject
     {
-        private const float base_size = 25;
         private readonly float speedMultiplier;
 
         private bool isMoving;
         protected float Angle { get; set; }
+
+        protected virtual float GetBaseSize() => 25;
 
         private readonly Sprite sprite;
         private readonly Sprite overlay;
@@ -29,7 +30,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             speedMultiplier = h.ApproachRate * 0.025f;
 
             Origin = Anchor.Centre;
-            Size = new Vector2(base_size * ((1.0f - 0.7f * (h.CircleSize - 5) / 5) / 2));
+            Size = new Vector2(GetBaseSize() * ((1.0f - 0.7f * (h.CircleSize - 5) / 5) / 2));
             Position = h.Position;
             Scale = Vector2.Zero;
             Alpha = 0;

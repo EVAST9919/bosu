@@ -4,6 +4,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableTargetedCherry : DrawableCherry
     {
+        protected override float GetBaseSize() => 15;
+
         public DrawableTargetedCherry(TargetedCherry h)
             : base(h)
         {
