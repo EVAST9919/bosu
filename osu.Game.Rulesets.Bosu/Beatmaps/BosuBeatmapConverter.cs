@@ -13,7 +13,8 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
     public class BosuBeatmapConverter : BeatmapConverter<BosuHitObject>
     {
         private const int bullets_per_hitcircle = 4;
-        private const int bullets_per_slider = 7;
+        private const int bullets_per_slider_head = 7;
+        private const int bullets_per_slider_tail = 5;
         private const int bullets_per_spinner_span = 20;
 
         private const float spinner_span_delay = 250f;
@@ -45,11 +46,11 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 // Slider
                 case IHasCurve curve:
                     // head
-                    for (int i = 0; i < bullets_per_slider; i++)
+                    for (int i = 0; i < bullets_per_slider_head; i++)
                     {
                         bullets.Add(new Cherry
                         {
-                            Angle = getBulletDistribution(bullets_per_slider, 360f, i),
+                            Angle = getBulletDistribution(bullets_per_slider_head, 360f, i),
                             StartTime = obj.StartTime,
                             Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
                             NewCombo = comboData?.NewCombo ?? false,
@@ -104,11 +105,11 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     // tail
                     var tailPosition = curve.CurvePositionAt(curve.ProgressAt(1));
 
-                    for (int i = 0; i < bullets_per_slider; i++)
+                    for (int i = 0; i < bullets_per_slider_tail; i++)
                     {
                         bullets.Add(new Cherry
                         {
-                            Angle = getBulletDistribution(bullets_per_slider, 360f, i),
+                            Angle = getBulletDistribution(bullets_per_slider_tail, 360f, i),
                             StartTime = curve.EndTime,
                             Position = new Vector2(tailPosition.X + positionData.X, (tailPosition.Y + positionData.Y) * 0.5f),
                             NewCombo = comboData?.NewCombo ?? false,
