@@ -11,8 +11,6 @@ namespace osu.Game.Rulesets.Bosu.Objects
 
         public float CircleSize { get; set; } = 1;
 
-        public float ApproachRate { get; set; } = 1;
-
         public double SpeedMultiplier { get; set; } = 1;
 
         public override Judgement CreateJudgement() => new BosuJudgement();
@@ -21,7 +19,6 @@ namespace osu.Game.Rulesets.Bosu.Objects
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
             CircleSize = difficulty.CircleSize;
-            ApproachRate = difficulty.ApproachRate;
             SpeedMultiplier = controlPointInfo.DifficultyPointAt(StartTime).SpeedMultiplier;
         }
     }
