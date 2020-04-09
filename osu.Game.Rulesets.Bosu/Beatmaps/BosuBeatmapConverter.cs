@@ -68,11 +68,10 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     // ticks
 
                     var controlPointInfo = beatmap.ControlPointInfo;
-
                     TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(obj.StartTime);
                     DifficultyControlPoint difficultyPoint = controlPointInfo.DifficultyPointAt(obj.StartTime);
 
-                    double scoringDistance = 100 * beatmap.BeatmapInfo.BaseDifficulty.SliderMultiplier * difficultyPoint.SpeedMultiplier;
+                    double scoringDistance = 100 * difficulty.SliderMultiplier * difficultyPoint.SpeedMultiplier;
 
                     var velocity = scoringDistance / timingPoint.BeatLength;
                     var tickDistance = scoringDistance / difficulty.SliderTickRate;
@@ -154,7 +153,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     {
                         hitObjects.Add(new Cherry
                         {
-                            Angle = getBulletDistribution(bullets_per_hitcircle, 100, i),
+                            Angle = getBulletDistribution(bullets_per_hitcircle, 120, i),
                             StartTime = obj.StartTime,
                             Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
                             NewCombo = comboData?.NewCombo ?? false,
