@@ -34,7 +34,6 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             var positionData = obj as IHasPosition;
             var comboData = obj as IHasCombo;
             var difficulty = beatmap.BeatmapInfo.BaseDifficulty;
-            var od = difficulty.OverallDifficulty;
 
             if (comboData?.NewCombo ?? false)
                 index++;
