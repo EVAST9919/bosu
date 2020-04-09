@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             : base(h)
         {
             Angle = h.Angle;
-            speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.7f, 1.4f) / 4f;
+            speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.85f, 1.2f) / 4.5f;
 
             Origin = Anchor.Centre;
             Size = new Vector2(GetBaseSize() * ((1.0f - 0.7f * (h.CircleSize - 5) / 5) / 2));
