@@ -23,7 +23,7 @@ namespace osu.Game.Rulesets.Bosu.UI
             };
         }
 
-        protected override HitObjectContainer CreateHitObjectContainer() => new JsbHitObjectContainer();
+        protected override HitObjectContainer CreateHitObjectContainer() => new BosuHitObjectContainer();
 
         public override void Add(DrawableHitObject h)
         {
@@ -33,9 +33,9 @@ namespace osu.Game.Rulesets.Bosu.UI
             drawable.GetPlayerToTrace(Player);
         }
 
-        private class JsbHitObjectContainer : HitObjectContainer
+        private class BosuHitObjectContainer : HitObjectContainer
         {
-            public JsbHitObjectContainer()
+            public BosuHitObjectContainer()
             {
                 Masking = true;
             }

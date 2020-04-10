@@ -137,21 +137,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             Position = new Vector2(Position.X + (float)xDelta, Position.Y + (float)yDelta);
         }
 
-        protected override void UpdateStateTransforms(ArmedState state)
-        {
-            base.UpdateStateTransforms(state);
-
-            switch (state)
-            {
-                case ArmedState.Idle:
-                    break;
-
-                default:
-                    this.FadeOut();
-                    break;
-            }
-        }
-
         protected override bool CheckPlayerCollision(BosuPlayer player)
         {
             // Let's assume that player is a circle for simplicity

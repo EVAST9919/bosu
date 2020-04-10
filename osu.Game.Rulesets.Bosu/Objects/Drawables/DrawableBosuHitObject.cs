@@ -46,6 +46,21 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             }
         }
 
+        protected override void UpdateStateTransforms(ArmedState state)
+        {
+            base.UpdateStateTransforms(state);
+
+            switch (state)
+            {
+                case ArmedState.Idle:
+                    break;
+
+                default:
+                    Expire(true);
+                    break;
+            }
+        }
+
         protected abstract bool CheckPlayerCollision(BosuPlayer player);
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
