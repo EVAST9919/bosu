@@ -33,13 +33,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         private float verticalSpeed;
         private bool midAir;
 
-        private readonly Container player;
+        public readonly Container Player;
         private readonly Sprite drawablePlayer;
 
         public BosuPlayer()
         {
             RelativeSizeAxes = Axes.Both;
-            AddInternal(player = new Container
+            AddInternal(Player = new Container
             {
                 Origin = Anchor.BottomCentre,
                 RelativePositionAxes = Axes.Both,
@@ -89,9 +89,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             jumpReleased += onJumpReleased;
         }
 
-        public Vector2 PlayerPositionInPlayfieldSpace() => player.Position * BosuPlayfield.BASE_SIZE;
+        public Vector2 PlayerPositionInPlayfieldSpace() => Player.Position * BosuPlayfield.BASE_SIZE;
 
-        public Vector2 PlayerDrawSize() => player.DrawSize;
+        public Vector2 PlayerDrawSize() => Player.DrawSize;
 
         public void PlayMissAnimation()
         {
@@ -141,30 +141,30 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             base.Update();
 
             // Collided with the ground, reset jump logic
-            if (player.Y > 1 || player.Y < 0)
+            if (Player.Y > 1 || Player.Y < 0)
             {
                 availableJumpCount = 2;
                 verticalSpeed = 0;
                 midAir = false;
-                player.Y = 1;
+                Player.Y = 1;
             }
 
             if (midAir)
             {
                 verticalSpeed -= (float)Clock.ElapsedFrameTime / 3.5f;
-                player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.00001);
+                Player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.00001);
             }
 
             if (horizontalDirection != 0)
             {
-                var position = Math.Clamp(player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, 0, 1);
+                var position = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, 0, 1);
 
-                player.Scale = new Vector2(Math.Abs(Scale.X) * (horizontalDirection > 0 ? 1 : -1), player.Scale.Y);
+                Player.Scale = new Vector2(Math.Abs(Scale.X) * (horizontalDirection > 0 ? 1 : -1), Player.Scale.Y);
 
-                if (position == player.X)
+                if (position == Player.X)
                     return;
 
-                player.X = (float)position;
+                Player.X = (float)position;
             }
         }
 

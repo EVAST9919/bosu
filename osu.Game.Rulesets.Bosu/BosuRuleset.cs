@@ -60,6 +60,9 @@ namespace osu.Game.Rulesets.Bosu
 
             if (mods.HasFlag(LegacyMods.Easy))
                 yield return new BosuModEasy();
+
+            if (mods.HasFlag(LegacyMods.Relax))
+                yield return new BosuModRelax();
         }
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
@@ -79,6 +82,12 @@ namespace osu.Game.Rulesets.Bosu
                     {
                         new BosuModSuddenDeath(),
                         new MultiMod(new BosuModDoubleTime(), new BosuModNightcore()),
+                    };
+
+                case ModType.Automation:
+                    return new Mod[]
+                    {
+                        new BosuModRelax(),
                     };
 
                 case ModType.Fun:
