@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.85f, 1.2f) / 4.5f;
 
             Origin = Anchor.Centre;
-            Size = new Vector2(GetBaseSize() * ((1.0f - 0.7f * (h.CircleSize - 5) / 5) / 2));
+            Size = new Vector2(GetBaseSize() * MathExtensions.Map(h.CircleSize, 0, 10, 0.2f, 1));
             finalSize = Size.X;
             Position = h.Position;
             Scale = Vector2.Zero;
