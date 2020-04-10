@@ -57,6 +57,9 @@ namespace osu.Game.Rulesets.Bosu
 
             if (mods.HasFlag(LegacyMods.HalfTime))
                 yield return new BosuModHalfTime();
+
+            if (mods.HasFlag(LegacyMods.Easy))
+                yield return new BosuModEasy();
         }
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
@@ -66,6 +69,7 @@ namespace osu.Game.Rulesets.Bosu
                 case ModType.DifficultyReduction:
                     return new Mod[]
                     {
+                        new BosuModEasy(),
                         new BosuModNoFail(),
                         new MultiMod(new BosuModHalfTime(), new BosuModDaycore())
                     };
