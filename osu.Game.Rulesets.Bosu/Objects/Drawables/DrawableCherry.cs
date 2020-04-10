@@ -23,6 +23,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         private readonly float speedMultiplier;
         private readonly float finalSize;
+        public Action<DrawableCherry> Ready;
 
         protected override Color4 GetComboColour(IReadOnlyList<Color4> comboColours) =>
             comboColours[(HitObject.IndexInBeatmap + 1) % comboColours.Count];
@@ -101,6 +102,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override void OnObjectReady()
         {
             base.OnObjectReady();
+
+            Ready?.Invoke(this);
 
             isMoving = true;
 
