@@ -22,6 +22,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected Action<Wall> OnWallCollided;
 
         private readonly float speedMultiplier;
+        private readonly float finalSize;
 
         protected override Color4 GetComboColour(IReadOnlyList<Color4> comboColours) =>
             comboColours[(HitObject.IndexInBeatmap + 1) % comboColours.Count];
@@ -43,6 +44,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
             Origin = Anchor.Centre;
             Size = new Vector2(GetBaseSize() * ((1.0f - 0.7f * (h.CircleSize - 5) / 5) / 2));
+            finalSize = Size.X;
             Position = h.Position;
             Scale = Vector2.Zero;
             Alpha = 0;
@@ -149,7 +151,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             var playerPosition = player.PlayerPositionInPlayfieldSpace();
             var distance = Math.Sqrt(Math.Pow(Math.Abs(playerPosition.X - Position.X), 2) + Math.Pow(Math.Abs(playerPosition.Y - Position.Y), 2));
             var playerRadius = player.PlayerDrawSize().X / 2f;
-            var cherryRadius = DrawSize.X / 2f;
+            var cherryRadius = finalSize / 2f;
 
             if (distance < playerRadius + cherryRadius)
                 return true;
