@@ -66,6 +66,9 @@ namespace osu.Game.Rulesets.Bosu
 
             if (mods.HasFlag(LegacyMods.Hidden))
                 yield return new BosuModHidden();
+
+            if (mods.HasFlag(LegacyMods.Flashlight))
+                yield return new BosuModFlashlight();
         }
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
@@ -86,6 +89,7 @@ namespace osu.Game.Rulesets.Bosu
                         new BosuModSuddenDeath(),
                         new MultiMod(new BosuModDoubleTime(), new BosuModNightcore()),
                         new BosuModHidden(),
+                        new BosuModFlashlight()
                     };
 
                 case ModType.Automation:
