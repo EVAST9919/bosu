@@ -98,6 +98,16 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             this.FadeIn(HitObject.TimePreempt);
         }
 
+        protected override void OnObjectReady()
+        {
+            base.OnObjectReady();
+
+            isMoving = true;
+
+            sprite.FlashColour(Color4.White, 150);
+            overlay.FlashColour(Color4.White, 150);
+        }
+
         protected override void Update()
         {
             base.Update();
@@ -107,26 +117,21 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 if (WallPassIsBlocked)
                     checkWallCollision();
                 else
-                    checkWallPass();
+                    CheckWallPass();
             }
 
             if (!isMoving)
                 return;
 
+            OnMove();
+        }
+
+        protected virtual void OnMove()
+        {
             var xDelta = Clock.ElapsedFrameTime * Math.Sin(Angle * Math.PI / 180) * speedMultiplier;
             var yDelta = Clock.ElapsedFrameTime * -Math.Cos(Angle * Math.PI / 180) * speedMultiplier;
 
             Position = new Vector2(Position.X + (float)xDelta, Position.Y + (float)yDelta);
-        }
-
-        protected override void OnObjectReady()
-        {
-            base.OnObjectReady();
-
-            isMoving = true;
-
-            sprite.FlashColour(Color4.White, 150);
-            overlay.FlashColour(Color4.White, 150);
         }
 
         protected override void UpdateStateTransforms(ArmedState state)
@@ -171,7 +176,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 OnWallCollided?.Invoke(Wall.Up);
         }
 
-        private void checkWallPass()
+        protected virtual void CheckWallPass()
         {
             if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f || Position.X < -DrawSize.X / 2f || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f || Position.Y < -DrawSize.Y / 2f)
             {

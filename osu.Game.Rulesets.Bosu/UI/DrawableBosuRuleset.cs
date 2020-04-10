@@ -26,6 +26,9 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             switch (h)
             {
+                case TickCherry tickCherry:
+                    return new DrawableTickCherry(tickCherry);
+
                 case GhostCherry ghostCherry:
                     return new DrawableGhostCherry(ghostCherry);
 

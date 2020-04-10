@@ -3,7 +3,8 @@ using osu.Game.Rulesets.Judgements;
 
 namespace osu.Game.Rulesets.Bosu.Objects
 {
-    public class TargetedCherry : Cherry
+    public class TickCherry : TargetedCherry
     {
+        public override Judgement CreateJudgement() => new TickJudgement();
     }
 }

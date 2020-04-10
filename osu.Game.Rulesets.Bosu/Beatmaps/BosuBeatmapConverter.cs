@@ -83,7 +83,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             case SliderEventType.Tick:
                                 var tickPosition = curve.CurvePositionAt(e.PathProgress);
 
-                                hitObjects.Add(new TargetedCherry
+                                hitObjects.Add(new TickCherry
                                 {
                                     StartTime = e.Time,
                                     Position = new Vector2(tickPosition.X + positionData.X, (tickPosition.Y + positionData.Y) * 0.5f),
