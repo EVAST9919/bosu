@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Bosu.Mods
         public override string Description => @"Play with fading fruits.";
         public override double ScoreMultiplier => 1.06;
 
-        private const double fade_out_offset_multiplier = 0.6;
+        private const double fade_out_offset_multiplier = 0.7;
         private const double fade_out_duration_multiplier = 0.44;
 
         protected override void ApplyHiddenState(DrawableHitObject drawable, ArmedState state)
