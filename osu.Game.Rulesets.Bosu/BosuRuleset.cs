@@ -81,6 +81,12 @@ namespace osu.Game.Rulesets.Bosu
                         new MultiMod(new BosuModDoubleTime(), new BosuModNightcore()),
                     };
 
+                case ModType.Fun:
+                    return new Mod[]
+                    {
+                        new MultiMod(new ModWindUp(), new ModWindDown())
+                    };
+
                 default:
                     return Array.Empty<Mod>();
             }
