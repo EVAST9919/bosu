@@ -1,7 +1,10 @@
 ﻿using osu.Framework.Input;
 using osu.Game.Beatmaps;
+using osu.Game.Input.Handlers;
+using osu.Game.Replays;
 using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
+using osu.Game.Rulesets.Bosu.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
@@ -21,6 +24,10 @@ namespace osu.Game.Rulesets.Bosu.UI
         protected override Playfield CreatePlayfield() => new BosuPlayfield();
 
         public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new BosuPlayfieldAdjustmentContainer();
+
+        protected override ReplayRecorder CreateReplayRecorder(Replay replay) => new BosuReplayRecorder(replay, (BosuPlayfield)Playfield);
+
+        protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new BosuFramedReplayInputHandler(replay);
 
         public override DrawableHitObject<BosuHitObject> CreateDrawableRepresentation(BosuHitObject h)
         {

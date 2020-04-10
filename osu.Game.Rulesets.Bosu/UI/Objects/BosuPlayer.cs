@@ -11,6 +11,8 @@ using osu.Game.Rulesets.Bosu.Configuration;
 using osu.Framework.Bindables;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Audio.Track;
+using osu.Game.Rulesets.UI;
+using osu.Game.Rulesets.Bosu.Replays;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects
 {
@@ -138,6 +140,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
         protected override void Update()
         {
+            updateReplayState();
+
             base.Update();
 
             // Collided with the ground, reset jump logic
@@ -197,6 +201,16 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                 return;
 
             verticalSpeed /= 2;
+        }
+
+        private void updateReplayState()
+        {
+            var state = (GetContainingInputManager().CurrentState as RulesetInputManagerInputState<BosuAction>)?.LastReplayState as BosuFramedReplayInputHandler.BosuReplayState ?? null;
+
+            if (state != null)
+            {
+                Player.X = state.Position.Value / BosuPlayfield.BASE_SIZE.X;
+            }
         }
     }
 }

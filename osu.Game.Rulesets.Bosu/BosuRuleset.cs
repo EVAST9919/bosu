@@ -22,6 +22,8 @@ using osu.Game.Rulesets.Configuration;
 using osu.Game.Configuration;
 using osu.Game.Rulesets.Bosu.Configuration;
 using osu.Game.Overlays.Settings;
+using osu.Game.Rulesets.Replays.Types;
+using osu.Game.Rulesets.Bosu.Replays;
 
 namespace osu.Game.Rulesets.Bosu
 {
@@ -34,6 +36,8 @@ namespace osu.Game.Rulesets.Bosu
         public override HealthProcessor CreateHealthProcessor(double drainStartTime) => new BosuHealthProcessor();
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new BosuBeatmapConverter(beatmap, this);
+
+        public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new BosuReplayFrame();
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {
