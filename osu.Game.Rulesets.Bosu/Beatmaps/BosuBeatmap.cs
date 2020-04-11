@@ -10,12 +10,21 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
     {
         public override IEnumerable<BeatmapStatistic> GetStatistics()
         {
+            var totalCount = HitObjects.Count();
+            var hitCount = HitObjects.Count(s => s is MovingCherry);
+
             return new[]
             {
                 new BeatmapStatistic
                 {
-                    Name = @"Cherries Count",
-                    Content = HitObjects.Count(s => s is MovingCherry).ToString(),
+                    Name = @"Cherries",
+                    Content = hitCount.ToString(),
+                    Icon = FontAwesome.Regular.Circle
+                },
+                new BeatmapStatistic
+                {
+                    Name = @"Visual objects",
+                    Content = (totalCount - hitCount).ToString(),
                     Icon = FontAwesome.Regular.Circle
                 }
             };
