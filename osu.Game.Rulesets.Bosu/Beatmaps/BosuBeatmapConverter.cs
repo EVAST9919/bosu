@@ -23,6 +23,8 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
         private const float slider_angle_per_span = 2f;
 
+        private const float slider_span_threshold = 50f;
+
         public BosuBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
         {
@@ -64,7 +66,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         Vector2 sliderEventPosition;
 
                         // Don't take into account very small sliders. There's a chance that they will contain reverse spam, and offset looks ugly
-                        if (spanDuration < 50)
+                        if (spanDuration < slider_span_threshold)
                             sliderEventPosition = objPosition * new Vector2(1, 0.5f);
                         else
                             sliderEventPosition = (curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition) * new Vector2(1, 0.5f);
@@ -144,12 +146,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     for(int i = 0; i < bodyCherriesCount; i++)
                     {
                         var progress = (float)i / bodyCherriesCount;
-                        var position = curve.CurvePositionAt(curve.ProgressAt(progress));
+                        var position = ((spanDuration < slider_span_threshold) ? objPosition : curve.CurvePositionAt(curve.ProgressAt(progress)) + objPosition) * new Vector2(1, 0.5f);
 
                         hitObjects.Add(new SliderPartCherry
                         {
                             StartTime = obj.StartTime + curve.Duration * progress,
-                            Position = new Vector2(position.X + objPosition.X, (position.Y + objPosition.Y) * 0.5f),
+                            Position = position,
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
