@@ -27,7 +27,5 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                     break;
             }
         }
-
-        protected override float GetReadyStateOffset() => base.GetReadyStateOffset() + 100;
     }
 }
