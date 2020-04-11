@@ -1,4 +1,4 @@
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Game.Rulesets.Objects.Types;
@@ -14,11 +14,14 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
     {
         private const int bullets_per_hitcircle = 4;
         private const int bullets_per_slider_head = 7;
+        private const int bullets_per_slider_reverse = 5;
         private const int bullets_per_slider_tail = 5;
         private const int bullets_per_spinner_span = 20;
 
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
+
+        private const float slider_angle_per_span = 2f;
 
         public BosuBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -93,6 +96,20 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                 {
                                     StartTime = e.Time,
                                     Samples = getTickSamples(obj.Samples)
+                                });
+                                break;
+
+                            case SliderEventType.Repeat:
+                                generateExplosion(hitObjects,
+                                    obj.StartTime + (e.SpanIndex + 1) * spanDuration,
+                                    bullets_per_slider_reverse, 360,
+                                    slider_angle_per_span * e.SpanIndex,
+                                    position, comboData, index);
+
+                                hitObjects.Add(new SoundHitObject
+                                {
+                                    StartTime = obj.StartTime + (e.SpanIndex + 1) * spanDuration,
+                                    Samples = obj.Samples
                                 });
                                 break;
                         }
