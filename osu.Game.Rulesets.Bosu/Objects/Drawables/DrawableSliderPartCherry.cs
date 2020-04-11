@@ -11,8 +11,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
         }
 
-        protected override float GetReadyStateOffset() => base.GetReadyStateOffset() + 100;
-
         protected override void OnObjectReady()
         {
             base.OnObjectReady();
