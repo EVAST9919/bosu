@@ -7,6 +7,7 @@ using osu.Game.Rulesets.Bosu.Objects;
 using osuTK;
 using osu.Game.Audio;
 using osu.Game.Beatmaps.ControlPoints;
+using System;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -23,7 +24,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
         private const float slider_angle_per_span = 2f;
 
-        private const float slider_span_threshold = 50f;
+        private const int max_visuals_per_slider_span = 100;
 
         public BosuBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -66,7 +67,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         Vector2 sliderEventPosition;
 
                         // Don't take into account very small sliders. There's a chance that they will contain reverse spam, and offset looks ugly
-                        if (spanDuration < slider_span_threshold)
+                        if (spanDuration < 75)
                             sliderEventPosition = objPosition * new Vector2(1, 0.5f);
                         else
                             sliderEventPosition = (curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition) * new Vector2(1, 0.5f);
@@ -141,12 +142,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
                     //body
 
-                    var bodyCherriesCount = curve.Distance / 10;
+                    var bodyCherriesCount = Math.Min(curve.Distance / 10, max_visuals_per_slider_span * (curve.RepeatCount + 1));
 
                     for(int i = 0; i < bodyCherriesCount; i++)
                     {
                         var progress = (float)i / bodyCherriesCount;
-                        var position = ((spanDuration < slider_span_threshold) ? objPosition : curve.CurvePositionAt(curve.ProgressAt(progress)) + objPosition) * new Vector2(1, 0.5f);
+                        var position = (curve.CurvePositionAt(curve.ProgressAt(progress)) + objPosition) * new Vector2(1, 0.5f);
 
                         hitObjects.Add(new SliderPartCherry
                         {
