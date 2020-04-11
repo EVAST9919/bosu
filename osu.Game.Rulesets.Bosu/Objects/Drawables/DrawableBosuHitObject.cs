@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         protected virtual float GetReadyStateOffset() => (float)HitObject.TimePreempt;
 
-        protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
+        protected sealed override double InitialLifetimeOffset => GetReadyStateOffset();
 
         public void GetPlayerToTrace(BosuPlayer player) => Player = player;
 

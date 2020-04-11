@@ -78,8 +78,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.UpdateInitialTransforms();
 
-            this.ScaleTo(Vector2.One, HitObject.TimePreempt);
-            this.FadeIn(HitObject.TimePreempt);
+            this.ScaleTo(Vector2.One, GetReadyStateOffset());
+            this.FadeIn(GetReadyStateOffset());
         }
 
         protected override void OnObjectReady()

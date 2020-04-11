@@ -11,10 +11,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
         }
 
+        protected override float GetReadyStateOffset() => base.GetReadyStateOffset() + 100;
+
         protected override void OnObjectReady()
         {
             base.OnObjectReady();
-            ApplyResult(r => r.Type = HitResult.Meh);
+            Scheduler.AddDelayed(() => ApplyResult(r => r.Type = HitResult.Meh), 20);
         }
 
         protected override void UpdateStateTransforms(ArmedState state)
@@ -23,7 +25,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             {
                 case ArmedState.Hit:
                 case ArmedState.Miss:
-                    this.FadeOut(200);
+                    this.ScaleTo(0, 150).Then().FadeOut();
                     break;
             }
         }
