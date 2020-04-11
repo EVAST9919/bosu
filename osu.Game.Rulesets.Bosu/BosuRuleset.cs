@@ -73,6 +73,11 @@ namespace osu.Game.Rulesets.Bosu
 
             if (mods.HasFlag(LegacyMods.Flashlight))
                 yield return new BosuModFlashlight();
+
+            if (mods.HasFlag(LegacyMods.Cinema))
+                yield return new BosuModCinema();
+            else if (mods.HasFlag(LegacyMods.Autoplay))
+                yield return new BosuModAutoplay();
         }
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
@@ -99,6 +104,7 @@ namespace osu.Game.Rulesets.Bosu
                 case ModType.Automation:
                     return new Mod[]
                     {
+                        new MultiMod(new BosuModAutoplay(), new BosuModCinema()),
                         new BosuModRelax(),
                     };
 

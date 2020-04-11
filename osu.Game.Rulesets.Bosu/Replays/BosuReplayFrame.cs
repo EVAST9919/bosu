@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Bosu.Replays
         public BosuReplayFrame(double time, float? position = null, bool jumping = false, BosuReplayFrame lastFrame = null)
             : base(time)
         {
-            Position = position ?? -1;
+            Position = position ?? -100;
             Jumping = jumping;
 
             if (Jumping)
