@@ -1,4 +1,5 @@
-﻿using osu.Game.Rulesets.Bosu.UI.Objects;
+﻿using osu.Framework.Graphics;
+using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 
@@ -7,22 +8,24 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
     public abstract class DrawableBosuHitObject : DrawableHitObject<BosuHitObject>
     {
         protected BosuPlayer Player;
-        protected bool ShouldCheckCollision;
+
+        private bool isReady;
 
         protected DrawableBosuHitObject(BosuHitObject hitObject)
             : base(hitObject)
         {
         }
 
-        protected override void LoadComplete()
+        protected override void UpdateInitialTransforms()
         {
-            base.LoadComplete();
+            base.UpdateInitialTransforms();
+
             Scheduler.AddDelayed(OnObjectReady, GetReadyStateOffset());
         }
 
         protected virtual void OnObjectReady()
         {
-            ShouldCheckCollision = true;
+            isReady = true;
         }
 
         protected virtual float GetReadyStateOffset() => (float)HitObject.TimePreempt;
@@ -31,40 +34,36 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         public void GetPlayerToTrace(BosuPlayer player) => Player = player;
 
+        protected override void UpdateStateTransforms(ArmedState state)
+        {
+            switch (state)
+            {
+                case ArmedState.Hit:
+                case ArmedState.Miss:
+                    this.FadeOut();
+                    break;
+            }
+        }
+
         protected override void Update()
         {
             base.Update();
 
-            if (!ShouldCheckCollision)
+            if (!isReady || (Result?.HasResult ?? true))
                 return;
 
+            OnObjectUpdate();
+        }
+
+        protected virtual void OnObjectUpdate()
+        {
             if (CheckPlayerCollision(Player))
             {
                 Player.PlayMissAnimation();
                 ApplyResult(r => r.Type = HitResult.Miss);
-                ShouldCheckCollision = false;
-            }
-        }
-
-        protected override void UpdateStateTransforms(ArmedState state)
-        {
-            base.UpdateStateTransforms(state);
-
-            switch (state)
-            {
-                case ArmedState.Idle:
-                    break;
-
-                default:
-                    Expire(true);
-                    break;
             }
         }
 
         protected abstract bool CheckPlayerCollision(BosuPlayer player);
-
-        protected override void CheckForResult(bool userTriggered, double timeOffset)
-        {
-        }
     }
 }

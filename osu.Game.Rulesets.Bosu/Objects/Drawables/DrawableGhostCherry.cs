@@ -10,12 +10,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
         }
 
+        protected override bool CheckPlayerCollision(BosuPlayer player) => false;
+
         protected override void OnObjectReady()
         {
             base.OnObjectReady();
             ApplyResult(r => r.Type = HitResult.Perfect);
         }
-
-        protected override bool CheckPlayerCollision(BosuPlayer player) => false;
     }
 }
