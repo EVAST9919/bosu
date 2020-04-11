@@ -101,6 +101,25 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         }
                     }
 
+                    //body
+
+                    var bodyCherriesCount = curve.Distance / 10;
+
+                    for(int i = 0; i < bodyCherriesCount; i++)
+                    {
+                        var progress = (float)i / bodyCherriesCount;
+                        var position = curve.CurvePositionAt(curve.ProgressAt(progress));
+
+                        hitObjects.Add(new SliderPartCherry
+                        {
+                            StartTime = obj.StartTime + curve.Duration * progress,
+                            Position = new Vector2(position.X + positionData.X, (position.Y + positionData.Y) * 0.5f),
+                            NewCombo = comboData?.NewCombo ?? false,
+                            ComboOffset = comboData?.ComboOffset ?? 0,
+                            IndexInBeatmap = index
+                        });
+                    }
+
                     // tail
                     var tailPosition = curve.CurvePositionAt(curve.ProgressAt(1));
 

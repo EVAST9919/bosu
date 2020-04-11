@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 new BeatmapStatistic
                 {
                     Name = @"Cherries Count",
-                    Content = HitObjects.Count(s => s is Cherry).ToString(),
+                    Content = HitObjects.Count(s => s is MovingCherry).ToString(),
                     Icon = FontAwesome.Regular.Circle
                 }
             };

@@ -42,6 +42,9 @@ namespace osu.Game.Rulesets.Bosu.UI
                 case TargetedCherry tergeted:
                     return new DrawableTargetedCherry(tergeted);
 
+                case SliderPartCherry sliderPart:
+                    return new DrawableSliderPartCherry(sliderPart);
+
                 case MovingCherry moving:
                     return new DrawableMovingCherry(moving);
 
