@@ -127,7 +127,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         hitObjects.Add(new SliderPartCherry
                         {
                             StartTime = obj.StartTime + curve.Duration * progress,
-                            Position = objPosition * new Vector2(1, 0.5f),
+                            Position = new Vector2(position.X + objPosition.X, (position.Y + objPosition.Y) * 0.5f),
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
