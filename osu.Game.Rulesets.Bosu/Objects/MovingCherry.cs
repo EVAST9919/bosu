@@ -5,16 +5,18 @@ using osu.Game.Rulesets.Judgements;
 
 namespace osu.Game.Rulesets.Bosu.Objects
 {
-    public class Cherry : BosuHitObject
+    public class MovingCherry : Cherry
     {
-        public float CircleSize { get; set; } = 1;
+        public float Angle { get; set; }
 
-        public override Judgement CreateJudgement() => new NullJudgement();
+        public double SpeedMultiplier { get; set; } = 1;
+
+        public override Judgement CreateJudgement() => new BosuJudgement();
 
         protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, BeatmapDifficulty difficulty)
         {
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
-            CircleSize = difficulty.CircleSize;
+            SpeedMultiplier = controlPointInfo.DifficultyPointAt(StartTime).SpeedMultiplier;
         }
     }
 }

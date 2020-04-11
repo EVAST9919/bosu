@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     // head
                     for (int i = 0; i < bullets_per_slider_head; i++)
                     {
-                        hitObjects.Add(new Cherry
+                        hitObjects.Add(new MovingCherry
                         {
                             Angle = getBulletDistribution(bullets_per_slider_head, 360f, i),
                             StartTime = obj.StartTime,
@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         });
                     }
 
-                    hitObjects.Add(new GhostCherry
+                    hitObjects.Add(new SoundHitObject
                     {
                         StartTime = obj.StartTime,
                         Samples = obj.Samples
@@ -92,7 +92,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                     IndexInBeatmap = index
                                 });
 
-                                hitObjects.Add(new GhostCherry
+                                hitObjects.Add(new SoundHitObject
                                 {
                                     StartTime = e.Time,
                                     Samples = getTickSamples(obj.Samples)
@@ -106,7 +106,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
                     for (int i = 0; i < bullets_per_slider_tail; i++)
                     {
-                        hitObjects.Add(new Cherry
+                        hitObjects.Add(new MovingCherry
                         {
                             Angle = getBulletDistribution(bullets_per_slider_tail, 360f, i),
                             StartTime = curve.EndTime,
@@ -117,7 +117,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         });
                     }
 
-                    hitObjects.Add(new GhostCherry
+                    hitObjects.Add(new SoundHitObject
                     {
                         StartTime = curve.EndTime,
                         Samples = obj.Samples
@@ -133,7 +133,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     {
                         for (int j = 0; j < bullets_per_spinner_span; j++)
                         {
-                            hitObjects.Add(new Cherry
+                            hitObjects.Add(new MovingCherry
                             {
                                 Angle = getBulletDistribution(bullets_per_spinner_span, 360f, j) + (i * spinner_angle_per_span),
                                 StartTime = obj.StartTime + i * spinner_span_delay,
@@ -151,7 +151,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 default:
                     for (int i = 0; i < bullets_per_hitcircle; i++)
                     {
-                        hitObjects.Add(new Cherry
+                        hitObjects.Add(new MovingCherry
                         {
                             Angle = getBulletDistribution(bullets_per_hitcircle, 120, i),
                             StartTime = obj.StartTime,
@@ -162,7 +162,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         });
                     }
 
-                    hitObjects.Add(new GhostCherry
+                    hitObjects.Add(new SoundHitObject
                     {
                         StartTime = obj.StartTime,
                         Samples = obj.Samples

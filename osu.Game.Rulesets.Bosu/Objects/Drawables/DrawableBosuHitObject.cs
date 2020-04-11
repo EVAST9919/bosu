@@ -5,7 +5,7 @@ using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public abstract class DrawableBosuHitObject : DrawableHitObject<BosuHitObject>
+    public class DrawableBosuHitObject : DrawableHitObject<BosuHitObject>
     {
         protected BosuPlayer Player;
 
@@ -64,6 +64,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             }
         }
 
-        protected abstract bool CheckPlayerCollision(BosuPlayer player);
+        protected virtual bool CheckPlayerCollision(BosuPlayer player) => false;
     }
 }

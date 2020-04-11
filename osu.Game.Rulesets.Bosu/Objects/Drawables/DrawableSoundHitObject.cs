@@ -3,10 +3,10 @@ using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableGhostCherry : DrawableBosuHitObject
+    public class DrawableSoundHitObject : DrawableBosuHitObject
     {
-        public DrawableGhostCherry(GhostCherry hitObject)
-            : base(hitObject)
+        public DrawableSoundHitObject(SoundHitObject h)
+            : base(h)
         {
         }
 
@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override void OnObjectReady()
         {
             base.OnObjectReady();
-            ApplyResult(r => r.Type = HitResult.Perfect);
+            ApplyResult(r => r.Type = HitResult.Meh);
         }
     }
 }

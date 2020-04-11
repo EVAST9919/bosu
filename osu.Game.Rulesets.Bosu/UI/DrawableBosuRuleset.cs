@@ -33,14 +33,17 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             switch (h)
             {
-                case TickCherry tickCherry:
-                    return new DrawableTickCherry(tickCherry);
+                case SoundHitObject sound:
+                    return new DrawableSoundHitObject(sound);
 
-                case GhostCherry ghostCherry:
-                    return new DrawableGhostCherry(ghostCherry);
+                case TickCherry tick:
+                    return new DrawableTickCherry(tick);
 
-                case TargetedCherry tergetedCherry:
-                    return new DrawableTargetedCherry(tergetedCherry);
+                case TargetedCherry tergeted:
+                    return new DrawableTargetedCherry(tergeted);
+
+                case MovingCherry moving:
+                    return new DrawableMovingCherry(moving);
 
                 case Cherry cherry:
                     return new DrawableCherry(cherry);

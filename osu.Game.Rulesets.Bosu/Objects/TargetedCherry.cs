@@ -1,9 +1,6 @@
-﻿using osu.Game.Rulesets.Bosu.Judgements;
-using osu.Game.Rulesets.Judgements;
-
-namespace osu.Game.Rulesets.Bosu.Objects
+﻿namespace osu.Game.Rulesets.Bosu.Objects
 {
-    public class TargetedCherry : Cherry
+    public class TargetedCherry : MovingCherry
     {
     }
 }
