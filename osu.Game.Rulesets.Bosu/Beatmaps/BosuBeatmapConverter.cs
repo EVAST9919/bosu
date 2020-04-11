@@ -14,11 +14,14 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
     {
         private const int bullets_per_hitcircle = 4;
         private const int bullets_per_slider_head = 7;
+        private const int bullets_per_slider_reverse = 5;
         private const int bullets_per_slider_tail = 5;
         private const int bullets_per_spinner_span = 20;
 
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
+
+        private const float slider_angle_per_span = 2f;
 
         public BosuBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -31,7 +34,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
         protected override IEnumerable<BosuHitObject> ConvertHitObject(HitObject obj, IBeatmap beatmap)
         {
-            var positionData = obj as IHasPosition;
+            var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
             var difficulty = beatmap.BeatmapInfo.BaseDifficulty;
 
@@ -44,29 +47,6 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             {
                 // Slider
                 case IHasCurve curve:
-
-                    // head
-                    for (int i = 0; i < bullets_per_slider_head; i++)
-                    {
-                        hitObjects.Add(new MovingCherry
-                        {
-                            Angle = getBulletDistribution(bullets_per_slider_head, 360f, i),
-                            StartTime = obj.StartTime,
-                            Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
-                            NewCombo = comboData?.NewCombo ?? false,
-                            ComboOffset = comboData?.ComboOffset ?? 0,
-                            IndexInBeatmap = index
-                        });
-                    }
-
-                    hitObjects.Add(new SoundHitObject
-                    {
-                        StartTime = obj.StartTime,
-                        Samples = obj.Samples
-                    });
-
-                    // ticks
-
                     var controlPointInfo = beatmap.ControlPointInfo;
                     TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(obj.StartTime);
                     DifficultyControlPoint difficultyPoint = controlPointInfo.DifficultyPointAt(obj.StartTime);
@@ -76,17 +56,42 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     var velocity = scoringDistance / timingPoint.BeatLength;
                     var tickDistance = scoringDistance / difficulty.SliderTickRate;
 
-                    foreach (var e in SliderEventGenerator.Generate(obj.StartTime, curve.Duration / (curve.RepeatCount + 1), velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, (obj as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0))
+                    double spanDuration = curve.Duration / (curve.RepeatCount + 1);
+                    double legacyLastTickOffset = (obj as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0;
+
+                    foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
                     {
+                        Vector2 sliderEventPosition;
+
+                        // Don't take into account very small sliders. There's a chance that they will contain reverse spam, and offset looks ugly
+                        if (spanDuration < 50)
+                            sliderEventPosition = objPosition * new Vector2(1, 0.5f);
+                        else
+                            sliderEventPosition = (curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition) * new Vector2(1, 0.5f);
+
                         switch (e.Type)
                         {
-                            case SliderEventType.Tick:
-                                var tickPosition = curve.CurvePositionAt(e.PathProgress);
+                            case SliderEventType.Head:
+                                hitObjects.AddRange(generateExplosion(
+                                    e.Time,
+                                    bullets_per_slider_head,
+                                    sliderEventPosition,
+                                    comboData,
+                                    index));
 
+                                hitObjects.Add(new SoundHitObject
+                                {
+                                    StartTime = obj.StartTime,
+                                    Samples = obj.Samples
+                                });
+
+                                break;
+
+                            case SliderEventType.Tick:
                                 hitObjects.Add(new TickCherry
                                 {
                                     StartTime = e.Time,
-                                    Position = new Vector2(tickPosition.X + positionData.X, (tickPosition.Y + positionData.Y) * 0.5f),
+                                    Position = sliderEventPosition,
                                     NewCombo = comboData?.NewCombo ?? false,
                                     ComboOffset = comboData?.ComboOffset ?? 0,
                                     IndexInBeatmap = index
@@ -96,6 +101,37 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                 {
                                     StartTime = e.Time,
                                     Samples = getTickSamples(obj.Samples)
+                                });
+                                break;
+
+                            case SliderEventType.Repeat:
+                                hitObjects.AddRange(generateExplosion(
+                                    obj.StartTime + (e.SpanIndex + 1) * spanDuration,
+                                    bullets_per_slider_reverse,
+                                    sliderEventPosition,
+                                    comboData,
+                                    index,
+                                    slider_angle_per_span * e.SpanIndex));
+
+                                hitObjects.Add(new SoundHitObject
+                                {
+                                    StartTime = e.Time,
+                                    Samples = obj.Samples
+                                });
+                                break;
+
+                            case SliderEventType.Tail:
+                                hitObjects.AddRange(generateExplosion(
+                                    e.Time,
+                                    bullets_per_slider_tail,
+                                    sliderEventPosition,
+                                    comboData,
+                                    index));
+
+                                hitObjects.Add(new SoundHitObject
+                                {
+                                    StartTime = curve.EndTime,
+                                    Samples = obj.Samples
                                 });
                                 break;
                         }
@@ -113,34 +149,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         hitObjects.Add(new SliderPartCherry
                         {
                             StartTime = obj.StartTime + curve.Duration * progress,
-                            Position = new Vector2(position.X + positionData.X, (position.Y + positionData.Y) * 0.5f),
+                            Position = new Vector2(position.X + objPosition.X, (position.Y + objPosition.Y) * 0.5f),
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
                         });
                     }
-
-                    // tail
-                    var tailPosition = curve.CurvePositionAt(curve.ProgressAt(1));
-
-                    for (int i = 0; i < bullets_per_slider_tail; i++)
-                    {
-                        hitObjects.Add(new MovingCherry
-                        {
-                            Angle = getBulletDistribution(bullets_per_slider_tail, 360f, i),
-                            StartTime = curve.EndTime,
-                            Position = new Vector2(tailPosition.X + positionData.X, (tailPosition.Y + positionData.Y) * 0.5f),
-                            NewCombo = comboData?.NewCombo ?? false,
-                            ComboOffset = comboData?.ComboOffset ?? 0,
-                            IndexInBeatmap = index
-                        });
-                    }
-
-                    hitObjects.Add(new SoundHitObject
-                    {
-                        StartTime = curve.EndTime,
-                        Samples = obj.Samples
-                    });
 
                     return hitObjects;
 
@@ -150,36 +164,27 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
                     for (int i = 0; i < spansPerSpinner; i++)
                     {
-                        for (int j = 0; j < bullets_per_spinner_span; j++)
-                        {
-                            hitObjects.Add(new MovingCherry
-                            {
-                                Angle = getBulletDistribution(bullets_per_spinner_span, 360f, j) + (i * spinner_angle_per_span),
-                                StartTime = obj.StartTime + i * spinner_span_delay,
-                                Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
-                                NewCombo = comboData?.NewCombo ?? false,
-                                ComboOffset = comboData?.ComboOffset ?? 0,
-                                IndexInBeatmap = index
-                            });
-                        }
+                        hitObjects.AddRange(generateExplosion(
+                            obj.StartTime + i * spinner_span_delay,
+                            bullets_per_spinner_span,
+                            objPosition * new Vector2(1, 0.5f),
+                            comboData,
+                            index,
+                            i * spinner_angle_per_span));
                     }
 
                     return hitObjects;
 
                 // Hitcircle
                 default:
-                    for (int i = 0; i < bullets_per_hitcircle; i++)
-                    {
-                        hitObjects.Add(new MovingCherry
-                        {
-                            Angle = getBulletDistribution(bullets_per_hitcircle, 120, i),
-                            StartTime = obj.StartTime,
-                            Position = new Vector2(positionData?.X ?? 0, positionData?.Y * 0.5f ?? 0),
-                            NewCombo = comboData?.NewCombo ?? false,
-                            ComboOffset = comboData?.ComboOffset ?? 0,
-                            IndexInBeatmap = index
-                        });
-                    }
+                    hitObjects.AddRange(generateExplosion(
+                        obj.StartTime,
+                        bullets_per_hitcircle,
+                        objPosition * new Vector2(1, 0.5f),
+                        comboData,
+                        index,
+                        0,
+                        120));
 
                     hitObjects.Add(new SoundHitObject
                     {
@@ -191,9 +196,25 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             }
         }
 
+        private IEnumerable<MovingCherry> generateExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
+        {
+            for (int i = 0; i < bulletCount; i++)
+            {
+                yield return new MovingCherry
+                {
+                    Angle = getBulletDistribution(bulletCount, angleRange, i) + angleOffset,
+                    StartTime = startTime,
+                    Position = position,
+                    NewCombo = comboData?.NewCombo ?? false,
+                    ComboOffset = comboData?.ComboOffset ?? 0,
+                    IndexInBeatmap = index
+                };
+            }
+        }
+
         protected override Beatmap<BosuHitObject> CreateBeatmap() => new BosuBeatmap();
 
-        private float getBulletDistribution(int bulletsPerObject, float angleRange, int index)
+        private static float getBulletDistribution(int bulletsPerObject, float angleRange, int index)
         {
             return getAngleBuffer(bulletsPerObject, angleRange) + index * getPerBulletAngle(bulletsPerObject, angleRange);
 
