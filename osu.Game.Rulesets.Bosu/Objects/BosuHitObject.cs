@@ -10,8 +10,8 @@ namespace osu.Game.Rulesets.Bosu.Objects
 {
     public abstract class BosuHitObject : HitObject, IHasPosition, IHasComboInformation
     {
-        public double TimePreempt = 600;
-        public double TimeFadeIn = 400;
+        public double TimePreempt;
+        public double TimeFadeIn;
 
         public readonly Bindable<Vector2> PositionBindable = new Bindable<Vector2>();
 

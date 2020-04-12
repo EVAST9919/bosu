@@ -7,12 +7,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         public DrawableTargetedCherry(TargetedCherry h)
             : base(h)
         {
-        }
-
-        protected override void OnObjectReady()
-        {
-            Angle = getAngle() - 90;
-            base.OnObjectReady();
+            OnReady += _ => Angle = getAngle() - 90;
         }
 
         private float getAngle()

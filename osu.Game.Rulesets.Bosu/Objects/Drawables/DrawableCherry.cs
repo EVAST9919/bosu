@@ -1,6 +1,5 @@
 ﻿using osu.Framework.Graphics;
 using osuTK;
-using System;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
@@ -11,10 +10,8 @@ using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableCherry : DrawableBosuHitObject
+    public abstract class DrawableCherry : DrawableBosuHitObject
     {
-        public Action<DrawableCherry> Ready;
-
         protected override Color4 GetComboColour(IReadOnlyList<Color4> comboColours) =>
             comboColours[(HitObject.IndexInBeatmap + 1) % comboColours.Count];
 
@@ -24,15 +21,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private readonly Sprite overlay;
         private readonly Sprite branch;
 
-        public DrawableCherry(Cherry h)
+        protected DrawableCherry(Cherry h)
             : base(h)
         {
             Origin = Anchor.Centre;
             Size = new Vector2(GetBaseSize() * MathExtensions.Map(h.CircleSize, 0, 10, 0.2f, 1));
             Position = h.Position;
-            Scale = Vector2.Zero;
-            Alpha = 0;
             AlwaysPresent = true;
+            Scale = Vector2.Zero;
 
             AddInternal(new Container
             {
@@ -79,17 +75,10 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             base.UpdateInitialTransforms();
 
             this.ScaleTo(Vector2.One, GetReadyStateOffset());
-            this.FadeIn(GetReadyStateOffset());
-        }
+            this.FadeInFromZero(GetReadyStateOffset());
 
-        protected override void OnObjectReady()
-        {
-            base.OnObjectReady();
-
-            Ready?.Invoke(this);
-
-            sprite.FlashColour(Color4.White, 150);
-            overlay.FlashColour(Color4.White, 150);
+            sprite.Delay(GetReadyStateOffset()).Then().FlashColour(Color4.White, 300);
+            overlay.Delay(GetReadyStateOffset()).Then().FlashColour(Color4.White, 300);
         }
     }
 }

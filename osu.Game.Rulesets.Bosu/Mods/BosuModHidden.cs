@@ -18,10 +18,10 @@ namespace osu.Game.Rulesets.Bosu.Mods
             if (!(drawable is DrawableCherry))
                 return;
 
-            ((DrawableCherry)drawable).Ready += onObjectReady;
+            ((DrawableCherry)drawable).OnReady += onObjectReady;
         }
 
-        private void onObjectReady(DrawableCherry cherry)
+        private void onObjectReady(DrawableBosuHitObject cherry)
         {
             var hitObject = cherry.HitObject;
 

@@ -26,22 +26,19 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.OnObjectUpdate();
 
-            if (Result?.HasResult ?? true)
-                return;
-
-            OnMove();
+            onMove();
             CheckWallPass();
         }
 
-        protected virtual void OnMove()
+        private void onMove()
         {
-            var xDelta = Clock.ElapsedFrameTime * Math.Sin(Angle * Math.PI / 180) * speedMultiplier;
-            var yDelta = Clock.ElapsedFrameTime * -Math.Cos(Angle * Math.PI / 180) * speedMultiplier;
-
-            Position = new Vector2(Position.X + (float)xDelta, Position.Y + (float)yDelta);
+            var elapsedTime = Clock.CurrentTime - HitObject.StartTime;
+            var xPosition = HitObject.Position.X + (elapsedTime * speedMultiplier * Math.Sin(Angle * Math.PI / 180));
+            var yPosition = HitObject.Position.Y + (elapsedTime * speedMultiplier * -Math.Cos(Angle * Math.PI / 180));
+            Position = new Vector2((float)xPosition, (float)yPosition);
         }
 
-        protected override bool CheckPlayerCollision(BosuPlayer player)
+        protected override bool CollidedWithPlayer(BosuPlayer player)
         {
             // Let's assume that player is a circle for simplicity
 

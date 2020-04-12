@@ -1,31 +1,19 @@
-﻿using osu.Framework.Graphics;
-using osu.Game.Rulesets.Bosu.UI.Objects;
+﻿using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
+using System;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableBosuHitObject : DrawableHitObject<BosuHitObject>
+    public abstract class DrawableBosuHitObject : DrawableHitObject<BosuHitObject>
     {
         protected BosuPlayer Player;
 
-        private bool isReady;
+        public Action<DrawableBosuHitObject> OnReady;
 
         protected DrawableBosuHitObject(BosuHitObject hitObject)
             : base(hitObject)
         {
-        }
-
-        protected override void UpdateInitialTransforms()
-        {
-            base.UpdateInitialTransforms();
-
-            Scheduler.AddDelayed(OnObjectReady, GetReadyStateOffset());
-        }
-
-        protected virtual void OnObjectReady()
-        {
-            isReady = true;
         }
 
         protected virtual float GetReadyStateOffset() => (float)HitObject.TimePreempt;
@@ -34,36 +22,36 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         public void GetPlayerToTrace(BosuPlayer player) => Player = player;
 
-        protected override void UpdateStateTransforms(ArmedState state)
-        {
-            switch (state)
-            {
-                case ArmedState.Hit:
-                case ArmedState.Miss:
-                    this.FadeOut();
-                    break;
-            }
-        }
-
         protected override void Update()
         {
             base.Update();
 
-            if (!isReady || (Result?.HasResult ?? true))
+            if (Judged || Clock.CurrentTime < HitObject.StartTime)
+            {
+                invoked = false;
                 return;
+            }
 
             OnObjectUpdate();
         }
 
+        private bool invoked;
+
         protected virtual void OnObjectUpdate()
         {
-            if (CheckPlayerCollision(Player))
+            if (!invoked)
+            {
+                OnReady?.Invoke(this);
+                invoked = true;
+            }
+
+            if (CollidedWithPlayer(Player))
             {
                 Player.PlayMissAnimation();
                 ApplyResult(r => r.Type = HitResult.Miss);
             }
         }
 
-        protected virtual bool CheckPlayerCollision(BosuPlayer player) => false;
+        protected abstract bool CollidedWithPlayer(BosuPlayer player);
     }
 }

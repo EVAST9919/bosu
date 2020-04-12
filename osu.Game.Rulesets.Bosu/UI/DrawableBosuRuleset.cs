@@ -47,9 +47,6 @@ namespace osu.Game.Rulesets.Bosu.UI
 
                 case MovingCherry moving:
                     return new DrawableMovingCherry(moving);
-
-                case Cherry cherry:
-                    return new DrawableCherry(cherry);
             }
 
             return null;
