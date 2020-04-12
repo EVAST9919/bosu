@@ -19,6 +19,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         private const int bullets_per_slider_tail = 5;
         private const int bullets_per_spinner_span = 20;
 
+        private const int bullets_per_hitcircle_kiai = 6;
+        private const int bullets_per_slider_head_kiai = 9;
+        private const int bullets_per_slider_reverse_kiai = 7;
+        private const int bullets_per_slider_tail_kiai = 7;
+        private const int bullets_per_spinner_span_kiai = 30;
+
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
@@ -45,6 +51,9 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 index++;
 
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
+
+            EffectControlPoint effectPoint = beatmap.ControlPointInfo.EffectPointAt(obj.StartTime);
+            bool kiai = effectPoint.KiaiMode;
 
             switch (obj)
             {
@@ -77,7 +86,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             case SliderEventType.Head:
                                 hitObjects.AddRange(generateExplosion(
                                     e.Time,
-                                    bullets_per_slider_head,
+                                    kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
                                     sliderEventPosition,
                                     comboData,
                                     index));
@@ -110,7 +119,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             case SliderEventType.Repeat:
                                 hitObjects.AddRange(generateExplosion(
                                     obj.StartTime + (e.SpanIndex + 1) * spanDuration,
-                                    bullets_per_slider_reverse,
+                                    kiai ? bullets_per_slider_reverse_kiai : bullets_per_slider_reverse,
                                     sliderEventPosition,
                                     comboData,
                                     index,
@@ -126,7 +135,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             case SliderEventType.Tail:
                                 hitObjects.AddRange(generateExplosion(
                                     e.Time,
-                                    bullets_per_slider_tail,
+                                    kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
                                     sliderEventPosition,
                                     comboData,
                                     index));
@@ -169,7 +178,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     {
                         hitObjects.AddRange(generateExplosion(
                             obj.StartTime + i * spinner_span_delay,
-                            bullets_per_spinner_span,
+                            kiai ? bullets_per_spinner_span_kiai : bullets_per_spinner_span,
                             objPosition * new Vector2(1, 0.5f),
                             comboData,
                             index,
@@ -182,7 +191,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 default:
                     hitObjects.AddRange(generateExplosion(
                         obj.StartTime,
-                        bullets_per_hitcircle,
+                        kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle,
                         objPosition * new Vector2(1, 0.5f),
                         comboData,
                         index,
