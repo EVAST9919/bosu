@@ -4,6 +4,8 @@ using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Bosu.Extensions;
+using osu.Framework.Graphics;
+using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
@@ -26,16 +28,16 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.OnObjectUpdate();
 
-            onMove();
+            this.MoveTo(getOffset());
             CheckWallPass();
         }
 
-        private void onMove()
+        private Vector2 getOffset()
         {
             var elapsedTime = Clock.CurrentTime - HitObject.StartTime;
             var xPosition = HitObject.Position.X + (elapsedTime * speedMultiplier * Math.Sin(Angle * Math.PI / 180));
             var yPosition = HitObject.Position.Y + (elapsedTime * speedMultiplier * -Math.Cos(Angle * Math.PI / 180));
-            Position = new Vector2((float)xPosition, (float)yPosition);
+            return new Vector2((float)xPosition, (float)yPosition);
         }
 
         protected override bool CollidedWithPlayer(BosuPlayer player)
@@ -58,6 +60,17 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f || Position.X < -DrawSize.X / 2f || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f || Position.Y < -DrawSize.Y / 2f)
             {
                 ApplyResult(r => r.Type = HitResult.Perfect);
+            }
+        }
+
+        protected override void UpdateStateTransforms(ArmedState state)
+        {
+            switch (state)
+            {
+                case ArmedState.Hit:
+                case ArmedState.Miss:
+                    this.FadeOut();
+                    break;
             }
         }
     }

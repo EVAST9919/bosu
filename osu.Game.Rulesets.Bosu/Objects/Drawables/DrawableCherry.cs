@@ -27,7 +27,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             Origin = Anchor.Centre;
             Size = new Vector2(GetBaseSize() * MathExtensions.Map(h.CircleSize, 0, 10, 0.2f, 1));
             Position = h.Position;
-            AlwaysPresent = true;
             Scale = Vector2.Zero;
 
             AddInternal(new Container
@@ -75,7 +74,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             base.UpdateInitialTransforms();
 
             this.ScaleTo(Vector2.One, GetReadyStateOffset());
-            this.FadeInFromZero(GetReadyStateOffset());
 
             sprite.Delay(GetReadyStateOffset()).Then().FlashColour(Color4.White, 300);
             overlay.Delay(GetReadyStateOffset()).Then().FlashColour(Color4.White, 300);
