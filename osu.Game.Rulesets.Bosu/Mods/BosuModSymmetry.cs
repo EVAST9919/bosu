@@ -1,6 +1,7 @@
 ﻿using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Bosu.Beatmaps;
 using osu.Game.Rulesets.Mods;
+using System;
 
 namespace osu.Game.Rulesets.Bosu.Mods
 {
@@ -18,5 +19,10 @@ namespace osu.Game.Rulesets.Bosu.Mods
             var bosuBeatmapConverter = (BosuBeatmapConverter)beatmapConverter;
             bosuBeatmapConverter.Symmetry = true;
         }
+
+        public override Type[] IncompatibleMods => new[]
+        {
+            typeof(BosuModSliders),
+        };
     }
 }

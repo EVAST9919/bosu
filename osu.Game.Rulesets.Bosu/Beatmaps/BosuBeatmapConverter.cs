@@ -103,7 +103,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                         hitObjects.AddRange(generateExplosion(
                                             e.Time,
                                             kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
-                                            getSymmetricalPosition(sliderEventPosition),
+                                            getSymmetricalXPosition(sliderEventPosition),
                                             comboData,
                                             index));
                                     }
@@ -131,7 +131,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                         hitObjects.Add(new TickCherry
                                         {
                                             StartTime = e.Time,
-                                            Position = getSymmetricalPosition(sliderEventPosition),
+                                            Position = getSymmetricalXPosition(sliderEventPosition),
                                             NewCombo = comboData?.NewCombo ?? false,
                                             ComboOffset = comboData?.ComboOffset ?? 0,
                                             IndexInBeatmap = index
@@ -159,7 +159,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                         hitObjects.AddRange(generateExplosion(
                                             obj.StartTime + (e.SpanIndex + 1) * spanDuration,
                                             kiai ? bullets_per_slider_reverse_kiai : bullets_per_slider_reverse,
-                                            getSymmetricalPosition(sliderEventPosition),
+                                            getSymmetricalXPosition(sliderEventPosition),
                                             comboData,
                                             index,
                                             -slider_angle_per_span * e.SpanIndex));
@@ -185,7 +185,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                         hitObjects.AddRange(generateExplosion(
                                             e.Time,
                                             kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
-                                            getSymmetricalPosition(sliderEventPosition),
+                                            getSymmetricalXPosition(sliderEventPosition),
                                             comboData,
                                             index));
                                     }
@@ -207,26 +207,69 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     for(int i = 0; i < bodyCherriesCount; i++)
                     {
                         var progress = (float)i / bodyCherriesCount;
-                        var position = (curve.CurvePositionAt(progress) + objPosition) * new Vector2(1, 0.5f);
+                        var position = (curve.CurvePositionAt(progress) + objPosition);
 
-                        hitObjects.Add(new SliderPartCherry
+                        if (!SlidersOnly)
                         {
-                            StartTime = obj.StartTime + curve.Duration * progress,
-                            Position = position,
-                            NewCombo = comboData?.NewCombo ?? false,
-                            ComboOffset = comboData?.ComboOffset ?? 0,
-                            IndexInBeatmap = index
-                        });
+                            position *= new Vector2(1, 0.5f);
 
-                        if (Symmetry)
-                        {
                             hitObjects.Add(new SliderPartCherry
                             {
                                 StartTime = obj.StartTime + curve.Duration * progress,
-                                Position = getSymmetricalPosition(position),
+                                Position = position,
                                 NewCombo = comboData?.NewCombo ?? false,
                                 ComboOffset = comboData?.ComboOffset ?? 0,
                                 IndexInBeatmap = index
+                            });
+
+                            if (Symmetry)
+                            {
+                                hitObjects.Add(new SliderPartCherry
+                                {
+                                    StartTime = obj.StartTime + curve.Duration * progress,
+                                    Position = getSymmetricalXPosition(position),
+                                    NewCombo = comboData?.NewCombo ?? false,
+                                    ComboOffset = comboData?.ComboOffset ?? 0,
+                                    IndexInBeatmap = index
+                                });
+                            }
+                        }
+                        else
+                        {
+                            hitObjects.AddRange(new[]
+                            {
+                                new SliderPartCherry
+                                {
+                                    StartTime = obj.StartTime + curve.Duration * progress,
+                                    Position = position,
+                                    NewCombo = comboData?.NewCombo ?? false,
+                                    ComboOffset = comboData?.ComboOffset ?? 0,
+                                    IndexInBeatmap = index
+                                },
+                                new SliderPartCherry
+                                {
+                                    StartTime = obj.StartTime + curve.Duration * progress,
+                                    Position = getSymmetricalXPosition(position),
+                                    NewCombo = comboData?.NewCombo ?? false,
+                                    ComboOffset = comboData?.ComboOffset ?? 0,
+                                    IndexInBeatmap = index
+                                },
+                                new SliderPartCherry
+                                {
+                                    StartTime = obj.StartTime + curve.Duration * progress,
+                                    Position = getSymmetricalYPosition(position),
+                                    NewCombo = comboData?.NewCombo ?? false,
+                                    ComboOffset = comboData?.ComboOffset ?? 0,
+                                    IndexInBeatmap = index
+                                },
+                                new SliderPartCherry
+                                {
+                                    StartTime = obj.StartTime + curve.Duration * progress,
+                                    Position = getSymmetricalYPosition(getSymmetricalXPosition(position)),
+                                    NewCombo = comboData?.NewCombo ?? false,
+                                    ComboOffset = comboData?.ComboOffset ?? 0,
+                                    IndexInBeatmap = index
+                                }
                             });
                         }
                     }
@@ -256,7 +299,44 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 // Hitcircle
                 default:
                     if (SlidersOnly)
+                    {
+                        hitObjects.AddRange(new[]
+                        {
+                            new SliderPartCherry
+                            {
+                                StartTime = obj.StartTime,
+                                Position = objPosition,
+                                NewCombo = comboData?.NewCombo ?? false,
+                                ComboOffset = comboData?.ComboOffset ?? 0,
+                                IndexInBeatmap = index
+                            },
+                            new SliderPartCherry
+                            {
+                                StartTime = obj.StartTime,
+                                Position = getSymmetricalXPosition(objPosition),
+                                NewCombo = comboData?.NewCombo ?? false,
+                                ComboOffset = comboData?.ComboOffset ?? 0,
+                                IndexInBeatmap = index
+                            },
+                            new SliderPartCherry
+                            {
+                                StartTime = obj.StartTime,
+                                Position = getSymmetricalYPosition(objPosition),
+                                NewCombo = comboData?.NewCombo ?? false,
+                                ComboOffset = comboData?.ComboOffset ?? 0,
+                                IndexInBeatmap = index
+                            },
+                            new SliderPartCherry
+                            {
+                                StartTime = obj.StartTime,
+                                Position = getSymmetricalYPosition(getSymmetricalXPosition(objPosition)),
+                                NewCombo = comboData?.NewCombo ?? false,
+                                ComboOffset = comboData?.ComboOffset ?? 0,
+                                IndexInBeatmap = index
+                            }
+                        });
                         break;
+                    }
 
                     hitObjects.AddRange(generateExplosion(
                         obj.StartTime,
@@ -272,7 +352,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         hitObjects.AddRange(generateExplosion(
                             obj.StartTime,
                             kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle,
-                            getSymmetricalPosition(objPosition * new Vector2(1, 0.5f)),
+                            getSymmetricalXPosition(objPosition * new Vector2(1, 0.5f)),
                             comboData,
                             index,
                             0,
@@ -291,9 +371,14 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             return hitObjects;
         }
 
-        private static Vector2 getSymmetricalPosition(Vector2 input)
+        private static Vector2 getSymmetricalXPosition(Vector2 input)
         {
             return new Vector2(BosuPlayfield.BASE_SIZE.X - input.X, input.Y);
+        }
+
+        private static Vector2 getSymmetricalYPosition(Vector2 input)
+        {
+            return new Vector2(input.X, BosuPlayfield.BASE_SIZE.Y - input.Y);
         }
 
         private IEnumerable<MovingCherry> generateExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
