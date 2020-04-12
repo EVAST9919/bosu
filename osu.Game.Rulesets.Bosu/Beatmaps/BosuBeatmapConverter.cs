@@ -142,12 +142,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
                     //body
 
-                    var bodyCherriesCount = Math.Min(curve.Distance / 10, max_visuals_per_slider_span * (curve.RepeatCount + 1));
+                    var bodyCherriesCount = Math.Min(curve.Distance * (curve.RepeatCount + 1) / 10, max_visuals_per_slider_span * (curve.RepeatCount + 1));
 
                     for(int i = 0; i < bodyCherriesCount; i++)
                     {
                         var progress = (float)i / bodyCherriesCount;
-                        var position = (curve.CurvePositionAt(curve.ProgressAt(progress)) + objPosition) * new Vector2(1, 0.5f);
+                        var position = (curve.CurvePositionAt(progress) + objPosition) * new Vector2(1, 0.5f);
 
                         hitObjects.Add(new SliderPartCherry
                         {
