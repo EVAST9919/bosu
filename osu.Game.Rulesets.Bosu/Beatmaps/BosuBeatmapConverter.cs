@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         private const int bullets_per_slider_tail = 5;
         private const int bullets_per_spinner_span = 20;
 
-        private const int bullets_per_hitcircle_kiai = 6;
+        private const int bullets_per_hitcircle_kiai = 5;
         private const int bullets_per_slider_head_kiai = 9;
         private const int bullets_per_slider_reverse_kiai = 7;
         private const int bullets_per_slider_tail_kiai = 7;
