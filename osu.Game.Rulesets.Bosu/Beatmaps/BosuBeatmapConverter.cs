@@ -8,6 +8,7 @@ using osuTK;
 using osu.Game.Audio;
 using osu.Game.Beatmaps.ControlPoints;
 using System;
+using osu.Game.Rulesets.Bosu.UI;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -31,6 +32,8 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         private const float slider_angle_per_span = 2f;
 
         private const int max_visuals_per_slider_span = 100;
+
+        public bool Symmetry { get; set; }
 
         public BosuBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
@@ -91,6 +94,16 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                     comboData,
                                     index));
 
+                                if (Symmetry)
+                                {
+                                    hitObjects.AddRange(generateExplosion(
+                                        e.Time,
+                                        kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
+                                        getSymmetricalPosition(sliderEventPosition),
+                                        comboData,
+                                        index));
+                                }
+
                                 hitObjects.Add(new SoundHitObject
                                 {
                                     StartTime = obj.StartTime,
@@ -109,6 +122,18 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                     IndexInBeatmap = index
                                 });
 
+                                if (Symmetry)
+                                {
+                                    hitObjects.Add(new TickCherry
+                                    {
+                                        StartTime = e.Time,
+                                        Position = getSymmetricalPosition(sliderEventPosition),
+                                        NewCombo = comboData?.NewCombo ?? false,
+                                        ComboOffset = comboData?.ComboOffset ?? 0,
+                                        IndexInBeatmap = index
+                                    });
+                                }
+
                                 hitObjects.Add(new SoundHitObject
                                 {
                                     StartTime = e.Time,
@@ -125,6 +150,17 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                     index,
                                     slider_angle_per_span * e.SpanIndex));
 
+                                if (Symmetry)
+                                {
+                                    hitObjects.AddRange(generateExplosion(
+                                        obj.StartTime + (e.SpanIndex + 1) * spanDuration,
+                                        kiai ? bullets_per_slider_reverse_kiai : bullets_per_slider_reverse,
+                                        getSymmetricalPosition(sliderEventPosition),
+                                        comboData,
+                                        index,
+                                        -slider_angle_per_span * e.SpanIndex));
+                                }
+
                                 hitObjects.Add(new SoundHitObject
                                 {
                                     StartTime = e.Time,
@@ -139,6 +175,16 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                     sliderEventPosition,
                                     comboData,
                                     index));
+
+                                if (Symmetry)
+                                {
+                                    hitObjects.AddRange(generateExplosion(
+                                        e.Time,
+                                        kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
+                                        getSymmetricalPosition(sliderEventPosition),
+                                        comboData,
+                                        index));
+                                }
 
                                 hitObjects.Add(new SoundHitObject
                                 {
@@ -166,9 +212,21 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
                         });
+
+                        if (Symmetry)
+                        {
+                            hitObjects.Add(new SliderPartCherry
+                            {
+                                StartTime = obj.StartTime + curve.Duration * progress,
+                                Position = getSymmetricalPosition(position),
+                                NewCombo = comboData?.NewCombo ?? false,
+                                ComboOffset = comboData?.ComboOffset ?? 0,
+                                IndexInBeatmap = index
+                            });
+                        }
                     }
 
-                    return hitObjects;
+                    break;
 
                 // Spinner
                 case IHasEndTime endTime:
@@ -185,7 +243,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             i * spinner_angle_per_span));
                     }
 
-                    return hitObjects;
+                    break;
 
                 // Hitcircle
                 default:
@@ -198,14 +256,33 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         0,
                         120));
 
+                    if (Symmetry)
+                    {
+                        hitObjects.AddRange(generateExplosion(
+                            obj.StartTime,
+                            kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle,
+                            getSymmetricalPosition(objPosition * new Vector2(1, 0.5f)),
+                            comboData,
+                            index,
+                            0,
+                            120));
+                    }
+
                     hitObjects.Add(new SoundHitObject
                     {
                         StartTime = obj.StartTime,
                         Samples = obj.Samples
                     });
 
-                    return hitObjects;
+                    break;
             }
+
+            return hitObjects;
+        }
+
+        private static Vector2 getSymmetricalPosition(Vector2 input)
+        {
+            return new Vector2(BosuPlayfield.BASE_SIZE.X - input.X, input.Y);
         }
 
         private IEnumerable<MovingCherry> generateExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
