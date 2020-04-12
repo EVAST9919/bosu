@@ -105,6 +105,7 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new MultiMod(new BosuModAutoplay(), new BosuModCinema()),
+                        new BosuModSliders(),
                         new BosuModRelax(),
                     };
 
@@ -112,7 +113,7 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
-                        new BosuModSymmetry()
+                        new BosuModSymmetry(),
                     };
 
                 default:

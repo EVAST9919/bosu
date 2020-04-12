@@ -35,6 +35,8 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
         public bool Symmetry { get; set; }
 
+        public bool SlidersOnly { get; set; }
+
         public BosuBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
             : base(beatmap, ruleset)
         {
@@ -62,136 +64,139 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             {
                 // Slider
                 case IHasCurve curve:
-                    var controlPointInfo = beatmap.ControlPointInfo;
-                    TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(obj.StartTime);
-                    DifficultyControlPoint difficultyPoint = controlPointInfo.DifficultyPointAt(obj.StartTime);
-
-                    double scoringDistance = 100 * difficulty.SliderMultiplier * difficultyPoint.SpeedMultiplier;
-
-                    var velocity = scoringDistance / timingPoint.BeatLength;
-                    var tickDistance = scoringDistance / difficulty.SliderTickRate;
-
-                    double spanDuration = curve.Duration / (curve.RepeatCount + 1);
-                    double legacyLastTickOffset = (obj as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0;
-
-                    foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
+                    if (!SlidersOnly)
                     {
-                        Vector2 sliderEventPosition;
+                        var controlPointInfo = beatmap.ControlPointInfo;
+                        TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(obj.StartTime);
+                        DifficultyControlPoint difficultyPoint = controlPointInfo.DifficultyPointAt(obj.StartTime);
 
-                        // Don't take into account very small sliders. There's a chance that they will contain reverse spam, and offset looks ugly
-                        if (spanDuration < 75)
-                            sliderEventPosition = objPosition * new Vector2(1, 0.5f);
-                        else
-                            sliderEventPosition = (curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition) * new Vector2(1, 0.5f);
+                        double scoringDistance = 100 * difficulty.SliderMultiplier * difficultyPoint.SpeedMultiplier;
 
-                        switch (e.Type)
+                        var velocity = scoringDistance / timingPoint.BeatLength;
+                        var tickDistance = scoringDistance / difficulty.SliderTickRate;
+
+                        double spanDuration = curve.Duration / (curve.RepeatCount + 1);
+                        double legacyLastTickOffset = (obj as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0;
+
+                        foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
                         {
-                            case SliderEventType.Head:
-                                hitObjects.AddRange(generateExplosion(
-                                    e.Time,
-                                    kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
-                                    sliderEventPosition,
-                                    comboData,
-                                    index));
+                            Vector2 sliderEventPosition;
 
-                                if (Symmetry)
-                                {
+                            // Don't take into account very small sliders. There's a chance that they will contain reverse spam, and offset looks ugly
+                            if (spanDuration < 75)
+                                sliderEventPosition = objPosition * new Vector2(1, 0.5f);
+                            else
+                                sliderEventPosition = (curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition) * new Vector2(1, 0.5f);
+
+                            switch (e.Type)
+                            {
+                                case SliderEventType.Head:
                                     hitObjects.AddRange(generateExplosion(
                                         e.Time,
                                         kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
-                                        getSymmetricalPosition(sliderEventPosition),
+                                        sliderEventPosition,
                                         comboData,
                                         index));
-                                }
 
-                                hitObjects.Add(new SoundHitObject
-                                {
-                                    StartTime = obj.StartTime,
-                                    Samples = obj.Samples
-                                });
+                                    if (Symmetry)
+                                    {
+                                        hitObjects.AddRange(generateExplosion(
+                                            e.Time,
+                                            kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
+                                            getSymmetricalPosition(sliderEventPosition),
+                                            comboData,
+                                            index));
+                                    }
 
-                                break;
+                                    hitObjects.Add(new SoundHitObject
+                                    {
+                                        StartTime = obj.StartTime,
+                                        Samples = obj.Samples
+                                    });
 
-                            case SliderEventType.Tick:
-                                hitObjects.Add(new TickCherry
-                                {
-                                    StartTime = e.Time,
-                                    Position = sliderEventPosition,
-                                    NewCombo = comboData?.NewCombo ?? false,
-                                    ComboOffset = comboData?.ComboOffset ?? 0,
-                                    IndexInBeatmap = index
-                                });
+                                    break;
 
-                                if (Symmetry)
-                                {
+                                case SliderEventType.Tick:
                                     hitObjects.Add(new TickCherry
                                     {
                                         StartTime = e.Time,
-                                        Position = getSymmetricalPosition(sliderEventPosition),
+                                        Position = sliderEventPosition,
                                         NewCombo = comboData?.NewCombo ?? false,
                                         ComboOffset = comboData?.ComboOffset ?? 0,
                                         IndexInBeatmap = index
                                     });
-                                }
 
-                                hitObjects.Add(new SoundHitObject
-                                {
-                                    StartTime = e.Time,
-                                    Samples = getTickSamples(obj.Samples)
-                                });
-                                break;
+                                    if (Symmetry)
+                                    {
+                                        hitObjects.Add(new TickCherry
+                                        {
+                                            StartTime = e.Time,
+                                            Position = getSymmetricalPosition(sliderEventPosition),
+                                            NewCombo = comboData?.NewCombo ?? false,
+                                            ComboOffset = comboData?.ComboOffset ?? 0,
+                                            IndexInBeatmap = index
+                                        });
+                                    }
 
-                            case SliderEventType.Repeat:
-                                hitObjects.AddRange(generateExplosion(
-                                    obj.StartTime + (e.SpanIndex + 1) * spanDuration,
-                                    kiai ? bullets_per_slider_reverse_kiai : bullets_per_slider_reverse,
-                                    sliderEventPosition,
-                                    comboData,
-                                    index,
-                                    slider_angle_per_span * e.SpanIndex));
+                                    hitObjects.Add(new SoundHitObject
+                                    {
+                                        StartTime = e.Time,
+                                        Samples = getTickSamples(obj.Samples)
+                                    });
+                                    break;
 
-                                if (Symmetry)
-                                {
+                                case SliderEventType.Repeat:
                                     hitObjects.AddRange(generateExplosion(
                                         obj.StartTime + (e.SpanIndex + 1) * spanDuration,
                                         kiai ? bullets_per_slider_reverse_kiai : bullets_per_slider_reverse,
-                                        getSymmetricalPosition(sliderEventPosition),
+                                        sliderEventPosition,
                                         comboData,
                                         index,
-                                        -slider_angle_per_span * e.SpanIndex));
-                                }
+                                        slider_angle_per_span * e.SpanIndex));
 
-                                hitObjects.Add(new SoundHitObject
-                                {
-                                    StartTime = e.Time,
-                                    Samples = obj.Samples
-                                });
-                                break;
+                                    if (Symmetry)
+                                    {
+                                        hitObjects.AddRange(generateExplosion(
+                                            obj.StartTime + (e.SpanIndex + 1) * spanDuration,
+                                            kiai ? bullets_per_slider_reverse_kiai : bullets_per_slider_reverse,
+                                            getSymmetricalPosition(sliderEventPosition),
+                                            comboData,
+                                            index,
+                                            -slider_angle_per_span * e.SpanIndex));
+                                    }
 
-                            case SliderEventType.Tail:
-                                hitObjects.AddRange(generateExplosion(
-                                    e.Time,
-                                    kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
-                                    sliderEventPosition,
-                                    comboData,
-                                    index));
+                                    hitObjects.Add(new SoundHitObject
+                                    {
+                                        StartTime = e.Time,
+                                        Samples = obj.Samples
+                                    });
+                                    break;
 
-                                if (Symmetry)
-                                {
+                                case SliderEventType.Tail:
                                     hitObjects.AddRange(generateExplosion(
                                         e.Time,
                                         kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
-                                        getSymmetricalPosition(sliderEventPosition),
+                                        sliderEventPosition,
                                         comboData,
                                         index));
-                                }
 
-                                hitObjects.Add(new SoundHitObject
-                                {
-                                    StartTime = curve.EndTime,
-                                    Samples = obj.Samples
-                                });
-                                break;
+                                    if (Symmetry)
+                                    {
+                                        hitObjects.AddRange(generateExplosion(
+                                            e.Time,
+                                            kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
+                                            getSymmetricalPosition(sliderEventPosition),
+                                            comboData,
+                                            index));
+                                    }
+
+                                    hitObjects.Add(new SoundHitObject
+                                    {
+                                        StartTime = curve.EndTime,
+                                        Samples = obj.Samples
+                                    });
+                                    break;
+                            }
                         }
                     }
 
@@ -230,6 +235,9 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
                 // Spinner
                 case IHasEndTime endTime:
+                    if (SlidersOnly)
+                        break;
+
                     var spansPerSpinner = endTime.Duration / spinner_span_delay;
 
                     for (int i = 0; i < spansPerSpinner; i++)
@@ -247,6 +255,9 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
                 // Hitcircle
                 default:
+                    if (SlidersOnly)
+                        break;
+
                     hitObjects.AddRange(generateExplosion(
                         obj.StartTime,
                         kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle,
