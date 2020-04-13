@@ -9,6 +9,7 @@ using osu.Game.Audio;
 using osu.Game.Beatmaps.ControlPoints;
 using System;
 using osu.Game.Rulesets.Bosu.UI;
+using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -399,7 +400,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             {
                 yield return new MovingCherry
                 {
-                    Angle = getBulletDistribution(bulletCount, angleRange, i) + angleOffset,
+                    Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i) + angleOffset,
                     StartTime = startTime,
                     Position = position,
                     NewCombo = comboData?.NewCombo ?? false,
@@ -410,15 +411,6 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         }
 
         protected override Beatmap<BosuHitObject> CreateBeatmap() => new BosuBeatmap();
-
-        private static float getBulletDistribution(int bulletsPerObject, float angleRange, int index)
-        {
-            return getAngleBuffer(bulletsPerObject, angleRange) + index * getPerBulletAngle(bulletsPerObject, angleRange);
-
-            static float getAngleBuffer(int bulletsPerObject, float angleRange) => (360 - angleRange + getPerBulletAngle(bulletsPerObject, angleRange)) / 2f;
-
-            static float getPerBulletAngle(int bulletsPerObject, float angleRange) => angleRange / bulletsPerObject;
-        }
 
         private List<HitSampleInfo> getTickSamples(IList<HitSampleInfo> objSamples) => objSamples.Select(s => new HitSampleInfo
         {

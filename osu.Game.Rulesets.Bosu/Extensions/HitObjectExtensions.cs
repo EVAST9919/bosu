@@ -1,12 +1,7 @@
 ﻿namespace osu.Game.Rulesets.Bosu.Extensions
 {
-    public static class MathExtensions
+    public static class HitObjectExtensions
     {
-        public static float Map(float value, float lowerCurrent, float upperCurrent, float lowerTarget, float upperTarget)
-        {
-            return (value - lowerCurrent) / (upperCurrent - lowerCurrent) * (upperTarget - lowerTarget) + lowerTarget;
-        }
-
         public static float BulletDistribution(int bulletsPerObject, float angleRange, int index)
         {
             return getAngleBuffer(bulletsPerObject, angleRange) + index * getPerBulletAngle(bulletsPerObject, angleRange);
