@@ -91,9 +91,13 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                             switch (e.Type)
                             {
                                 case SliderEventType.Head:
+                                    var headBulletsCount = kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head;
+                                    if (Symmetry)
+                                        headBulletsCount = (int)Math.Round(headBulletsCount / 1.5f);
+
                                     hitObjects.AddRange(generateExplosion(
                                         e.Time,
-                                        kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
+                                        headBulletsCount,
                                         sliderEventPosition,
                                         comboData,
                                         index));
@@ -102,7 +106,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                     {
                                         hitObjects.AddRange(generateExplosion(
                                             e.Time,
-                                            kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
+                                            headBulletsCount,
                                             getSymmetricalXPosition(sliderEventPosition),
                                             comboData,
                                             index));
@@ -173,9 +177,13 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                     break;
 
                                 case SliderEventType.Tail:
+                                    var tailBulletsCount = kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail;
+                                    if (Symmetry)
+                                        tailBulletsCount = (int)Math.Round(tailBulletsCount / 1.5f);
+
                                     hitObjects.AddRange(generateExplosion(
                                         e.Time,
-                                        kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
+                                        tailBulletsCount,
                                         sliderEventPosition,
                                         comboData,
                                         index));
@@ -184,7 +192,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                                     {
                                         hitObjects.AddRange(generateExplosion(
                                             e.Time,
-                                            kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
+                                            tailBulletsCount,
                                             getSymmetricalXPosition(sliderEventPosition),
                                             comboData,
                                             index));
@@ -207,7 +215,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     for(int i = 0; i < bodyCherriesCount; i++)
                     {
                         var progress = (float)i / bodyCherriesCount;
-                        var position = (curve.CurvePositionAt(progress) + objPosition);
+                        var position = curve.CurvePositionAt(progress) + objPosition;
 
                         if (!SlidersOnly)
                         {
@@ -338,9 +346,13 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         break;
                     }
 
+                    var hitcircleBulletsCount = kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle;
+                    if (Symmetry)
+                        hitcircleBulletsCount = (int)Math.Round(hitcircleBulletsCount / 1.5f);
+
                     hitObjects.AddRange(generateExplosion(
                         obj.StartTime,
-                        kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle,
+                        hitcircleBulletsCount,
                         objPosition * new Vector2(1, 0.5f),
                         comboData,
                         index,
@@ -351,7 +363,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     {
                         hitObjects.AddRange(generateExplosion(
                             obj.StartTime,
-                            kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle,
+                            hitcircleBulletsCount,
                             getSymmetricalXPosition(objPosition * new Vector2(1, 0.5f)),
                             comboData,
                             index,

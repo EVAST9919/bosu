@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Bosu.Mods
         public override ModType Type => ModType.Fun;
         public override string Description => "Everything is symmetrical";
 
-        public override double ScoreMultiplier => 2;
+        public override double ScoreMultiplier => 1.7;
 
         public void ApplyToBeatmapConverter(IBeatmapConverter beatmapConverter)
         {
