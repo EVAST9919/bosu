@@ -33,6 +33,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         private const float slider_angle_per_span = 2f;
 
         private const int max_visuals_per_slider_span = 100;
+        private const int visuals_per_spinner = 500;
 
         public bool Symmetry { get; set; }
 
@@ -290,6 +291,24 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     if (SlidersOnly)
                         break;
 
+                    var spinnerPosition = objPosition * new Vector2(1, 0.5f);
+
+                    // Visuals
+                    //for (int i = 0; i < visuals_per_spinner; i++)
+                    //{
+                    //    var progress = i / (float)visuals_per_spinner;
+                    //    var startTime = obj.StartTime + endTime.Duration * progress;
+                    //    var offset = new Vector2((float)Math.Sin(i * 10 * Math.PI / 180), (float)-Math.Cos(i * 10 * Math.PI / 180)) * new Vector2(100 * progress);
+                    //    hitObjects.Add(new SliderPartCherry
+                    //    {
+                    //        StartTime = startTime,
+                    //        Position = spinnerPosition + offset,
+                    //        NewCombo = comboData?.NewCombo ?? false,
+                    //        ComboOffset = comboData?.ComboOffset ?? 0,
+                    //        IndexInBeatmap = index
+                    //    });
+                    //}
+
                     var spansPerSpinner = endTime.Duration / spinner_span_delay;
 
                     for (int i = 0; i < spansPerSpinner; i++)
@@ -297,7 +316,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                         hitObjects.AddRange(generateExplosion(
                             obj.StartTime + i * spinner_span_delay,
                             kiai ? bullets_per_spinner_span_kiai : bullets_per_spinner_span,
-                            objPosition * new Vector2(1, 0.5f),
+                            spinnerPosition,
                             comboData,
                             index,
                             i * spinner_angle_per_span));
