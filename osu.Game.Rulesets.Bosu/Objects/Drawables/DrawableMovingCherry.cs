@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             : base(h)
         {
             Angle = h.Angle;
-            speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.85f, 1.2f) / 4.5f;
+            speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.9f, 1.1f) / 4.5f;
             finalSize = Size.X;
         }
 

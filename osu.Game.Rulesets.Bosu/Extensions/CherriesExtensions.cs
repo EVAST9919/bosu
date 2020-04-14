@@ -18,16 +18,19 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const int bullets_per_hitcircle_kiai = 5;
 
         private const int bullets_per_slider_head = 7;
-        private const int bullets_per_slider_reverse = 5;
+        private const int bullets_per_slider_head_kiai = 8;
+        
         private const int bullets_per_slider_tail = 5;
-        private const int bullets_per_slider_head_kiai = 9;
-        private const int bullets_per_slider_reverse_kiai = 7;
         private const int bullets_per_slider_tail_kiai = 7;
+
+        private const int bullets_per_slider_reverse = 5;
+        private const int bullets_per_slider_reverse_kiai = 7;
+
         private const float slider_angle_per_span = 2f;
         private const int max_visuals_per_slider_span = 100;
 
         private const int bullets_per_spinner_span = 20;
-        private const int bullets_per_spinner_span_kiai = 30;
+        private const int bullets_per_spinner_span_kiai = 25;
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
