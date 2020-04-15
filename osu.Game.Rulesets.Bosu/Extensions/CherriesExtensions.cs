@@ -62,12 +62,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                     switch (e.Type)
                     {
                         case SliderEventType.Head:
-                            hitObjects.AddRange(generateExplosion(
-                                e.Time,
-                                bullets_per_slider_head,
-                                sliderEventPosition,
-                                comboData,
-                                index));
 
                             hitObjects.Add(new SoundHitObject
                             {
