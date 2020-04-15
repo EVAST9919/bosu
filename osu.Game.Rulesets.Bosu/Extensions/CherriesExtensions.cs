@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                     var isRepeatSpam = false;
 
                     // Don't take into account very small sliders. There's a chance that they will contain reverse spam, and offset looks ugly
-                    if (spanDuration < 75)
+                    if (spanDuration < 75 && curve.RepeatCount > 0)
                     {
                         sliderEventPosition = objPosition * new Vector2(1, 0.5f);
                         isRepeatSpam = true;
