@@ -73,10 +73,10 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.UpdateInitialTransforms();
 
-            this.ScaleTo(Vector2.One, GetReadyStateOffset());
+            this.ScaleTo(Vector2.One, HitObject.TimePreempt);
 
-            sprite.Delay(GetReadyStateOffset()).Then().FlashColour(Color4.White, 300);
-            overlay.Delay(GetReadyStateOffset()).Then().FlashColour(Color4.White, 300);
+            sprite.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
+            overlay.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
         }
     }
 }

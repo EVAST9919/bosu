@@ -8,9 +8,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         public DrawableSoundHitObject(SoundHitObject h)
             : base(h)
         {
-            OnReady += _ => ApplyResult(r => r.Type = HitResult.Meh);
         }
 
         protected override bool CollidedWithPlayer(BosuPlayer player) => false;
+
+        protected override void CheckForResult(bool userTriggered, double timeOffset)
+        {
+            if (timeOffset > 0)
+                ApplyResult(r => r.Type = HitResult.Meh);
+        }
     }
 }

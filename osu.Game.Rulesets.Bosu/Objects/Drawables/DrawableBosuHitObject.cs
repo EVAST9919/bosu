@@ -16,9 +16,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
         }
 
-        protected virtual float GetReadyStateOffset() => (float)HitObject.TimePreempt;
-
-        protected sealed override double InitialLifetimeOffset => GetReadyStateOffset();
+        protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
 
         public void GetPlayerToTrace(BosuPlayer player) => Player = player;
 
@@ -26,7 +24,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.Update();
 
-            if (Judged || Clock.CurrentTime < HitObject.StartTime)
+            if (Judged || Time.Current < HitObject.StartTime)
             {
                 invoked = false;
                 return;
@@ -44,14 +42,20 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 OnReady?.Invoke(this);
                 invoked = true;
             }
-
-            if (CollidedWithPlayer(Player))
-            {
-                Player.PlayMissAnimation();
-                ApplyResult(r => r.Type = HitResult.Miss);
-            }
         }
 
         protected abstract bool CollidedWithPlayer(BosuPlayer player);
+
+        protected override void CheckForResult(bool userTriggered, double timeOffset)
+        {
+            if (timeOffset > 0)
+            {
+                if (CollidedWithPlayer(Player))
+                {
+                    Player.PlayMissAnimation();
+                    ApplyResult(r => r.Type = HitResult.Miss);
+                }
+            }
+        }
     }
 }

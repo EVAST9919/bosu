@@ -27,9 +27,24 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override void OnObjectUpdate()
         {
             base.OnObjectUpdate();
+            this.MoveTo(getOffset()); // Should be moved to initial transforms
+        }
 
-            this.MoveTo(getOffset());
-            CheckWallPass();
+        protected override void CheckForResult(bool userTriggered, double timeOffset)
+        {
+            base.CheckForResult(userTriggered, timeOffset);
+
+            if (!Judged && timeOffset > 0)
+            {
+                // Wall pass check
+                if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f
+                    || Position.X < -DrawSize.X / 2f
+                    || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f
+                    || Position.Y < -DrawSize.Y / 2f)
+                {
+                    ApplyResult(r => r.Type = HitResult.Perfect);
+                }
+            }
         }
 
         private Vector2 getOffset()
@@ -53,14 +68,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 return true;
 
             return false;
-        }
-
-        protected virtual void CheckWallPass()
-        {
-            if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f || Position.X < -DrawSize.X / 2f || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f || Position.Y < -DrawSize.Y / 2f)
-            {
-                ApplyResult(r => r.Type = HitResult.Perfect);
-            }
         }
 
         protected override void UpdateStateTransforms(ArmedState state)
