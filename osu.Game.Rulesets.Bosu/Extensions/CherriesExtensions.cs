@@ -15,22 +15,15 @@ namespace osu.Game.Rulesets.Bosu.Extensions
     public static class CherriesExtensions
     {
         private const int bullets_per_hitcircle = 4;
-        private const int bullets_per_hitcircle_kiai = 5;
 
-        private const int bullets_per_slider_head = 7;
-        private const int bullets_per_slider_head_kiai = 8;
-        
+        private const int bullets_per_slider_head = 7;        
         private const int bullets_per_slider_tail = 5;
-        private const int bullets_per_slider_tail_kiai = 7;
-
         private const int bullets_per_slider_reverse = 5;
-        private const int bullets_per_slider_reverse_kiai = 7;
 
         private const float slider_angle_per_span = 2f;
         private const int max_visuals_per_slider_span = 100;
 
         private const int bullets_per_spinner_span = 20;
-        private const int bullets_per_spinner_span_kiai = 25;
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
@@ -41,9 +34,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
             var difficulty = beatmap.BeatmapInfo.BaseDifficulty;
-
-            EffectControlPoint effectPoint = beatmap.ControlPointInfo.EffectPointAt(obj.StartTime);
-            bool kiai = effectPoint.KiaiMode;
 
             if (!slidersOnly)
             {
@@ -74,7 +64,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         case SliderEventType.Head:
                             hitObjects.AddRange(generateExplosion(
                                 e.Time,
-                                kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
+                                bullets_per_slider_head,
                                 sliderEventPosition,
                                 comboData,
                                 index));
@@ -107,7 +97,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         case SliderEventType.Repeat:
                             hitObjects.AddRange(generateExplosion(
                                 obj.StartTime + (e.SpanIndex + 1) * spanDuration,
-                                kiai ? bullets_per_slider_reverse_kiai : bullets_per_slider_reverse,
+                                bullets_per_slider_reverse,
                                 sliderEventPosition,
                                 comboData,
                                 index,
@@ -123,7 +113,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         case SliderEventType.Tail:
                             hitObjects.AddRange(generateExplosion(
                                 e.Time,
-                                kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
+                                bullets_per_slider_tail,
                                 sliderEventPosition,
                                 comboData,
                                 index));
@@ -203,15 +193,12 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> CreateHitCircle(HitObject obj, IBeatmap beatmap, bool slidersOnly, int index)
+        public static List<BosuHitObject> CreateHitCircle(HitObject obj, bool slidersOnly, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
             var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
-
-            EffectControlPoint effectPoint = beatmap.ControlPointInfo.EffectPointAt(obj.StartTime);
-            bool kiai = effectPoint.KiaiMode;
 
             if (slidersOnly)
             {
@@ -256,7 +243,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             hitObjects.AddRange(generateExplosion(
                 obj.StartTime,
-                kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle,
+                bullets_per_hitcircle,
                 objPosition * new Vector2(1, 0.5f),
                 comboData,
                 index,
@@ -272,7 +259,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> CreateSpinner(HitObject obj, IBeatmap beatmap, IHasEndTime endTime, bool slidersOnly, int index)
+        public static List<BosuHitObject> CreateSpinner(HitObject obj, IHasEndTime endTime, bool slidersOnly, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -281,16 +268,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
                 var comboData = obj as IHasCombo;
 
-                EffectControlPoint effectPoint = beatmap.ControlPointInfo.EffectPointAt(obj.StartTime);
-                bool kiai = effectPoint.KiaiMode;
-
                 var spansPerSpinner = endTime.Duration / spinner_span_delay;
 
                 for (int i = 0; i < spansPerSpinner; i++)
                 {
                     hitObjects.AddRange(generateExplosion(
                         obj.StartTime + i * spinner_span_delay,
-                        kiai ? bullets_per_spinner_span_kiai : bullets_per_spinner_span,
+                        bullets_per_spinner_span,
                         objPosition * new Vector2(1, 0.5f),
                         comboData,
                         index,

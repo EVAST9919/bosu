@@ -36,11 +36,11 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     break;
 
                 case IHasEndTime endTime:
-                    hitObjects.AddRange(CherriesExtensions.CreateSpinner(obj, beatmap, endTime, SlidersOnly, index));
+                    hitObjects.AddRange(CherriesExtensions.CreateSpinner(obj, endTime, SlidersOnly, index));
                     break;
 
                 default:
-                    hitObjects.AddRange(CherriesExtensions.CreateHitCircle(obj, beatmap, SlidersOnly, index));
+                    hitObjects.AddRange(CherriesExtensions.CreateHitCircle(obj, SlidersOnly, index));
                     break;
             }
 
