@@ -96,7 +96,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             }, true);
         }
 
-        public Vector2 PlayerPositionInPlayfieldSpace() => new Vector2(Player.Position.X * BosuPlayfield.BASE_SIZE.X, Player.Position.Y * BosuPlayfield.BASE_SIZE.Y - drawablePlayer.DrawHeight / 2);
+        public Vector2 PlayerPositionInPlayfieldSpace(Vector2? offset = null) => new Vector2(Player.Position.X * BosuPlayfield.BASE_SIZE.X + (offset?.X ?? 0), (Player.Position.Y * BosuPlayfield.BASE_SIZE.Y - drawablePlayer.DrawHeight / 2) - (offset?.Y ?? 0));
 
         public Vector2 PlayerDrawSize() => drawablePlayer.DrawSize;
 
@@ -220,7 +220,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             shoot.Play();
             bulletsContainer.Add(new Bullet(Player.Scale.X > 0, Clock.CurrentTime)
             {
-                Position = PlayerPositionInPlayfieldSpace()
+                Position = PlayerPositionInPlayfieldSpace(new Vector2(0, 1))
             });
         }
 
