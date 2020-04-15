@@ -16,8 +16,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
     {
         private const int bullets_per_hitcircle = 4;
 
-        private const int bullets_per_slider_head = 7;        
-        private const int bullets_per_slider_tail = 5;
         private const int bullets_per_slider_reverse = 5;
 
         private const float slider_angle_per_span = 2f;
@@ -107,7 +105,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         case SliderEventType.Tail:
                             hitObjects.AddRange(generateExplosion(
                                 e.Time,
-                                bullets_per_slider_tail,
+                                Math.Clamp((int)curve.Distance / 15, 5, 20),
                                 sliderEventPosition,
                                 comboData,
                                 index));
