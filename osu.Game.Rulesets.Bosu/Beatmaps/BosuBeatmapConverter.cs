@@ -10,8 +10,6 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
     public class BosuBeatmapConverter : BeatmapConverter<BosuHitObject>
     {
-        public bool Symmetry { get; set; }
-
         public bool SlidersOnly { get; set; }
 
         public BosuBeatmapConverter(IBeatmap beatmap, Ruleset ruleset)
@@ -34,7 +32,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             switch (obj)
             {
                 case IHasCurve curve:
-                    hitObjects.AddRange(CherriesExtensions.CreateSlider(obj, beatmap, curve, Symmetry, SlidersOnly, index));
+                    hitObjects.AddRange(CherriesExtensions.CreateSlider(obj, beatmap, curve, SlidersOnly, index));
                     break;
 
                 case IHasEndTime endTime:
@@ -42,7 +40,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     break;
 
                 default:
-                    hitObjects.AddRange(CherriesExtensions.CreateHitCircle(obj, beatmap, Symmetry, SlidersOnly, index));
+                    hitObjects.AddRange(CherriesExtensions.CreateHitCircle(obj, beatmap, SlidersOnly, index));
                     break;
             }
 

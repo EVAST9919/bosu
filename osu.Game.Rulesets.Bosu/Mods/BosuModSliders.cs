@@ -30,7 +30,6 @@ namespace osu.Game.Rulesets.Bosu.Mods
         public override Type[] IncompatibleMods => new[]
         {
             typeof(BosuModAutoplay),
-            typeof(BosuModSymmetry),
             typeof(ModFlashlight),
             typeof(ModRelax),
         };

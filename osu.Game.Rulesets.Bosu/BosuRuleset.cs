@@ -113,7 +113,6 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
-                        new BosuModSymmetry(),
                     };
 
                 default:

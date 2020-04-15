@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
-        public static List<BosuHitObject> CreateSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, bool symmetry, bool slidersOnly, int index)
+        public static List<BosuHitObject> CreateSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, bool slidersOnly, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -72,26 +72,12 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                     switch (e.Type)
                     {
                         case SliderEventType.Head:
-                            var headBulletsCount = kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head;
-                            if (symmetry)
-                                headBulletsCount = (int)Math.Round(headBulletsCount / 1.5f);
-
                             hitObjects.AddRange(generateExplosion(
                                 e.Time,
-                                headBulletsCount,
+                                kiai ? bullets_per_slider_head_kiai : bullets_per_slider_head,
                                 sliderEventPosition,
                                 comboData,
                                 index));
-
-                            if (symmetry)
-                            {
-                                hitObjects.AddRange(generateExplosion(
-                                    e.Time,
-                                    headBulletsCount,
-                                    getSymmetricalXPosition(sliderEventPosition),
-                                    comboData,
-                                    index));
-                            }
 
                             hitObjects.Add(new SoundHitObject
                             {
@@ -111,18 +97,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 IndexInBeatmap = index
                             });
 
-                            if (symmetry)
-                            {
-                                hitObjects.Add(new TickCherry
-                                {
-                                    StartTime = e.Time,
-                                    Position = getSymmetricalXPosition(sliderEventPosition),
-                                    NewCombo = comboData?.NewCombo ?? false,
-                                    ComboOffset = comboData?.ComboOffset ?? 0,
-                                    IndexInBeatmap = index
-                                });
-                            }
-
                             hitObjects.Add(new SoundHitObject
                             {
                                 StartTime = e.Time,
@@ -139,17 +113,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 index,
                                 slider_angle_per_span * e.SpanIndex));
 
-                            if (symmetry)
-                            {
-                                hitObjects.AddRange(generateExplosion(
-                                    obj.StartTime + (e.SpanIndex + 1) * spanDuration,
-                                    kiai ? bullets_per_slider_reverse_kiai : bullets_per_slider_reverse,
-                                    getSymmetricalXPosition(sliderEventPosition),
-                                    comboData,
-                                    index,
-                                    -slider_angle_per_span * e.SpanIndex));
-                            }
-
                             hitObjects.Add(new SoundHitObject
                             {
                                 StartTime = e.Time,
@@ -158,26 +121,12 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             break;
 
                         case SliderEventType.Tail:
-                            var tailBulletsCount = kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail;
-                            if (symmetry)
-                                tailBulletsCount = (int)Math.Round(tailBulletsCount / 1.5f);
-
                             hitObjects.AddRange(generateExplosion(
                                 e.Time,
-                                tailBulletsCount,
+                                kiai ? bullets_per_slider_tail_kiai : bullets_per_slider_tail,
                                 sliderEventPosition,
                                 comboData,
                                 index));
-
-                            if (symmetry)
-                            {
-                                hitObjects.AddRange(generateExplosion(
-                                    e.Time,
-                                    tailBulletsCount,
-                                    getSymmetricalXPosition(sliderEventPosition),
-                                    comboData,
-                                    index));
-                            }
 
                             hitObjects.Add(new SoundHitObject
                             {
@@ -210,18 +159,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         ComboOffset = comboData?.ComboOffset ?? 0,
                         IndexInBeatmap = index
                     });
-
-                    if (symmetry)
-                    {
-                        hitObjects.Add(new SliderPartCherry
-                        {
-                            StartTime = obj.StartTime + curve.Duration * progress,
-                            Position = getSymmetricalXPosition(position),
-                            NewCombo = comboData?.NewCombo ?? false,
-                            ComboOffset = comboData?.ComboOffset ?? 0,
-                            IndexInBeatmap = index
-                        });
-                    }
                 }
                 else
                 {
@@ -266,7 +203,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> CreateHitCircle(HitObject obj, IBeatmap beatmap, bool symmetry, bool slidersOnly, int index)
+        public static List<BosuHitObject> CreateHitCircle(HitObject obj, IBeatmap beatmap, bool slidersOnly, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -317,30 +254,14 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 return hitObjects;
             }
 
-            var hitcircleBulletsCount = kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle;
-            if (symmetry)
-                hitcircleBulletsCount = (int)Math.Round(hitcircleBulletsCount / 1.5f);
-
             hitObjects.AddRange(generateExplosion(
                 obj.StartTime,
-                hitcircleBulletsCount,
+                kiai ? bullets_per_hitcircle_kiai : bullets_per_hitcircle,
                 objPosition * new Vector2(1, 0.5f),
                 comboData,
                 index,
                 0,
                 120));
-
-            if (symmetry)
-            {
-                hitObjects.AddRange(generateExplosion(
-                    obj.StartTime,
-                    hitcircleBulletsCount,
-                    getSymmetricalXPosition(objPosition * new Vector2(1, 0.5f)),
-                    comboData,
-                    index,
-                    0,
-                    120));
-            }
 
             hitObjects.Add(new SoundHitObject
             {
