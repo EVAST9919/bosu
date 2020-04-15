@@ -100,10 +100,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
         public Vector2 PlayerDrawSize() => drawablePlayer.DrawSize;
 
-        public void PlayMissAnimation()
-        {
-            drawablePlayer.FadeColour(Color4.Red).Then().FadeColour(Color4.White, 1000, Easing.OutQuint);
-        }
+        public void PlayMissAnimation() => drawablePlayer.FlashColour(Color4.Red, 1000, Easing.OutQuint);
 
         public bool OnPressed(BosuAction action)
         {
