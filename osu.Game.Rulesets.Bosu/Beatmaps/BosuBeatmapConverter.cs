@@ -32,15 +32,15 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             switch (obj)
             {
                 case IHasCurve curve:
-                    hitObjects.AddRange(CherriesExtensions.CreateSlider(obj, beatmap, curve, SlidersOnly, index));
+                    hitObjects.AddRange(CherriesExtensions.ConvertSlider(obj, beatmap, curve, SlidersOnly, index));
                     break;
 
                 case IHasEndTime endTime:
-                    hitObjects.AddRange(CherriesExtensions.CreateSpinner(obj, endTime, SlidersOnly, index));
+                    hitObjects.AddRange(CherriesExtensions.ConvertSpinner(obj, endTime, SlidersOnly, index));
                     break;
 
                 default:
-                    hitObjects.AddRange(CherriesExtensions.CreateHitCircle(obj, SlidersOnly, index));
+                    hitObjects.AddRange(CherriesExtensions.ConvertHitCircle(obj, SlidersOnly, index));
                     break;
             }
 

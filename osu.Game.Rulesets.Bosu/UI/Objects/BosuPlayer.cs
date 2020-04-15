@@ -25,33 +25,40 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
         private SampleChannel jump;
         private SampleChannel doubleJump;
+        private SampleChannel shoot;
 
         private readonly Bindable<PlayerModel> playerModel = new Bindable<PlayerModel>();
 
         private int horizontalDirection;
-        private Action jumpPressed;
-        private Action jumpReleased;
         private int availableJumpCount = 2;
         private float verticalSpeed;
         private bool midAir;
 
         public readonly Container Player;
         private readonly Sprite drawablePlayer;
+        private readonly Container bulletsContainer;
 
         public BosuPlayer()
         {
             RelativeSizeAxes = Axes.Both;
-            AddInternal(Player = new Container
+            AddRangeInternal(new Drawable[]
             {
-                Origin = Anchor.BottomCentre,
-                RelativePositionAxes = Axes.Both,
-                Position = new Vector2(0.5f, 1),
-                Size = new Vector2(15),
-                Child = drawablePlayer = new Sprite
+                bulletsContainer = new Container
                 {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.Both
+                },
+                Player = new Container
+                {
+                    Origin = Anchor.BottomCentre,
+                    RelativePositionAxes = Axes.Both,
+                    Position = new Vector2(0.5f, 1),
+                    Size = new Vector2(15),
+                    Child = drawablePlayer = new Sprite
+                    {
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        RelativeSizeAxes = Axes.Both
+                    }
                 }
             });
         }
@@ -63,6 +70,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
             jump = samples.Get("jump");
             doubleJump = samples.Get("double-jump");
+            shoot = samples.Get("shoot");
         }
 
         protected override void LoadComplete()
@@ -86,14 +94,11 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                         return;
                 }
             }, true);
-
-            jumpPressed += onJumpPressed;
-            jumpReleased += onJumpReleased;
         }
 
-        public Vector2 PlayerPositionInPlayfieldSpace() => Player.Position * BosuPlayfield.BASE_SIZE;
+        public Vector2 PlayerPositionInPlayfieldSpace() => new Vector2(Player.Position.X * BosuPlayfield.BASE_SIZE.X, Player.Position.Y * BosuPlayfield.BASE_SIZE.Y - drawablePlayer.DrawHeight / 2);
 
-        public Vector2 PlayerDrawSize() => Player.DrawSize;
+        public Vector2 PlayerDrawSize() => drawablePlayer.DrawSize;
 
         public void PlayMissAnimation()
         {
@@ -113,7 +118,11 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                     return true;
 
                 case BosuAction.Jump:
-                    jumpPressed?.Invoke();
+                    onJumpPressed();
+                    return true;
+
+                case BosuAction.Shoot:
+                    onShoot();
                     return true;
             }
 
@@ -133,7 +142,10 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                     return;
 
                 case BosuAction.Jump:
-                    jumpReleased?.Invoke();
+                    onJumpReleased();
+                    return;
+
+                case BosuAction.Shoot:
                     return;
             }
         }
@@ -184,12 +196,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             switch (availableJumpCount)
             {
                 case 1:
-                    jump?.Play();
+                    jump.Play();
                     verticalSpeed = 100;
                     break;
 
                 case 0:
-                    doubleJump?.Play();
+                    doubleJump.Play();
                     verticalSpeed = 90;
                     break;
             }
@@ -201,6 +213,15 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                 return;
 
             verticalSpeed /= 2;
+        }
+
+        private void onShoot()
+        {
+            shoot.Play();
+            bulletsContainer.Add(new Bullet(Player.Scale.X > 0)
+            {
+                Position = PlayerPositionInPlayfieldSpace()
+            });
         }
 
         private void updateReplayState()

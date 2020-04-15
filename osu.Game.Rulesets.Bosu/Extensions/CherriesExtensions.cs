@@ -25,7 +25,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
-        public static List<BosuHitObject> CreateSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, bool slidersOnly, int index)
+        public static List<BosuHitObject> ConvertSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, bool slidersOnly, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -185,7 +185,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> CreateHitCircle(HitObject obj, bool slidersOnly, int index)
+        public static List<BosuHitObject> ConvertHitCircle(HitObject obj, bool slidersOnly, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -251,7 +251,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> CreateSpinner(HitObject obj, IHasEndTime endTime, bool slidersOnly, int index)
+        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasEndTime endTime, bool slidersOnly, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 

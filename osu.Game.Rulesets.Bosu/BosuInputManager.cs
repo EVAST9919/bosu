@@ -24,6 +24,9 @@ namespace osu.Game.Rulesets.Bosu
         MoveRight,
 
         [Description("Jump")]
-        Jump
+        Jump,
+
+        [Description("Shoot")]
+        Shoot
     }
 }
