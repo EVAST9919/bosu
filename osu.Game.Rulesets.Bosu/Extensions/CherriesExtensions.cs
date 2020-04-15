@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const int bullets_per_slider_reverse = 5;
 
         private const float slider_angle_per_span = 2f;
-        private const int max_visuals_per_slider_span = 100;
+        private const int max_visuals_per_slider_span = 150;
 
         private const int bullets_per_spinner_span = 20;
         private const float spinner_span_delay = 250f;
@@ -50,10 +50,14 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
                 {
                     Vector2 sliderEventPosition;
+                    var isRepeatSpam = false;
 
                     // Don't take into account very small sliders. There's a chance that they will contain reverse spam, and offset looks ugly
                     if (spanDuration < 75)
+                    {
                         sliderEventPosition = objPosition * new Vector2(1, 0.5f);
+                        isRepeatSpam = true;
+                    }
                     else
                         sliderEventPosition = (curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition) * new Vector2(1, 0.5f);
 
@@ -70,14 +74,18 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             break;
 
                         case SliderEventType.Tick:
-                            hitObjects.Add(new TickCherry
+
+                            if (positionIsValid(sliderEventPosition))
                             {
-                                StartTime = e.Time,
-                                Position = sliderEventPosition,
-                                NewCombo = comboData?.NewCombo ?? false,
-                                ComboOffset = comboData?.ComboOffset ?? 0,
-                                IndexInBeatmap = index
-                            });
+                                hitObjects.Add(new TickCherry
+                                {
+                                    StartTime = e.Time,
+                                    Position = sliderEventPosition,
+                                    NewCombo = comboData?.NewCombo ?? false,
+                                    ComboOffset = comboData?.ComboOffset ?? 0,
+                                    IndexInBeatmap = index
+                                });
+                            }
 
                             hitObjects.Add(new SoundHitObject
                             {
@@ -87,13 +95,17 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             break;
 
                         case SliderEventType.Repeat:
-                            hitObjects.AddRange(generateExplosion(
-                                obj.StartTime + (e.SpanIndex + 1) * spanDuration,
-                                bullets_per_slider_reverse,
-                                sliderEventPosition,
-                                comboData,
-                                index,
-                                slider_angle_per_span * e.SpanIndex));
+
+                            if (positionIsValid(sliderEventPosition))
+                            {
+                                hitObjects.AddRange(generateExplosion(
+                                    obj.StartTime + (e.SpanIndex + 1) * spanDuration,
+                                    bullets_per_slider_reverse,
+                                    sliderEventPosition,
+                                    comboData,
+                                    index,
+                                    slider_angle_per_span * e.SpanIndex));
+                            }
 
                             hitObjects.Add(new SoundHitObject
                             {
@@ -103,12 +115,17 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             break;
 
                         case SliderEventType.Tail:
-                            hitObjects.AddRange(generateExplosion(
-                                e.Time,
-                                Math.Clamp((int)curve.Distance / 15, 5, 20),
-                                sliderEventPosition,
-                                comboData,
-                                index));
+
+                            if (positionIsValid(sliderEventPosition))
+                            {
+                                hitObjects.AddRange(generateExplosion(
+                                    e.Time,
+                                    Math.Clamp((int)curve.Distance / 15, 5, 20),
+                                    sliderEventPosition,
+                                    comboData,
+                                    index,
+                                    isRepeatSpam ? (slider_angle_per_span * curve.RepeatCount) : 0));
+                            }
 
                             hitObjects.Add(new SoundHitObject
                             {
@@ -133,52 +150,68 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 {
                     position *= new Vector2(1, 0.5f);
 
-                    hitObjects.Add(new SliderPartCherry
+                    if (positionIsValid(position))
                     {
-                        StartTime = obj.StartTime + curve.Duration * progress,
-                        Position = position,
-                        NewCombo = comboData?.NewCombo ?? false,
-                        ComboOffset = comboData?.ComboOffset ?? 0,
-                        IndexInBeatmap = index
-                    });
-                }
-                else
-                {
-                    hitObjects.AddRange(new[]
-                    {
-                        new SliderPartCherry
+                        hitObjects.Add(new SliderPartCherry
                         {
                             StartTime = obj.StartTime + curve.Duration * progress,
                             Position = position,
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
-                        },
-                        new SliderPartCherry
+                        });
+                    }
+                }
+                else
+                {
+                    var position2 = getSymmetricalXPosition(position);
+                    var position3 = getSymmetricalYPosition(position);
+                    var position4 = getSymmetricalYPosition(position2);
+
+                    if (positionIsValid(position))
+                    {
+                        hitObjects.Add(new SliderPartCherry
                         {
                             StartTime = obj.StartTime + curve.Duration * progress,
-                            Position = getSymmetricalXPosition(position),
+                            Position = position,
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
-                        },
-                        new SliderPartCherry
+                        });
+                    }
+                    if (positionIsValid(position2))
+                    {
+                        hitObjects.Add(new SliderPartCherry
                         {
                             StartTime = obj.StartTime + curve.Duration * progress,
-                            Position = getSymmetricalYPosition(position),
+                            Position = position2,
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
-                        },
-                        new SliderPartCherry
+                        });
+                    }
+                    if (positionIsValid(position3))
+                    {
+                        hitObjects.Add(new SliderPartCherry
                         {
                             StartTime = obj.StartTime + curve.Duration * progress,
-                            Position = getSymmetricalYPosition(getSymmetricalXPosition(position)),
+                            Position = position3,
                             NewCombo = comboData?.NewCombo ?? false,
                             ComboOffset = comboData?.ComboOffset ?? 0,
                             IndexInBeatmap = index
-                        }
-                    });
+                        });
+                    }
+                    if (positionIsValid(position4))
+                    {
+                        hitObjects.Add(new SliderPartCherry
+                        {
+                            StartTime = obj.StartTime + curve.Duration * progress,
+                            Position = position4,
+                            NewCombo = comboData?.NewCombo ?? false,
+                            ComboOffset = comboData?.ComboOffset ?? 0,
+                            IndexInBeatmap = index
+                        });
+                    }
                 }
             }
 
@@ -303,5 +336,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             Name = @"slidertick",
             Volume = s.Volume
         }).ToList();
+
+        private static bool positionIsValid(Vector2 position)
+        {
+            if (position.X > BosuPlayfield.BASE_SIZE.X || position.X < 0 || position.Y < 0 || position.Y > BosuPlayfield.BASE_SIZE.Y)
+                return false;
+
+            return true;
+        }
     }
 }
