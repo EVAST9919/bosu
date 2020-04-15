@@ -218,7 +218,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         private void onShoot()
         {
             shoot.Play();
-            bulletsContainer.Add(new Bullet(Player.Scale.X > 0)
+            bulletsContainer.Add(new Bullet(Player.Scale.X > 0, Clock.CurrentTime)
             {
                 Position = PlayerPositionInPlayfieldSpace()
             });

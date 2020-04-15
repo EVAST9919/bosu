@@ -12,10 +12,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         private readonly Sprite sprite;
 
         private readonly bool right;
+        private readonly double spawnTime;
 
-        public Bullet(bool right)
+        public Bullet(bool right, double spawnTime)
         {
             this.right = right;
+            this.spawnTime = spawnTime;
 
             Size = new Vector2(3);
             Origin = Anchor.Centre;
@@ -36,6 +38,14 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         protected override void Update()
         {
             base.Update();
+
+            if (Clock.CurrentTime < spawnTime)
+            {
+                this.FadeOut();
+                return;
+            }
+
+            this.FadeIn();
 
             if (Position.X > BosuPlayfield.BASE_SIZE.X || Position.X < 0)
             {
