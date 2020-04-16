@@ -29,6 +29,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
         private readonly Bindable<PlayerModel> playerModel = new Bindable<PlayerModel>();
 
+        public override bool RemoveCompletedTransforms => false;
+
         private int horizontalDirection;
         private int availableJumpCount = 2;
         private float verticalSpeed;
