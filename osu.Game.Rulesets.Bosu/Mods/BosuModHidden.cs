@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Bosu.Mods
             var drawableCherry = (DrawableMovingCherry)drawable;
             var cherry = (MovingCherry)drawableCherry.HitObject;
 
-            using (drawableCherry.BeginAbsoluteSequence(cherry.StartTime))
+            using (drawableCherry.BeginAbsoluteSequence(cherry.StartTime, true))
                 drawableCherry.FadeOut(cherry.TimePreempt * 1.5f);
         }
     }
