@@ -7,9 +7,9 @@
             return (value - lowerCurrent) / (upperCurrent - lowerCurrent) * (upperTarget - lowerTarget) + lowerTarget;
         }
 
-        public static float BulletDistribution(int bulletsPerObject, float angleRange, int index)
+        public static float BulletDistribution(int bulletsPerObject, float angleRange, int index, float angleOffset = 0)
         {
-            var angle = getAngleBuffer(bulletsPerObject, angleRange) + index * getPerBulletAngle(bulletsPerObject, angleRange);
+            var angle = getAngleBuffer(bulletsPerObject, angleRange) + index * getPerBulletAngle(bulletsPerObject, angleRange) + angleOffset;
 
             if (angle > 360)
                 angle %= 360;

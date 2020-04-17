@@ -317,7 +317,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             {
                 yield return new MovingCherry
                 {
-                    Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i) + angleOffset,
+                    Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i, angleOffset),
                     StartTime = startTime,
                     Position = position,
                     NewCombo = comboData?.NewCombo ?? false,
