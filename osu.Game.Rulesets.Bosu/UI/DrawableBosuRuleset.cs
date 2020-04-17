@@ -36,14 +36,11 @@ namespace osu.Game.Rulesets.Bosu.UI
                 case SoundHitObject sound:
                     return new DrawableSoundHitObject(sound);
 
-                case TickCherry tick:
-                    return new DrawableTickCherry(tick);
-
-                case TargetedCherry tergeted:
-                    return new DrawableTargetedCherry(tergeted);
-
                 case SliderPartCherry sliderPart:
                     return new DrawableSliderPartCherry(sliderPart);
+
+                case TickCherry tick:
+                    return new DrawableTickCherry(tick);
 
                 case MovingCherry moving:
                     return new DrawableMovingCherry(moving);

@@ -71,8 +71,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         protected override void UpdateInitialTransforms()
         {
-            base.UpdateInitialTransforms();
-
             this.ScaleTo(Vector2.One, HitObject.TimePreempt);
 
             sprite.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);

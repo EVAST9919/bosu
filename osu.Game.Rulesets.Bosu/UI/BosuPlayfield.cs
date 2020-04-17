@@ -34,10 +34,14 @@ namespace osu.Game.Rulesets.Bosu.UI
 
         public override void Add(DrawableHitObject h)
         {
-            base.Add(h);
+            if (h is DrawableMovingCherry drawable)
+            {
+                drawable.GetPlayerToTrace(Player);
+                base.Add(drawable);
+                return;
+            }
 
-            var drawable = (DrawableBosuHitObject)h;
-            drawable.GetPlayerToTrace(Player);
+            base.Add(h);
         }
     }
 }

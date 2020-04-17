@@ -11,51 +11,78 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableMovingCherry : DrawableCherry
     {
-        protected float Angle { get; set; }
+        private const float speed_multiplier = 4.5f;
 
-        private readonly float speedMultiplier;
         private readonly float finalSize;
+        private float duration;
+        private float finalX;
+        private float finalY;
 
         public DrawableMovingCherry(MovingCherry h)
             : base(h)
         {
-            Angle = h.Angle;
-            speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.9f, 1.1f) / 4.5f;
+            AlwaysPresent = true;
             finalSize = Size.X;
         }
 
-        protected override void OnObjectUpdate()
+        protected override void UpdateInitialTransforms()
         {
-            base.OnObjectUpdate();
-            this.MoveTo(getOffset()); // Should be moved to initial transforms
+            base.UpdateInitialTransforms();
+
+            var angle = GetAngle();
+            var wall = selectWall(angle);
+
+            switch (wall)
+            {
+                case Wall.Bottom:
+                    finalY = BosuPlayfield.BASE_SIZE.Y + (finalSize / 2f);
+                    finalX = (float)getXPosition(Position, finalY, angle);
+                    break;
+
+                case Wall.Top:
+                    finalY = -finalSize / 2f;
+                    finalX = (float)getXPosition(Position, finalY, angle);
+                    break;
+
+                case Wall.Left:
+                    finalX = -finalSize / 2f;
+                    finalY = (float)getYPosition(Position, finalX, angle);
+                    break;
+
+                case Wall.Right:
+                    finalX = BosuPlayfield.BASE_SIZE.X + (finalSize / 2f);
+                    finalY = (float)getYPosition(Position, finalX, angle);
+                    break;
+            }
+
+            var distance = Math.Sqrt(((finalX - Position.X) * (finalX - Position.X)) + ((finalY - Position.Y) * (finalY - Position.Y)));
+            duration = (float)distance / MathExtensions.Map((float)((MovingCherry)HitObject).SpeedMultiplier, 0, 3, 0.9f, 1.2f) * speed_multiplier;
+
+            this.Delay(HitObject.TimePreempt).MoveTo(new Vector2(finalX, finalY), duration);
         }
+
+        protected virtual float GetAngle() => ((MovingCherry)HitObject).Angle;
+
+        private double missTime;
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
-            base.CheckForResult(userTriggered, timeOffset);
-
-            if (!Judged && timeOffset > 0)
+            if (timeOffset > 0)
             {
-                // Wall pass check
-                if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f
-                    || Position.X < -DrawSize.X / 2f
-                    || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f
-                    || Position.Y < -DrawSize.Y / 2f)
+                if (collidedWithPlayer(Player))
                 {
-                    ApplyResult(r => r.Type = HitResult.Perfect);
+                    Player.PlayMissAnimation();
+                    missTime = timeOffset;
+                    ApplyResult(r => r.Type = HitResult.Miss);
+                    return;
                 }
+
+                if (timeOffset > duration)
+                    ApplyResult(r => r.Type = HitResult.Perfect);
             }
         }
 
-        private Vector2 getOffset()
-        {
-            var elapsedTime = Clock.CurrentTime - HitObject.StartTime;
-            var xPosition = HitObject.Position.X + (elapsedTime * speedMultiplier * Math.Sin(Angle * Math.PI / 180));
-            var yPosition = HitObject.Position.Y + (elapsedTime * speedMultiplier * -Math.Cos(Angle * Math.PI / 180));
-            return new Vector2((float)xPosition, (float)yPosition);
-        }
-
-        protected override bool CollidedWithPlayer(BosuPlayer player)
+        private bool collidedWithPlayer(BosuPlayer player)
         {
             // Let's assume that player is a circle for simplicity
 
@@ -72,13 +99,75 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         protected override void UpdateStateTransforms(ArmedState state)
         {
+            base.UpdateStateTransforms(state);
+
             switch (state)
             {
-                case ArmedState.Hit:
                 case ArmedState.Miss:
-                    this.FadeOut();
+                    // Check DrawableHitCircle L#168
+                    this.Delay(missTime).FadeOut();
                     break;
             }
+        }
+
+        private Wall selectWall(float angle)
+        {
+            // Top/Right
+            if (angle <= 90)
+            {
+                if (angle < getCornerAngle(Position, new Vector2(BosuPlayfield.BASE_SIZE.X, 0)) - 360)
+                    return Wall.Top;
+
+                return Wall.Right;
+            }
+
+            // Right/Bottom
+            if (angle <= 180)
+            {
+                if (angle < getCornerAngle(Position, new Vector2(BosuPlayfield.BASE_SIZE.X, BosuPlayfield.BASE_SIZE.Y)))
+                    return Wall.Right;
+
+                return Wall.Bottom;
+            }
+
+            // Bottom/Left
+            if (angle <= 270)
+            {
+                if (angle < getCornerAngle(Position, new Vector2(0, BosuPlayfield.BASE_SIZE.Y)))
+                    return Wall.Bottom;
+
+                return Wall.Left;
+            }
+
+            if (angle < getCornerAngle(Position, Vector2.Zero))
+                return Wall.Left;
+
+            return Wall.Top;
+        }
+
+        private static double getXPosition(Vector2 initialPosition, float finalY, float angle)
+        {
+            var time = (finalY - initialPosition.Y) / -Math.Cos(angle * Math.PI / 180);
+            return initialPosition.X + (time * Math.Sin(angle * Math.PI / 180));
+        }
+
+        private static double getYPosition(Vector2 initialPosition, float finalX, float angle)
+        {
+            var time = (finalX - initialPosition.X) / Math.Sin(angle * Math.PI / 180);
+            return initialPosition.Y + (time * -Math.Cos(angle * Math.PI / 180));
+        }
+
+        private static float getCornerAngle(Vector2 objectPosition, Vector2 cornerPosition)
+        {
+            return (float)(Math.Atan2(objectPosition.Y - cornerPosition.Y, objectPosition.X - cornerPosition.X) * 180 / Math.PI) + 270;
+        }
+
+        public enum Wall
+        {
+            Top,
+            Right,
+            Left,
+            Bottom
         }
     }
 }

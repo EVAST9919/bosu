@@ -1,5 +1,4 @@
 ﻿using osu.Framework.Graphics;
-using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 
@@ -11,8 +10,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             : base(h)
         {
         }
-
-        protected override bool CollidedWithPlayer(BosuPlayer player) => false;
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {

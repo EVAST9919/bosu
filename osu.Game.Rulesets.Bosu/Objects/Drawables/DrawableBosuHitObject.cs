@@ -1,6 +1,5 @@
 ﻿using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
@@ -17,31 +16,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         public void GetPlayerToTrace(BosuPlayer player) => Player = player;
 
-        protected override void Update()
+        protected override void UpdateStateTransforms(ArmedState state)
         {
-            base.Update();
-
-            if (Judged || Time.Current < HitObject.StartTime)
-                return;
-
-            OnObjectUpdate();
-        }
-
-        protected virtual void OnObjectUpdate()
-        {
-        }
-
-        protected abstract bool CollidedWithPlayer(BosuPlayer player);
-
-        protected override void CheckForResult(bool userTriggered, double timeOffset)
-        {
-            if (timeOffset > 0)
+            switch (state)
             {
-                if (CollidedWithPlayer(Player))
-                {
-                    Player.PlayMissAnimation();
-                    ApplyResult(r => r.Type = HitResult.Miss);
-                }
+                case ArmedState.Idle:
+                    // Manually set to reduce the number of future alive objects to a bare minimum.
+                    LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
+                    break;
             }
         }
     }

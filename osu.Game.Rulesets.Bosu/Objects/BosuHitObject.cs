@@ -11,7 +11,6 @@ namespace osu.Game.Rulesets.Bosu.Objects
     public abstract class BosuHitObject : HitObject, IHasPosition, IHasComboInformation
     {
         public double TimePreempt;
-        public double TimeFadeIn;
 
         public readonly Bindable<Vector2> PositionBindable = new Bindable<Vector2>();
 
@@ -29,7 +28,6 @@ namespace osu.Game.Rulesets.Bosu.Objects
             base.ApplyDefaultsToSelf(controlPointInfo, difficulty);
 
             TimePreempt = (float)BeatmapDifficulty.DifficultyRange(difficulty.ApproachRate, 1800, 1200, 450);
-            TimeFadeIn = 400; // as in osu! ruleset
         }
 
         protected override HitWindows CreateHitWindows() => HitWindows.Empty;

@@ -79,6 +79,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             {
                                 hitObjects.Add(new TickCherry
                                 {
+                                    Angle = 180,
                                     StartTime = e.Time,
                                     Position = sliderEventPosition,
                                     NewCombo = comboData?.NewCombo ?? false,

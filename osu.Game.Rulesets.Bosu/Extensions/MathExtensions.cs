@@ -9,7 +9,12 @@
 
         public static float BulletDistribution(int bulletsPerObject, float angleRange, int index)
         {
-            return getAngleBuffer(bulletsPerObject, angleRange) + index * getPerBulletAngle(bulletsPerObject, angleRange);
+            var angle = getAngleBuffer(bulletsPerObject, angleRange) + index * getPerBulletAngle(bulletsPerObject, angleRange);
+
+            if (angle > 360)
+                angle %= 360;
+
+            return angle;
 
             static float getAngleBuffer(int bulletsPerObject, float angleRange) => (360 - angleRange + getPerBulletAngle(bulletsPerObject, angleRange)) / 2f;
 
