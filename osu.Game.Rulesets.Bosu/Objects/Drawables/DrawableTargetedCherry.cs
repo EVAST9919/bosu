@@ -7,7 +7,13 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         public DrawableTargetedCherry(TargetedCherry h)
             : base(h)
         {
-            OnReady += _ => Angle = getAngle() - 90;
+        }
+
+        protected override void UpdateInitialTransforms()
+        {
+            base.UpdateInitialTransforms();
+
+            Scheduler.AddDelayed(() => Angle = getAngle() - 90, HitObject.TimePreempt);
         }
 
         private float getAngle()
