@@ -16,6 +16,7 @@ namespace osu.Game.Rulesets.Bosu.Configuration
             Set(BosuRulesetSetting.PlayerModel, PlayerModel.Bosu);
             Set(BosuRulesetSetting.Background, BackgroundType.None);
             Set(BosuRulesetSetting.PlayfieldDim, 0.5, 0, 1);
+            Set(BosuRulesetSetting.SliderOpacity, 0.0, 0, 1);
         }
     }
 
@@ -23,7 +24,8 @@ namespace osu.Game.Rulesets.Bosu.Configuration
     {
         PlayerModel,
         Background,
-        PlayfieldDim
+        PlayfieldDim,
+        SliderOpacity
     }
 
     public enum PlayerModel

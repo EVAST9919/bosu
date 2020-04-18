@@ -20,6 +20,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private readonly Sprite sprite;
         private readonly Sprite overlay;
         private readonly Sprite branch;
+        protected readonly Container Content;
 
         protected DrawableCherry(Cherry h)
             : base(h)
@@ -29,7 +30,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             Position = h.Position;
             Scale = Vector2.Zero;
 
-            AddInternal(new Container
+            AddInternal(Content = new Container
             {
                 RelativeSizeAxes = Axes.Both,
                 Anchor = Anchor.Centre,
