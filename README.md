@@ -5,7 +5,7 @@ Install guide:
 https://www.youtube.com/watch?v=LF6hKh6FBtU
 
 Support:
-https://streamlabs.com/ev4st/tip
+https://www.patreon.com/evast
 
 Follow me:
 
