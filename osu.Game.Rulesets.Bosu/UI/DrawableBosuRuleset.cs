@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Bosu.UI
 
         protected override PassThroughInputManager CreateInputManager() => new BosuInputManager(Ruleset.RulesetInfo);
 
-        protected override Playfield CreatePlayfield() => new BosuPlayfield();
+        protected override Playfield CreatePlayfield() => new BosuPlayfield(((BosuRuleset)Ruleset).HealthProcessor);
 
         public override PlayfieldAdjustmentContainer CreatePlayfieldAdjustmentContainer() => new BosuPlayfieldAdjustmentContainer();
 

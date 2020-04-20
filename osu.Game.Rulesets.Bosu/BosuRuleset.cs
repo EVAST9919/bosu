@@ -29,11 +29,13 @@ namespace osu.Game.Rulesets.Bosu
 {
     public class BosuRuleset : Ruleset
     {
+        public BosuHealthProcessor HealthProcessor { get; private set; }
+
         public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new DrawableBosuRuleset(this, beatmap, mods);
 
         public override ScoreProcessor CreateScoreProcessor() => new BosuScoreProcessor();
 
-        public override HealthProcessor CreateHealthProcessor(double drainStartTime) => new BosuHealthProcessor();
+        public override HealthProcessor CreateHealthProcessor(double drainStartTime) => HealthProcessor = new BosuHealthProcessor();
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new BosuBeatmapConverter(beatmap, this);
 
