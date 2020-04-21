@@ -25,6 +25,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
+        private const float spinner_span_delay_stage_2 = 25;
+
         public static List<BosuHitObject> ConvertSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
@@ -187,34 +189,55 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasEndTime endTime, int index)
+        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasEndTime endTime, int index, int stageIndex)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
             var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
 
-            var spansPerSpinner = endTime.Duration / spinner_span_delay;
-
-            for (int i = 0; i < spansPerSpinner; i++)
+            if (stageIndex == 1)
             {
-                hitObjects.AddRange(generateExplosion(
-                    obj.StartTime + i * spinner_span_delay,
-                    bullets_per_spinner_span,
-                    objPosition * new Vector2(1, 0.5f),
-                    comboData,
-                    index,
-                    i * spinner_angle_per_span));
+                var spansPerSpinner = endTime.Duration / spinner_span_delay;
+
+                for (int i = 0; i < spansPerSpinner; i++)
+                {
+                    hitObjects.AddRange(generateExplosion(
+                        obj.StartTime + i * spinner_span_delay,
+                        bullets_per_spinner_span,
+                        objPosition * new Vector2(1, 0.5f),
+                        comboData,
+                        index,
+                        i * spinner_angle_per_span));
+                }
+            }
+            else
+            {
+                var spansPerSpinner = (int)Math.Floor(endTime.Duration / spinner_span_delay_stage_2);
+
+                float[] xPositions = getRandomTimedXPosition(obj.StartTime, spansPerSpinner);
+
+                for (int i = 0; i < spansPerSpinner; i++)
+                {
+                    hitObjects.Add(new FallingCherry
+                    {
+                        StartTime = obj.StartTime + i * spinner_span_delay_stage_2,
+                        Position = new Vector2(xPositions[i], 0),
+                        NewCombo = comboData?.NewCombo ?? false,
+                        ComboOffset = comboData?.ComboOffset ?? 0,
+                        IndexInBeatmap = index
+                    });
+                }
             }
 
             return hitObjects;
         }
 
-        private static IEnumerable<MovingCherry> generateExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
+        private static IEnumerable<AngledCherry> generateExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
         {
             for (int i = 0; i < bulletCount; i++)
             {
-                yield return new MovingCherry
+                yield return new AngledCherry
                 {
                     Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i, angleOffset),
                     StartTime = startTime,
@@ -243,6 +266,18 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 return false;
 
             return true;
+        }
+
+        private static float[] getRandomTimedXPosition(double time, int count)
+        {
+            var random = new Random((int)Math.Round(time));
+
+            float[] randoms = new float[count];
+
+            for (int i = 0; i < count; i++)
+                randoms[i] = (float)random.NextDouble() * BosuPlayfield.BASE_SIZE.X;
+
+            return randoms;
         }
     }
 }

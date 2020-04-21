@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         public override IEnumerable<BeatmapStatistic> GetStatistics()
         {
             var totalCount = HitObjects.Count();
-            var hitCount = HitObjects.Count(s => s is MovingCherry);
+            var hitCount = HitObjects.Count(s => s is AngledCherry);
 
             return new[]
             {

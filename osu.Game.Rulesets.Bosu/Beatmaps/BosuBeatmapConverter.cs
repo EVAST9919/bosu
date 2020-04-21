@@ -5,6 +5,7 @@ using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.Extensions;
+using osu.Game.Beatmaps.Timing;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -25,6 +26,8 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
             if (comboData?.NewCombo ?? false)
                 index++;
 
+            var beatmapStageIndex = getBeatmapStageIndex(beatmap, obj.StartTime);
+
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
             switch (obj)
@@ -34,7 +37,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     break;
 
                 case IHasEndTime endTime:
-                    hitObjects.AddRange(CherriesExtensions.ConvertSpinner(obj, endTime, index));
+                    hitObjects.AddRange(CherriesExtensions.ConvertSpinner(obj, endTime, index, beatmapStageIndex));
                     break;
 
                 default:
@@ -46,5 +49,24 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         }
 
         protected override Beatmap<BosuHitObject> CreateBeatmap() => new BosuBeatmap();
+
+        private static int getBeatmapStageIndex(IBeatmap beatmap, double time)
+        {
+            if (beatmap.Breaks.Count == 0)
+                return 1;
+
+            BreakPeriod latestBreak = null;
+
+            beatmap.Breaks.ForEach(b =>
+            {
+                if (b.EndTime < time)
+                    latestBreak = b;
+            });
+
+            if (latestBreak == null)
+                return 1;
+
+            return beatmap.Breaks.IndexOf(latestBreak) + 1;
+        }
     }
 }

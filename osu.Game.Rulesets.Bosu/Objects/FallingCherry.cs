@@ -5,10 +5,8 @@ using osu.Game.Rulesets.Judgements;
 
 namespace osu.Game.Rulesets.Bosu.Objects
 {
-    public class MovingCherry : Cherry
+    public class FallingCherry : Cherry
     {
-        public float Angle { get; set; }
-
         public double SpeedMultiplier { get; set; } = 1;
 
         public override Judgement CreateJudgement() => new BosuJudgement();

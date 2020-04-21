@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Bosu.UI
 
         public override void Add(DrawableHitObject h)
         {
-            if (h is DrawableMovingCherry drawable)
+            if (h is DrawableCherry drawable)
             {
                 drawable.GetPlayerToTrace(Player);
                 base.Add(drawable);

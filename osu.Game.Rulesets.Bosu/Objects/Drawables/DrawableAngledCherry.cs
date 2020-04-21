@@ -9,7 +9,7 @@ using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableMovingCherry : DrawableCherry
+    public class DrawableAngledCherry : DrawableCherry
     {
         private const float speed_multiplier = 4.5f;
 
@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private float finalX;
         private float finalY;
 
-        public DrawableMovingCherry(MovingCherry h)
+        public DrawableAngledCherry(AngledCherry h)
             : base(h)
         {
             AlwaysPresent = true;
@@ -56,12 +56,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             }
 
             var distance = Math.Sqrt(((finalX - Position.X) * (finalX - Position.X)) + ((finalY - Position.Y) * (finalY - Position.Y)));
-            duration = (float)distance / MathExtensions.Map((float)((MovingCherry)HitObject).SpeedMultiplier, 0, 3, 0.9f, 1.2f) * speed_multiplier;
+            duration = (float)distance / MathExtensions.Map((float)((AngledCherry)HitObject).SpeedMultiplier, 0, 3, 0.9f, 1.2f) * speed_multiplier;
 
             this.Delay(HitObject.TimePreempt).MoveTo(new Vector2(finalX, finalY), duration);
         }
 
-        protected virtual float GetAngle() => ((MovingCherry)HitObject).Angle;
+        protected virtual float GetAngle() => ((AngledCherry)HitObject).Angle;
 
         private double missTime;
 

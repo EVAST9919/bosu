@@ -13,11 +13,11 @@ namespace osu.Game.Rulesets.Bosu.Mods
 
         protected override void ApplyHiddenState(DrawableHitObject drawable, ArmedState state)
         {
-            if (!(drawable is DrawableMovingCherry))
+            if (!(drawable is DrawableAngledCherry))
                 return;
 
-            var drawableCherry = (DrawableMovingCherry)drawable;
-            var cherry = (MovingCherry)drawableCherry.HitObject;
+            var drawableCherry = (DrawableAngledCherry)drawable;
+            var cherry = (AngledCherry)drawableCherry.HitObject;
 
             using (drawableCherry.BeginAbsoluteSequence(cherry.StartTime, true))
                 drawableCherry.FadeOut(cherry.TimePreempt * 1.5f);
