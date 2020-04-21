@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
-        private const double base_speed = 1.0 / 2500;
+        private const double base_speed = 1.0 / 4.5;
 
         [Resolved]
         private TextureStore textures { get; set; }
@@ -51,14 +51,10 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                 },
                 Player = new Container
                 {
-                    Origin = Anchor.BottomCentre,
-                    RelativePositionAxes = Axes.Both,
-                    Position = new Vector2(0.5f, 1),
+                    Origin = Anchor.Centre,
                     Size = new Vector2(15),
                     Child = drawablePlayer = new Sprite
                     {
-                        Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre,
                         RelativeSizeAxes = Axes.Both
                     }
                 }
@@ -96,9 +92,11 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                         return;
                 }
             }, true);
+
+            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f);
         }
 
-        public Vector2 PlayerPositionInPlayfieldSpace(Vector2? offset = null) => new Vector2(Player.Position.X * BosuPlayfield.BASE_SIZE.X + (offset?.X ?? 0), (Player.Position.Y * BosuPlayfield.BASE_SIZE.Y - drawablePlayer.DrawHeight / 2) - (offset?.Y ?? 0));
+        public Vector2 PlayerPosition(Vector2? offset = null) => new Vector2(Player.Position.X + (offset?.X ?? 0), Player.Position.Y - (offset?.Y ?? 0));
 
         public Vector2 PlayerDrawSize() => drawablePlayer.DrawSize;
 
@@ -156,23 +154,23 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             base.Update();
 
             // Collided with the ground, reset jump logic
-            if (Player.Y > 1 || Player.Y < 0)
+            if (Player.Y > (BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f) || Player.Y < 0)
             {
                 availableJumpCount = 2;
                 verticalSpeed = 0;
                 midAir = false;
-                Player.Y = 1;
+                Player.Y = BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f;
             }
 
             if (midAir)
             {
                 verticalSpeed -= (float)Clock.ElapsedFrameTime / 3.5f;
-                Player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.00001);
+                Player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.0045);
             }
 
             if (horizontalDirection != 0)
             {
-                var position = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, 0, 1);
+                var position = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, PlayerDrawSize().X / 2f, BosuPlayfield.BASE_SIZE.X - PlayerDrawSize().X / 2f);
 
                 Player.Scale = new Vector2(Math.Abs(Scale.X) * (horizontalDirection > 0 ? 1 : -1), Player.Scale.Y);
 
@@ -196,12 +194,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             {
                 case 1:
                     jump.Play();
-                    verticalSpeed = 100;
+                    verticalSpeed = 90;
                     break;
 
                 case 0:
                     doubleJump.Play();
-                    verticalSpeed = 90;
+                    verticalSpeed = 80;
                     break;
             }
         }
@@ -219,7 +217,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             shoot.Play();
             bulletsContainer.Add(new Bullet(Player.Scale.X > 0, Clock.CurrentTime)
             {
-                Position = PlayerPositionInPlayfieldSpace(new Vector2(0, 1))
+                Position = PlayerPosition(new Vector2(0, 1))
             });
         }
 
@@ -229,7 +227,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
             if (state != null)
             {
-                Player.X = state.Position.Value / BosuPlayfield.BASE_SIZE.X;
+                Player.X = state.Position.Value;
             }
         }
     }

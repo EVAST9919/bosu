@@ -86,7 +86,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             // Let's assume that player is a circle for simplicity
 
-            var playerPosition = player.PlayerPositionInPlayfieldSpace();
+            var playerPosition = player.PlayerPosition();
             var distance = Math.Sqrt(Math.Pow(Math.Abs(playerPosition.X - Position.X), 2) + Math.Pow(Math.Abs(playerPosition.Y - Position.Y), 2));
             var playerRadius = player.PlayerDrawSize().X / 2f;
             var cherryRadius = finalSize / 2f;

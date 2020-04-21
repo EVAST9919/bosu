@@ -38,7 +38,7 @@ namespace osu.Game.Rulesets.Bosu.Mods
             {
                 base.Update();
 
-                var playerPos = playfield.Player.PlayerPositionInPlayfieldSpace();
+                var playerPos = playfield.Player.PlayerPosition();
 
                 FlashlightPosition = playfield.ToSpaceOfOtherDrawable(new Vector2(playerPos.X, playerPos.Y - 50), this);
             }

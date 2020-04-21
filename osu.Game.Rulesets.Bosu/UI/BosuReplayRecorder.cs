@@ -18,6 +18,6 @@ namespace osu.Game.Rulesets.Bosu.UI
         }
 
         protected override ReplayFrame HandleFrame(Vector2 mousePosition, List<BosuAction> actions, ReplayFrame previousFrame)
-            => new BosuReplayFrame(Time.Current, playfield.Player.PlayerPositionInPlayfieldSpace().X, actions.Contains(BosuAction.Jump), actions.Contains(BosuAction.Shoot), previousFrame as BosuReplayFrame);
+            => new BosuReplayFrame(Time.Current, playfield.Player.PlayerPosition().X, actions.Contains(BosuAction.Jump), actions.Contains(BosuAction.Shoot), previousFrame as BosuReplayFrame);
     }
 }
