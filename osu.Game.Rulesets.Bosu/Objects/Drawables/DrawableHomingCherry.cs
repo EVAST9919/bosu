@@ -2,9 +2,9 @@
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableTargetedCherry : DrawableAngledCherry
+    public class DrawableHomingCherry : DrawableAngledCherry
     {
-        public DrawableTargetedCherry(TargetedCherry h)
+        public DrawableHomingCherry(HomingCherry h)
             : base(h)
         {
         }

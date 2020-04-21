@@ -62,13 +62,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             return false;
         }
 
-        private float angle;
-
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-            angle = GetAngle();
-        }
+        private float? angle;
 
         protected override void Update()
         {
@@ -84,9 +78,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         private Vector2 updatePosition()
         {
+            if (angle == null)
+                angle = GetAngle();
+
             var elapsedTime = Clock.CurrentTime - HitObject.StartTime;
-            var xPosition = HitObject.Position.X + (elapsedTime * speedMultiplier * Math.Sin(angle * Math.PI / 180));
-            var yPosition = HitObject.Position.Y + (elapsedTime * speedMultiplier * -Math.Cos(angle * Math.PI / 180));
+            var xPosition = HitObject.Position.X + (elapsedTime * speedMultiplier * Math.Sin((angle ?? 0) * Math.PI / 180));
+            var yPosition = HitObject.Position.Y + (elapsedTime * speedMultiplier * -Math.Cos((angle ?? 0) * Math.PI / 180));
             return new Vector2((float)xPosition, (float)yPosition);
         }
 
