@@ -108,7 +108,6 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new MultiMod(new BosuModAutoplay(), new BosuModCinema()),
-                        new BosuModSliders(),
                         new BosuModRelax(),
                     };
 
