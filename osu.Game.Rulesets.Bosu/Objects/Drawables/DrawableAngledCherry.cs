@@ -1,64 +1,26 @@
 ﻿using osuTK;
 using System;
-using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Bosu.UI.Objects;
-using osu.Game.Rulesets.Bosu.Extensions;
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Bosu.UI;
+using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableAngledCherry : DrawableCherry
     {
-        private const float speed_multiplier = 4.5f;
+        private readonly float speedMultiplier;
 
         private readonly float finalSize;
-        private float duration;
-        private float finalX;
-        private float finalY;
 
         public DrawableAngledCherry(AngledCherry h)
             : base(h)
         {
             AlwaysPresent = true;
+            speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.9f, 1.1f) / 4.5f;
             finalSize = Size.X;
-        }
-
-        protected override void UpdateInitialTransforms()
-        {
-            base.UpdateInitialTransforms();
-
-            var angle = GetAngle();
-            var wall = selectWall(angle);
-
-            switch (wall)
-            {
-                case Wall.Bottom:
-                    finalY = BosuPlayfield.BASE_SIZE.Y + (finalSize / 2f);
-                    finalX = (float)getXPosition(Position, finalY, angle);
-                    break;
-
-                case Wall.Top:
-                    finalY = -finalSize / 2f;
-                    finalX = (float)getXPosition(Position, finalY, angle);
-                    break;
-
-                case Wall.Left:
-                    finalX = -finalSize / 2f;
-                    finalY = (float)getYPosition(Position, finalX, angle);
-                    break;
-
-                case Wall.Right:
-                    finalX = BosuPlayfield.BASE_SIZE.X + (finalSize / 2f);
-                    finalY = (float)getYPosition(Position, finalX, angle);
-                    break;
-            }
-
-            var distance = Math.Sqrt(((finalX - Position.X) * (finalX - Position.X)) + ((finalY - Position.Y) * (finalY - Position.Y)));
-            duration = (float)distance / MathExtensions.Map((float)((AngledCherry)HitObject).SpeedMultiplier, 0, 3, 0.9f, 1.2f) * speed_multiplier;
-
-            this.Delay(HitObject.TimePreempt).MoveTo(new Vector2(finalX, finalY), duration);
         }
 
         protected virtual float GetAngle() => ((AngledCherry)HitObject).Angle;
@@ -77,7 +39,10 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                     return;
                 }
 
-                if (timeOffset > duration)
+                if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f
+                    || Position.X < -DrawSize.X / 2f
+                    || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f
+                    || Position.Y < -DrawSize.Y / 2f)
                     ApplyResult(r => r.Type = HitResult.Perfect);
             }
         }
@@ -97,6 +62,34 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             return false;
         }
 
+        private float angle;
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            angle = GetAngle();
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+
+            Vector2 newPosition = (Time.Current > HitObject.StartTime) ? updatePosition() : HitObject.Position;
+
+            if (newPosition == Position)
+                return;
+
+            Position = newPosition;
+        }
+
+        private Vector2 updatePosition()
+        {
+            var elapsedTime = Clock.CurrentTime - HitObject.StartTime;
+            var xPosition = HitObject.Position.X + (elapsedTime * speedMultiplier * Math.Sin(angle * Math.PI / 180));
+            var yPosition = HitObject.Position.Y + (elapsedTime * speedMultiplier * -Math.Cos(angle * Math.PI / 180));
+            return new Vector2((float)xPosition, (float)yPosition);
+        }
+
         protected override void UpdateStateTransforms(ArmedState state)
         {
             base.UpdateStateTransforms(state);
@@ -108,66 +101,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                     this.Delay(missTime).FadeOut();
                     break;
             }
-        }
-
-        private Wall selectWall(float angle)
-        {
-            // Top/Right
-            if (angle <= 90)
-            {
-                if (angle < getCornerAngle(Position, new Vector2(BosuPlayfield.BASE_SIZE.X, 0)) - 360)
-                    return Wall.Top;
-
-                return Wall.Right;
-            }
-
-            // Right/Bottom
-            if (angle <= 180)
-            {
-                if (angle < getCornerAngle(Position, new Vector2(BosuPlayfield.BASE_SIZE.X, BosuPlayfield.BASE_SIZE.Y)))
-                    return Wall.Right;
-
-                return Wall.Bottom;
-            }
-
-            // Bottom/Left
-            if (angle <= 270)
-            {
-                if (angle < getCornerAngle(Position, new Vector2(0, BosuPlayfield.BASE_SIZE.Y)))
-                    return Wall.Bottom;
-
-                return Wall.Left;
-            }
-
-            if (angle < getCornerAngle(Position, Vector2.Zero))
-                return Wall.Left;
-
-            return Wall.Top;
-        }
-
-        private static double getXPosition(Vector2 initialPosition, float finalY, float angle)
-        {
-            var time = (finalY - initialPosition.Y) / -Math.Cos(angle * Math.PI / 180);
-            return initialPosition.X + (time * Math.Sin(angle * Math.PI / 180));
-        }
-
-        private static double getYPosition(Vector2 initialPosition, float finalX, float angle)
-        {
-            var time = (finalX - initialPosition.X) / Math.Sin(angle * Math.PI / 180);
-            return initialPosition.Y + (time * -Math.Cos(angle * Math.PI / 180));
-        }
-
-        private static float getCornerAngle(Vector2 objectPosition, Vector2 cornerPosition)
-        {
-            return (float)(Math.Atan2(objectPosition.Y - cornerPosition.Y, objectPosition.X - cornerPosition.X) * 180 / Math.PI) + 270;
-        }
-
-        public enum Wall
-        {
-            Top,
-            Right,
-            Left,
-            Bottom
         }
     }
 }

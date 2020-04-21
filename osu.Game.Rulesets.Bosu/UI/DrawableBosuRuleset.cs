@@ -42,6 +42,9 @@ namespace osu.Game.Rulesets.Bosu.UI
                 case TickCherry tick:
                     return new DrawableTickCherry(tick);
 
+                case TargetedCherry targeted:
+                    return new DrawableTargetedCherry(targeted);
+
                 case FallingCherry falling:
                     return new DrawableFallingCherry(falling);
 
