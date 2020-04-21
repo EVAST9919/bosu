@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Bosu.Mods
 
             protected override bool OnMouseMove(MouseMoveEvent e)
             {
-                player.X = e.MousePosition.X / DrawSize.X;
+                player.X = e.MousePosition.X / DrawSize.X * BosuPlayfield.BASE_SIZE.X;
                 return base.OnMouseMove(e);
             }
         }
