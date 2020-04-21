@@ -25,8 +25,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
-        private const float spinner_span_delay_stage_2 = 25;
-
         public static List<BosuHitObject> ConvertSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, int index)
         {
             double spanDuration = curve.Duration / (curve.RepeatCount + 1);
@@ -69,40 +67,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
-
-            //if (stageIndex == 1)
-            //{
-            //    var spansPerSpinner = endTime.Duration / spinner_span_delay;
-
-            //    for (int i = 0; i < spansPerSpinner; i++)
-            //    {
-            //        hitObjects.AddRange(generateExplosion(
-            //            obj.StartTime + i * spinner_span_delay,
-            //            bullets_per_spinner_span,
-            //            objPosition * new Vector2(1, 0.5f),
-            //            comboData,
-            //            index,
-            //            i * spinner_angle_per_span));
-            //    }
-            //}
-            //else
-            //{
-            //    var spansPerSpinner = (int)Math.Floor(endTime.Duration / spinner_span_delay_stage_2);
-
-            //    float[] xPositions = getRandomTimedXPosition(obj.StartTime, spansPerSpinner);
-
-            //    for (int i = 0; i < spansPerSpinner; i++)
-            //    {
-            //        hitObjects.Add(new FallingCherry
-            //        {
-            //            StartTime = obj.StartTime + i * spinner_span_delay_stage_2,
-            //            Position = new Vector2(xPositions[i], 0),
-            //            NewCombo = comboData?.NewCombo ?? false,
-            //            ComboOffset = comboData?.ComboOffset ?? 0,
-            //            IndexInBeatmap = index
-            //        });
-            //    }
-            //}
 
             var spansPerSpinner = endTime.Duration / spinner_span_delay;
 

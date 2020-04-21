@@ -45,9 +45,6 @@ namespace osu.Game.Rulesets.Bosu.UI
                 case TargetedCherry targeted:
                     return new DrawableTargetedCherry(targeted);
 
-                case FallingCherry falling:
-                    return new DrawableFallingCherry(falling);
-
                 case AngledCherry angled:
                     return new DrawableAngledCherry(angled);
             }
