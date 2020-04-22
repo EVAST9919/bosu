@@ -197,12 +197,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
                         if (positionIsValid(sliderEventPosition))
                         {
-                            hitObjects.AddRange(generateExplosion(
+                            hitObjects.AddRange(generateTriangularExplosion(
                                 e.Time,
-                                bullets_per_slider_reverse,
+                                20,
                                 sliderEventPosition,
                                 comboData,
-                                index));
+                                index,
+                                getRandomTimedAngleOffset(e.Time)));
                         }
 
                         hitObjects.Add(new SoundHitObject
