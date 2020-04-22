@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             : base(h)
         {
             AlwaysPresent = true;
-            speedMultiplier = MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.9f, 1.1f) / 4.5f;
+            speedMultiplier = (float)(MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.9f, 1.1f) * h.DeltaMultiplier / 4.5f );
             finalSize = Size.X;
         }
 

@@ -14,6 +14,8 @@ namespace osu.Game.Rulesets.Bosu.Objects
 
         public double SpeedMultiplier { get; set; } = 1;
 
+        public double DeltaMultiplier { get; set; } = 1;
+
         public override Judgement CreateJudgement() => new BosuJudgement();
 
         protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, BeatmapDifficulty difficulty)

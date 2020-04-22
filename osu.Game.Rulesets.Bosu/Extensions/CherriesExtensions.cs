@@ -100,6 +100,25 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             }
         }
 
+        private static IEnumerable<AngledCherry> generateTriangularExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0)
+        {
+            for (int i = 0; i < bulletCount; i++)
+            {
+                var angle = MathExtensions.BulletDistribution(bulletCount, 360, i);
+
+                yield return new AngledCherry
+                {
+                    Angle = angle,
+                    DeltaMultiplier = getTriangularDelta(angle + angleOffset),
+                    StartTime = startTime,
+                    Position = position,
+                    NewCombo = comboData?.NewCombo ?? false,
+                    ComboOffset = comboData?.ComboOffset ?? 0,
+                    IndexInBeatmap = index
+                };
+            }
+        }
+
         private static IEnumerable<EndTimeCherry> generateEndTimeExplosion(double startTime, double endTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
         {
             for (int i = 0; i < bulletCount; i++)
@@ -372,6 +391,23 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 randoms[i] = (float)random.NextDouble() * BosuPlayfield.BASE_SIZE.X;
 
             return randoms;
+        }
+
+        private static float getRandomTimedAngleOffset(double time)
+        {
+            var random = new Random((int)Math.Round(time));
+            return (float)random.NextDouble() * 360f;
+        }
+
+        private static double getTriangularDelta(float angle)
+        {
+            while (angle > 120)
+                angle -= 120;
+
+            if (angle > 60)
+                angle = 120 - angle;
+
+            return 0.5f / Math.Cos(angle * Math.PI / 180) * 1.5f;
         }
     }
 }
