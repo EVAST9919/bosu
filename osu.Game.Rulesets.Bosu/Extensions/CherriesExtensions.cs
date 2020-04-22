@@ -30,10 +30,10 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             double spanDuration = curve.Duration / (curve.RepeatCount + 1);
             bool isRepeatSpam = spanDuration < 75 && curve.RepeatCount > 0;
 
-            if (!isRepeatSpam)
-                return generateDefaultSlider(obj, beatmap, curve, spanDuration, index);
-            else
+            if (isRepeatSpam)
                 return generateRepeatSpamSlider(obj, beatmap, curve, spanDuration, index);
+            else
+                return generateDefaultSlider(obj, beatmap, curve, spanDuration, index);
         }
 
         public static List<BosuHitObject> ConvertHitCircle(HitObject obj, int index)
@@ -166,8 +166,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 bullets_per_slider_reverse,
                                 sliderEventPosition,
                                 comboData,
-                                index,
-                                slider_angle_per_span * e.SpanIndex));
+                                index));
                         }
 
                         hitObjects.Add(new SoundHitObject
