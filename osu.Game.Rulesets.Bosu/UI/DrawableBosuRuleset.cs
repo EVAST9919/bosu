@@ -39,6 +39,9 @@ namespace osu.Game.Rulesets.Bosu.UI
                 case SliderPartCherry sliderPart:
                     return new DrawableSliderPartCherry(sliderPart);
 
+                case EndTimeCherry endTime:
+                    return new DrawableEndTimeCherry(endTime);
+
                 case TickCherry tick:
                     return new DrawableTickCherry(tick);
 

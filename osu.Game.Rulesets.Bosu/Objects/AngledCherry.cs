@@ -5,6 +5,9 @@ using osu.Game.Rulesets.Judgements;
 
 namespace osu.Game.Rulesets.Bosu.Objects
 {
+    /// <summary>
+    /// Will move along the provided angle until hit the playfield borders.
+    /// </summary>
     public class AngledCherry : Cherry
     {
         public float Angle { get; set; }

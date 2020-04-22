@@ -68,7 +68,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.Update();
 
-            Vector2 newPosition = (Time.Current > HitObject.StartTime) ? updatePosition() : HitObject.Position;
+            Vector2 newPosition = (Time.Current > HitObject.StartTime) ? UpdatePosition(Time.Current) : HitObject.Position;
 
             if (newPosition == Position)
                 return;
@@ -76,7 +76,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             Position = newPosition;
         }
 
-        private Vector2 updatePosition()
+        protected virtual Vector2 UpdatePosition(double currentTime)
         {
             if (angle == null)
                 angle = GetAngle();

@@ -100,6 +100,23 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             }
         }
 
+        private static IEnumerable<EndTimeCherry> generateEndTimeExplosion(double startTime, double endTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
+        {
+            for (int i = 0; i < bulletCount; i++)
+            {
+                yield return new EndTimeCherry
+                {
+                    Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i, angleOffset),
+                    StartTime = startTime,
+                    EndTime = endTime,
+                    Position = position,
+                    NewCombo = comboData?.NewCombo ?? false,
+                    ComboOffset = comboData?.ComboOffset ?? 0,
+                    IndexInBeatmap = index
+                };
+            }
+        }
+
         private static List<BosuHitObject> generateDefaultSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, double spanDuration, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
