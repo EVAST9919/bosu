@@ -14,7 +14,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 {
     public static class CherriesExtensions
     {
-        private const int bullets_per_hitcircle = 4;
+        private const int bullets_per_hitcircle = 10;
+        private const int hitcircle_angle_offset = 5;
 
         private const int bullets_per_slider_reverse = 5;
 
@@ -36,22 +37,24 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 return generateDefaultSlider(obj, beatmap, curve, spanDuration, isKiai, index);
         }
 
-        public static List<BosuHitObject> ConvertHitCircle(HitObject obj, bool isKiai, int index)
+        public static List<BosuHitObject> ConvertHitCircle(HitObject obj, bool isKiai, int index, int indexInCurrentCombo)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
-            var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
+            var circlePosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
+            circlePosition *= new Vector2(1, 0.5f);
             var comboData = obj as IHasCombo;
+
+            // TODO: new another type for new combo hitcircle
 
             hitObjects.AddRange(generateExplosion(
                 obj.StartTime,
                 bullets_per_hitcircle,
-                objPosition * new Vector2(1, 0.5f),
+                circlePosition,
                 comboData,
                 isKiai,
                 index,
-                0,
-                120));
+                hitcircle_angle_offset * indexInCurrentCombo));
 
             hitObjects.Add(new SoundHitObject
             {

@@ -19,12 +19,16 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition);
 
         private int index = -1;
+        private int objectIndexInCurrentCombo = 0;
 
         protected override IEnumerable<BosuHitObject> ConvertHitObject(HitObject obj, IBeatmap beatmap)
         {
             var comboData = obj as IHasCombo;
             if (comboData?.NewCombo ?? false)
+            {
+                objectIndexInCurrentCombo = 0;
                 index++;
+            }
 
             var beatmapStageIndex = getBeatmapStageIndex(beatmap, obj.StartTime);
 
@@ -43,9 +47,11 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     break;
 
                 default:
-                    hitObjects.AddRange(CherriesExtensions.ConvertHitCircle(obj, kiai, index));
+                    hitObjects.AddRange(CherriesExtensions.ConvertHitCircle(obj, kiai, index, objectIndexInCurrentCombo));
                     break;
             }
+
+            objectIndexInCurrentCombo++;
 
             return hitObjects;
         }
