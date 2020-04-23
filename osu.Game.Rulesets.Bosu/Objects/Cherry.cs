@@ -9,6 +9,8 @@ namespace osu.Game.Rulesets.Bosu.Objects
     {
         public float CircleSize { get; set; } = 1;
 
+        public bool IsKiai { get; set; }
+
         public override Judgement CreateJudgement() => new NullJudgement();
 
         protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, BeatmapDifficulty difficulty)

@@ -18,13 +18,18 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected virtual float GetBaseSize() => 25;
 
         private readonly Sprite sprite;
+        private readonly Sprite kiaiSprite;
         private readonly Sprite overlay;
         private readonly Sprite branch;
         protected readonly Container Content;
 
+        private readonly bool isKiai;
+
         protected DrawableCherry(Cherry h)
             : base(h)
         {
+            isKiai = h.IsKiai;
+
             Origin = Anchor.Centre;
             Size = new Vector2(GetBaseSize() * MathExtensions.Map(h.CircleSize, 0, 10, 0.2f, 1));
             Position = h.Position;
@@ -37,6 +42,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 Origin = Anchor.Centre,
                 Children = new Drawable[]
                 {
+                    kiaiSprite = new Sprite
+                    {
+                        Scale = new Vector2(1.8f),
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        RelativeSizeAxes = Axes.Both,
+                        Alpha = isKiai ? 1 : 0,
+                    },
                     sprite = new Sprite
                     {
                         Anchor = Anchor.Centre,
@@ -64,10 +77,11 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private void load(TextureStore textures)
         {
             sprite.Texture = textures.Get("cherry");
+            kiaiSprite.Texture = textures.Get("cherry-kiai");
             overlay.Texture = textures.Get("cherry-overlay");
             branch.Texture = textures.Get("cherry-branch");
 
-            AccentColour.BindValueChanged(accent => sprite.Colour = accent.NewValue, true);
+            AccentColour.BindValueChanged(accent => sprite.Colour = kiaiSprite.Colour = accent.NewValue, true);
         }
 
         protected override void UpdateInitialTransforms()
@@ -76,6 +90,9 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
             sprite.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
             overlay.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
+
+            if (isKiai)
+                kiaiSprite.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
         }
     }
 }

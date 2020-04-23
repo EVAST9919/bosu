@@ -25,18 +25,18 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const float spinner_span_delay = 250f;
         private const float spinner_angle_per_span = 8f;
 
-        public static List<BosuHitObject> ConvertSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, int index)
+        public static List<BosuHitObject> ConvertSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, bool isKiai, int index)
         {
             double spanDuration = curve.Duration / (curve.RepeatCount + 1);
             bool isRepeatSpam = spanDuration < 75 && curve.RepeatCount > 0;
 
             if (isRepeatSpam)
-                return generateRepeatSpamSlider(obj, beatmap, curve, spanDuration, index);
+                return generateRepeatSpamSlider(obj, beatmap, curve, spanDuration, isKiai, index);
             else
-                return generateDefaultSlider(obj, beatmap, curve, spanDuration, index);
+                return generateDefaultSlider(obj, beatmap, curve, spanDuration, isKiai, index);
         }
 
-        public static List<BosuHitObject> ConvertHitCircle(HitObject obj, int index)
+        public static List<BosuHitObject> ConvertHitCircle(HitObject obj, bool isKiai, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -48,6 +48,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 bullets_per_hitcircle,
                 objPosition * new Vector2(1, 0.5f),
                 comboData,
+                isKiai,
                 index,
                 0,
                 120));
@@ -61,7 +62,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasEndTime endTime, int index, int stageIndex)
+        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasEndTime endTime, bool isKiai, int index, int stageIndex)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -77,6 +78,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                     bullets_per_spinner_span,
                     objPosition * new Vector2(1, 0.5f),
                     comboData,
+                    isKiai,
                     index,
                     i * spinner_angle_per_span));
             }
@@ -84,7 +86,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        private static IEnumerable<AngledCherry> generateExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
+        private static IEnumerable<AngledCherry> generateExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0, float angleRange = 360f)
         {
             for (int i = 0; i < bulletCount; i++)
             {
@@ -95,12 +97,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                     Position = position,
                     NewCombo = comboData?.NewCombo ?? false,
                     ComboOffset = comboData?.ComboOffset ?? 0,
-                    IndexInBeatmap = index
+                    IndexInBeatmap = index,
+                    IsKiai = isKiai
                 };
             }
         }
 
-        private static IEnumerable<AngledCherry> generateTriangularExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0)
+        private static IEnumerable<AngledCherry> generateTriangularExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0)
         {
             for (int i = 0; i < bulletCount; i++)
             {
@@ -114,12 +117,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                     Position = position,
                     NewCombo = comboData?.NewCombo ?? false,
                     ComboOffset = comboData?.ComboOffset ?? 0,
-                    IndexInBeatmap = index
+                    IndexInBeatmap = index,
+                    IsKiai = isKiai,
                 };
             }
         }
 
-        private static IEnumerable<EndTimeCherry> generateEndTimeExplosion(double startTime, double endTime, int bulletCount, Vector2 position, IHasCombo comboData, int index, float angleOffset = 0, float angleRange = 360f)
+        private static IEnumerable<EndTimeCherry> generateEndTimeExplosion(double startTime, double endTime, int bulletCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0, float angleRange = 360f)
         {
             for (int i = 0; i < bulletCount; i++)
             {
@@ -131,12 +135,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                     Position = position,
                     NewCombo = comboData?.NewCombo ?? false,
                     ComboOffset = comboData?.ComboOffset ?? 0,
-                    IndexInBeatmap = index
+                    IndexInBeatmap = index,
+                    IsKiai = isKiai
                 };
             }
         }
 
-        private static List<BosuHitObject> generateDefaultSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, double spanDuration, int index)
+        private static List<BosuHitObject> generateDefaultSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, double spanDuration, bool isKiai, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -182,7 +187,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 Position = sliderEventPosition,
                                 NewCombo = comboData?.NewCombo ?? false,
                                 ComboOffset = comboData?.ComboOffset ?? 0,
-                                IndexInBeatmap = index
+                                IndexInBeatmap = index,
+                                IsKiai = isKiai
                             });
                         }
 
@@ -202,6 +208,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 20,
                                 sliderEventPosition,
                                 comboData,
+                                isKiai,
                                 index,
                                 MathExtensions.GetRandomTimedAngleOffset(e.Time)));
                         }
@@ -222,6 +229,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 Math.Clamp((int)curve.Distance / 15, 5, 20),
                                 sliderEventPosition,
                                 comboData,
+                                isKiai,
                                 index));
                         }
 
@@ -234,12 +242,12 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 }
             }
 
-            hitObjects.AddRange(generateSliderBody(obj, curve, index));
+            hitObjects.AddRange(generateSliderBody(obj, curve, isKiai, index));
 
             return hitObjects;
         }
 
-        private static List<BosuHitObject> generateRepeatSpamSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, double spanDuration, int index)
+        private static List<BosuHitObject> generateRepeatSpamSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, double spanDuration, bool isKiai, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -273,6 +281,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 bullets_per_slider_reverse,
                                 sliderEventPosition,
                                 comboData,
+                                isKiai,
                                 index));
                         }
 
@@ -293,6 +302,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 bullets_per_slider_reverse,
                                 sliderEventPosition,
                                 comboData,
+                                isKiai,
                                 index,
                                 slider_angle_per_span * (e.SpanIndex + 1)));
                         }
@@ -313,6 +323,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 bullets_per_slider_reverse,
                                 sliderEventPosition,
                                 comboData,
+                                isKiai,
                                 index,
                                 slider_angle_per_span * (curve.RepeatCount + 1)));
                         }
@@ -326,12 +337,12 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 }
             }
 
-            hitObjects.AddRange(generateSliderBody(obj, curve, index));
+            hitObjects.AddRange(generateSliderBody(obj, curve, isKiai, index));
 
             return hitObjects;
         }
 
-        private static List<SliderPartCherry> generateSliderBody(HitObject obj, IHasCurve curve, int index)
+        private static List<SliderPartCherry> generateSliderBody(HitObject obj, IHasCurve curve, bool isKiai, int index)
         {
             var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
@@ -355,7 +366,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         Position = position,
                         NewCombo = comboData?.NewCombo ?? false,
                         ComboOffset = comboData?.ComboOffset ?? 0,
-                        IndexInBeatmap = index
+                        IndexInBeatmap = index,
+                        IsKiai = isKiai,
                     });
                 }
             }
