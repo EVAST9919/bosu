@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Bosu.Replays
                 if (Position > lastBosuFrame.Position)
                     lastBosuFrame.Actions.Add(BosuAction.MoveRight);
                 else if (Position < lastBosuFrame.Position)
-                    Actions.Add(BosuAction.MoveLeft);
+                    lastBosuFrame.Actions.Add(BosuAction.MoveLeft);
             }
         }
 
