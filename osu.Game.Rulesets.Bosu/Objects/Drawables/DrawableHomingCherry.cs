@@ -1,4 +1,4 @@
-﻿using System;
+﻿using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
@@ -9,15 +9,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
         }
 
-        protected override float GetAngle()
-        {
-            var playerPosition = Player.PlayerPosition();
-            var angle = (float)(Math.Atan2(HitObject.Y - playerPosition.Y, HitObject.X - playerPosition.X) * 180 / Math.PI) + 270;
-
-            if (angle > 360)
-                angle %= 360f;
-
-            return angle;
-        }
+        protected override float GetAngle() => MathExtensions.GetPlayerAngle(Player, HitObject.Position);
     }
 }

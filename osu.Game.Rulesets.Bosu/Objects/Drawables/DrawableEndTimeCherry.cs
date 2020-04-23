@@ -1,4 +1,5 @@
-﻿using osuTK;
+﻿using osu.Game.Rulesets.Bosu.Extensions;
+using osuTK;
 using System;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
@@ -37,18 +38,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             return new Vector2((float)xPosition, (float)yPosition);
         }
 
-        private float getAngle()
-        {
-            var playerPosition = Player.PlayerPosition();
-            var angle = (float)(Math.Atan2((finishedYPosition ?? 0) - playerPosition.Y, (finishedXPosition ?? 0) - playerPosition.X) * 180 / Math.PI) + 90;
-
-            if (angle < 0)
-                angle += 360;
-
-            if (angle > 360)
-                angle %= 360f;
-
-            return angle;
-        }
+        private float getAngle() => MathExtensions.GetPlayerReverseAngle(Player, new Vector2((float)(finishedXPosition ?? 0), (float)(finishedYPosition ?? 0)));
     }
 }

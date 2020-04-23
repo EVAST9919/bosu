@@ -104,7 +104,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             for (int i = 0; i < bulletCount; i++)
             {
-                var angle = MathExtensions.BulletDistribution(bulletCount, 360, i);
+                var angle = (float)i / bulletCount * 360f;
 
                 yield return new AngledCherry
                 {
@@ -203,7 +203,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 sliderEventPosition,
                                 comboData,
                                 index,
-                                getRandomTimedAngleOffset(e.Time)));
+                                MathExtensions.GetRandomTimedAngleOffset(e.Time)));
                         }
 
                         hitObjects.Add(new SoundHitObject
@@ -380,24 +380,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 return false;
 
             return true;
-        }
-
-        private static float[] getRandomTimedXPosition(double time, int count)
-        {
-            var random = new Random((int)Math.Round(time));
-
-            float[] randoms = new float[count];
-
-            for (int i = 0; i < count; i++)
-                randoms[i] = (float)random.NextDouble() * BosuPlayfield.BASE_SIZE.X;
-
-            return randoms;
-        }
-
-        private static float getRandomTimedAngleOffset(double time)
-        {
-            var random = new Random((int)Math.Round(time));
-            return (float)random.NextDouble() * 360f;
         }
 
         private static double getTriangularDelta(float angle)

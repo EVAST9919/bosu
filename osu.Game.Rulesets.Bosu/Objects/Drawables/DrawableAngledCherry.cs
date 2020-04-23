@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableAngledCherry : DrawableCherry
     {
-        private readonly float speedMultiplier;
+        protected readonly float SpeedMultiplier;
 
         private readonly float finalSize;
 
@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             : base(h)
         {
             AlwaysPresent = true;
-            speedMultiplier = (float)(MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.9f, 1.1f) * h.DeltaMultiplier / 4.5f );
+            SpeedMultiplier = (float)(MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 0.9f, 1.1f) * h.DeltaMultiplier / 4.5f );
             finalSize = Size.X;
         }
 
@@ -39,13 +39,18 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                     return;
                 }
 
-                if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f
+                if (timeOffset > GetWallCheckOffset())
+                {
+                    if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f
                     || Position.X < -DrawSize.X / 2f
                     || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f
                     || Position.Y < -DrawSize.Y / 2f)
-                    ApplyResult(r => r.Type = HitResult.Perfect);
+                        ApplyResult(r => r.Type = HitResult.Perfect);
+                }
             }
         }
+
+        protected virtual float GetWallCheckOffset() => 0;
 
         private bool collidedWithPlayer(BosuPlayer player)
         {
@@ -82,8 +87,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 angle = GetAngle();
 
             var elapsedTime = Clock.CurrentTime - HitObject.StartTime;
-            var xPosition = HitObject.Position.X + (elapsedTime * speedMultiplier * Math.Sin((angle ?? 0) * Math.PI / 180));
-            var yPosition = HitObject.Position.Y + (elapsedTime * speedMultiplier * -Math.Cos((angle ?? 0) * Math.PI / 180));
+            var xPosition = HitObject.Position.X + (elapsedTime * SpeedMultiplier * Math.Sin((angle ?? 0) * Math.PI / 180));
+            var yPosition = HitObject.Position.Y + (elapsedTime * SpeedMultiplier * -Math.Cos((angle ?? 0) * Math.PI / 180));
             return new Vector2((float)xPosition, (float)yPosition);
         }
 
