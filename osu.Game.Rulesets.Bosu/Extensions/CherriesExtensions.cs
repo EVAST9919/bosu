@@ -59,7 +59,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             hitObjects.Add(new SoundHitObject
             {
                 StartTime = obj.StartTime,
-                Samples = obj.Samples
+                Samples = obj.Samples,
+                Position = circlePosition
             });
 
             return hitObjects;
@@ -174,7 +175,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         hitObjects.Add(new SoundHitObject
                         {
                             StartTime = obj.StartTime,
-                            Samples = obj.Samples
+                            Samples = obj.Samples,
+                            Position = sliderEventPosition
                         });
 
                         break;
@@ -198,7 +200,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         hitObjects.Add(new SoundHitObject
                         {
                             StartTime = e.Time,
-                            Samples = getTickSamples(obj.Samples)
+                            Samples = getTickSamples(obj.Samples),
+                            Position = sliderEventPosition
                         });
                         break;
 
@@ -219,7 +222,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         hitObjects.Add(new SoundHitObject
                         {
                             StartTime = e.Time,
-                            Samples = obj.Samples
+                            Samples = obj.Samples,
+                            Position = sliderEventPosition
                         });
                         break;
 
@@ -239,7 +243,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         hitObjects.Add(new SoundHitObject
                         {
                             StartTime = curve.EndTime,
-                            Samples = obj.Samples
+                            Samples = obj.Samples,
+                            Position = sliderEventPosition
                         });
                         break;
                 }
@@ -291,7 +296,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         hitObjects.Add(new SoundHitObject
                         {
                             StartTime = obj.StartTime,
-                            Samples = obj.Samples
+                            Samples = obj.Samples,
+                            Position = sliderEventPosition
                         });
 
                         break;
@@ -313,7 +319,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         hitObjects.Add(new SoundHitObject
                         {
                             StartTime = e.Time,
-                            Samples = obj.Samples
+                            Samples = obj.Samples,
+                            Position = sliderEventPosition
                         });
                         break;
 
@@ -334,7 +341,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                         hitObjects.Add(new SoundHitObject
                         {
                             StartTime = curve.EndTime,
-                            Samples = obj.Samples
+                            Samples = obj.Samples,
+                            Position = sliderEventPosition
                         });
                         break;
                 }
