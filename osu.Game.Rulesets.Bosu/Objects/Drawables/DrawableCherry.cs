@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected virtual float GetBaseSize() => 25;
 
         private readonly Sprite sprite;
-        private readonly Sprite kiaiSprite;
+        private readonly KiaiCherrySprite kiaiSprite;
         private readonly Sprite overlay;
         private readonly Sprite branch;
         protected readonly Container Content;
@@ -42,13 +42,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 Origin = Anchor.Centre,
                 Children = new Drawable[]
                 {
-                    kiaiSprite = new Sprite
+                    kiaiSprite = new KiaiCherrySprite(isKiai)
                     {
                         Scale = new Vector2(1.8f),
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         RelativeSizeAxes = Axes.Both,
-                        Alpha = isKiai ? 1 : 0,
                     },
                     sprite = new Sprite
                     {
@@ -77,7 +76,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private void load(TextureStore textures)
         {
             sprite.Texture = textures.Get("cherry");
-            kiaiSprite.Texture = textures.Get("cherry-kiai");
             overlay.Texture = textures.Get("cherry-overlay");
             branch.Texture = textures.Get("cherry-branch");
 
@@ -90,9 +88,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
             sprite.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
             overlay.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
-
-            if (isKiai)
-                kiaiSprite.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
         }
     }
 }
