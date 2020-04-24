@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     break;
 
                 case IHasEndTime endTime:
-                    hitObjects.AddRange(CherriesExtensions.ConvertSpinner(obj, endTime, kiai, index, beatmapStageIndex));
+                    hitObjects.AddRange(CherriesExtensions.ConvertSpinner(obj, endTime, beatmap.ControlPointInfo.TimingPointAt(obj.StartTime).BeatLength, kiai, index, beatmapStageIndex));
                     break;
 
                 default:
