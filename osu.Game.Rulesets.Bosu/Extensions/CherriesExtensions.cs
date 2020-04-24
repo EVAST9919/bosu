@@ -45,16 +45,28 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             circlePosition *= new Vector2(1, 0.5f);
             var comboData = obj as IHasCombo;
 
-            // TODO: new another type for new combo hitcircle
-
-            hitObjects.AddRange(generateExplosion(
-                obj.StartTime,
-                bullets_per_hitcircle,
-                circlePosition,
-                comboData,
-                isKiai,
-                index,
-                hitcircle_angle_offset * indexInCurrentCombo));
+            if (indexInCurrentCombo == 0)
+            {
+                hitObjects.AddRange(generateTriangularExplosion(
+                    obj.StartTime,
+                    16,
+                    circlePosition,
+                    comboData,
+                    isKiai,
+                    index,
+                    MathExtensions.GetRandomTimedAngleOffset(obj.StartTime)));
+            }
+            else
+            {
+                hitObjects.AddRange(generateExplosion(
+                    obj.StartTime,
+                    bullets_per_hitcircle,
+                    circlePosition,
+                    comboData,
+                    isKiai,
+                    index,
+                    hitcircle_angle_offset * indexInCurrentCombo));
+            }
 
             hitObjects.Add(new SoundHitObject
             {
@@ -207,17 +219,14 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
                     case SliderEventType.Repeat:
 
-                        if (positionIsValid(sliderEventPosition))
-                        {
-                            hitObjects.AddRange(generateTriangularExplosion(
-                                e.Time,
-                                20,
-                                sliderEventPosition,
-                                comboData,
-                                isKiai,
-                                index,
-                                MathExtensions.GetRandomTimedAngleOffset(e.Time)));
-                        }
+                        hitObjects.AddRange(generateExplosion(
+                            e.Time,
+                            Math.Clamp((int)curve.Distance / 15, 3, 15),
+                            sliderEventPosition,
+                            comboData,
+                            isKiai,
+                            index,
+                            MathExtensions.GetRandomTimedAngleOffset(e.Time)));
 
                         hitObjects.Add(new SoundHitObject
                         {
@@ -229,16 +238,14 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
                     case SliderEventType.Tail:
 
-                        if (positionIsValid(sliderEventPosition))
-                        {
-                            hitObjects.AddRange(generateExplosion(
-                                e.Time,
-                                Math.Clamp((int)curve.Distance / 15, 5, 20),
-                                sliderEventPosition,
-                                comboData,
-                                isKiai,
-                                index));
-                        }
+                        hitObjects.AddRange(generateExplosion(
+                            e.Time,
+                            Math.Clamp((int)curve.Distance * (curve.RepeatCount + 1) / 15, 5, 20),
+                            sliderEventPosition,
+                            comboData,
+                            isKiai,
+                            index,
+                            MathExtensions.GetRandomTimedAngleOffset(e.Time)));
 
                         hitObjects.Add(new SoundHitObject
                         {
@@ -282,16 +289,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 {
                     case SliderEventType.Head:
 
-                        if (positionIsValid(sliderEventPosition))
-                        {
-                            hitObjects.AddRange(generateExplosion(
-                                e.Time,
-                                bullets_per_slider_reverse,
-                                sliderEventPosition,
-                                comboData,
-                                isKiai,
-                                index));
-                        }
+                        hitObjects.AddRange(generateExplosion(
+                            e.Time,
+                            bullets_per_slider_reverse,
+                            sliderEventPosition,
+                            comboData,
+                            isKiai,
+                            index));
 
                         hitObjects.Add(new SoundHitObject
                         {
@@ -304,17 +308,14 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
                     case SliderEventType.Repeat:
 
-                        if (positionIsValid(sliderEventPosition))
-                        {
-                            hitObjects.AddRange(generateExplosion(
-                                e.Time,
-                                bullets_per_slider_reverse,
-                                sliderEventPosition,
-                                comboData,
-                                isKiai,
-                                index,
-                                slider_angle_per_span * (e.SpanIndex + 1)));
-                        }
+                        hitObjects.AddRange(generateExplosion(
+                            e.Time,
+                            bullets_per_slider_reverse,
+                            sliderEventPosition,
+                            comboData,
+                            isKiai,
+                            index,
+                            slider_angle_per_span * (e.SpanIndex + 1)));
 
                         hitObjects.Add(new SoundHitObject
                         {
@@ -326,17 +327,14 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
                     case SliderEventType.Tail:
 
-                        if (positionIsValid(sliderEventPosition))
-                        {
-                            hitObjects.AddRange(generateExplosion(
-                                e.Time,
-                                bullets_per_slider_reverse,
-                                sliderEventPosition,
-                                comboData,
-                                isKiai,
-                                index,
-                                slider_angle_per_span * (curve.RepeatCount + 1)));
-                        }
+                        hitObjects.AddRange(generateExplosion(
+                            e.Time,
+                            bullets_per_slider_reverse,
+                            sliderEventPosition,
+                            comboData,
+                            isKiai,
+                            index,
+                            slider_angle_per_span * (curve.RepeatCount + 1)));
 
                         hitObjects.Add(new SoundHitObject
                         {
