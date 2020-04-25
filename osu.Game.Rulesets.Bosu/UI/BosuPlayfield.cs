@@ -1,4 +1,6 @@
 ﻿using osu.Framework.Allocation;
+using osu.Framework.Audio.Sample;
+using osu.Framework.Audio.Track;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -50,10 +52,13 @@ namespace osu.Game.Rulesets.Bosu.UI
             };
         }
 
+        private SampleChannel death;
+
         [BackgroundDependencyLoader]
-        private void load(TextureStore textures)
+        private void load(TextureStore textures, ISampleStore samples)
         {
             failSprite.Texture = textures.Get("game-over");
+            death = samples.Get("death");
         }
 
         private bool failInvoked;
@@ -75,6 +80,7 @@ namespace osu.Game.Rulesets.Bosu.UI
         private void onFail()
         {
             failSprite.FadeIn();
+            death.Play();
         }
 
         public override void Add(DrawableHitObject h)
