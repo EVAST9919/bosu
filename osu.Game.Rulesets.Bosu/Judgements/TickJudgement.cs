@@ -8,8 +8,11 @@ namespace osu.Game.Rulesets.Bosu.Judgements
         {
             switch (result)
             {
+                case HitResult.Perfect:
+                    return 0.0003f;
+
                 case HitResult.Miss:
-                    return -0.05f;
+                    return -0.075f;
             }
 
             return base.HealthIncreaseFor(result);
