@@ -84,6 +84,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
 
+            // Fast bpm spinners are almost impossible to pass, nerf them.
+            if (beatLength < 400)
+            {
+                while (beatLength < 400)
+                    beatLength *= 2f;
+            }
+
             var spansPerSpinner = endTime.Duration / beatLength;
 
             for (int i = 0; i < spansPerSpinner; i++)
