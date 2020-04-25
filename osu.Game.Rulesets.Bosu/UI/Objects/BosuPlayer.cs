@@ -23,11 +23,14 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         [Resolved]
         private TextureStore textures { get; set; }
 
+        [Resolved(canBeNull: true)]
+        private BosuRulesetConfigManager config { get; set; }
+
         private SampleChannel jump;
         private SampleChannel doubleJump;
         private SampleChannel shoot;
 
-        private readonly Bindable<PlayerModel> playerModel = new Bindable<PlayerModel>();
+        private readonly Bindable<PlayerModel> playerModel = new Bindable<PlayerModel>(PlayerModel.Boshy);
 
         public override bool RemoveCompletedTransforms => false;
 
@@ -62,9 +65,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         }
 
         [BackgroundDependencyLoader]
-        private void load(BosuRulesetConfigManager config, ISampleStore samples)
+        private void load(ISampleStore samples)
         {
-            config.BindWith(BosuRulesetSetting.PlayerModel, playerModel);
+            config?.BindWith(BosuRulesetSetting.PlayerModel, playerModel);
 
             jump = samples.Get("jump");
             doubleJump = samples.Get("double-jump");
@@ -79,8 +82,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             {
                 switch (model.NewValue)
                 {
-                    case PlayerModel.Boshy:
-                        drawablePlayer.Texture = textures.Get("Player/boshy");
+                    case PlayerModel.Bosu:
+                        drawablePlayer.Texture = textures.Get("Player/bosu");
                         return;
 
                     case PlayerModel.Kid:
@@ -88,7 +91,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                         return;
 
                     default:
-                        drawablePlayer.Texture = textures.Get("Player/bosu");
+                        drawablePlayer.Texture = textures.Get("Player/boshy");
                         return;
                 }
             }, true);

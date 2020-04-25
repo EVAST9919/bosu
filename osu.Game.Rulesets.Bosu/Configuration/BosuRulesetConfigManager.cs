@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Bosu.Configuration
         protected override void InitialiseDefaults()
         {
             base.InitialiseDefaults();
-            Set(BosuRulesetSetting.PlayerModel, PlayerModel.Bosu);
+            Set(BosuRulesetSetting.PlayerModel, PlayerModel.Boshy);
             Set(BosuRulesetSetting.Background, BackgroundType.None);
             Set(BosuRulesetSetting.PlayfieldDim, 0.5, 0, 1);
         }

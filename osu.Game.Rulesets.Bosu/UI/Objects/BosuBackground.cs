@@ -19,6 +19,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         [Resolved]
         private TextureStore textures { get; set; }
 
+        [Resolved(canBeNull:true)]
+        private BosuRulesetConfigManager config { get; set; }
+
         private readonly Container bgContainer;
         private readonly Container dimContainer;
 
@@ -48,10 +51,10 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         }
 
         [BackgroundDependencyLoader]
-        private void load(BosuRulesetConfigManager config)
+        private void load()
         {
-            config.BindWith(BosuRulesetSetting.Background, bgType);
-            config.BindWith(BosuRulesetSetting.PlayfieldDim, bgDim);
+            config?.BindWith(BosuRulesetSetting.Background, bgType);
+            config?.BindWith(BosuRulesetSetting.PlayfieldDim, bgDim);
         }
 
         protected override void LoadComplete()
