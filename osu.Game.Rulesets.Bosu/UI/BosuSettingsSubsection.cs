@@ -37,13 +37,6 @@ namespace osu.Game.Rulesets.Bosu.UI
                     Bindable = config.GetBindable<double>(BosuRulesetSetting.PlayfieldDim),
                     KeyboardStep = 0.01f,
                     DisplayAsPercentage = true
-                },
-                new SettingsSlider<double>
-                {
-                    LabelText = "Slider opacity",
-                    Bindable = config.GetBindable<double>(BosuRulesetSetting.SliderOpacity),
-                    KeyboardStep = 0.01f,
-                    DisplayAsPercentage = true
                 }
             };
         }

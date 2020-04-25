@@ -7,9 +7,9 @@ using osu.Framework.Graphics;
 using osu.Framework.Bindables;
 using osu.Game.Rulesets.Bosu.Extensions;
 
-namespace osu.Game.Rulesets.Bosu.Objects.Drawables
+namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
 {
-    public class KiaiCherrySprite : MusicIntensityController
+    public class KiaiCherryPiece : MusicIntensityController
     {
         private Color4 colour;
 
@@ -24,12 +24,9 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         }
 
         private readonly Sprite sprite;
-        private readonly bool isActive;
 
-        public KiaiCherrySprite(bool isActive)
+        public KiaiCherryPiece()
         {
-            this.isActive = isActive;
-
             Child = sprite = new Sprite
             {
                 Anchor = Anchor.Centre,
@@ -47,11 +44,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override void LoadComplete()
         {
             base.LoadComplete();
-
-            if (isActive)
-                Intensity.BindValueChanged(onIntensityChanged, true);
-            else
-                Alpha = 0;
+            Intensity.BindValueChanged(onIntensityChanged, true);
         }
 
         private void onIntensityChanged(ValueChangedEvent<float> intensity)
