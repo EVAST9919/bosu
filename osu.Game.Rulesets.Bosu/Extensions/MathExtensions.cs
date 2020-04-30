@@ -78,5 +78,16 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             return angle;
         }
+
+        public static double Distance(Vector2 input, Vector2 target)
+        {
+            var x = Math.Abs(input.X - target.X);
+            var xPow = x * x;
+
+            var y = Math.Abs(input.Y - target.Y);
+            var yPow = y * y;
+
+            return Math.Sqrt(xPow + yPow);
+        }
     }
 }

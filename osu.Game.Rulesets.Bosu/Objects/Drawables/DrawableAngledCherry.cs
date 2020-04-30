@@ -55,10 +55,12 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private bool collidedWithPlayer(BosuPlayer player)
         {
             // Let's assume that player is a circle for simplicity
+            // Very rough calculations, want to improve in the future
 
             var playerPosition = player.PlayerPosition();
-            var distance = Math.Sqrt(Math.Pow(Math.Abs(playerPosition.X - Position.X), 2) + Math.Pow(Math.Abs(playerPosition.Y - Position.Y), 2));
-            var playerRadius = player.PlayerDrawSize().X / 2f;
+            var adjustedPosition = new Vector2(playerPosition.X, playerPosition.Y + 2);
+            var distance = MathExtensions.Distance(adjustedPosition, Position);
+            var playerRadius = player.PlayerDrawSize().X * 0.9f / 2f;
             var cherryRadius = finalSize / 2f;
 
             if (distance < playerRadius + cherryRadius)

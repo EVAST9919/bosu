@@ -13,7 +13,6 @@ namespace osu.Game.Rulesets.Bosu.Configuration
         protected override void InitialiseDefaults()
         {
             base.InitialiseDefaults();
-            Set(BosuRulesetSetting.PlayerModel, PlayerModel.Boshy);
             Set(BosuRulesetSetting.Background, BackgroundType.None);
             Set(BosuRulesetSetting.PlayfieldDim, 0.5, 0, 1);
         }
@@ -21,16 +20,8 @@ namespace osu.Game.Rulesets.Bosu.Configuration
 
     public enum BosuRulesetSetting
     {
-        PlayerModel,
         Background,
         PlayfieldDim,
-    }
-
-    public enum PlayerModel
-    {
-        Bosu,
-        Boshy,
-        Kid
     }
 
     public enum BackgroundType

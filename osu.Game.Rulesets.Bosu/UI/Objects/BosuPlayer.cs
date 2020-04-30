@@ -4,10 +4,7 @@ using osuTK;
 using System;
 using osuTK.Graphics;
 using osu.Framework.Input.Bindings;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics.Textures;
-using osu.Game.Rulesets.Bosu.Configuration;
 using osu.Framework.Bindables;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Audio.Track;
@@ -18,19 +15,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
-        private const double base_speed = 1.0 / 4.5;
+        private const double base_speed = 1.0 / 6;
 
-        [Resolved]
-        private TextureStore textures { get; set; }
-
-        [Resolved(canBeNull: true)]
-        private BosuRulesetConfigManager config { get; set; }
+        private readonly Bindable<PlayerState> state = new Bindable<PlayerState>(PlayerState.Idle);
 
         private SampleChannel jump;
         private SampleChannel doubleJump;
         private SampleChannel shoot;
-
-        private readonly Bindable<PlayerModel> playerModel = new Bindable<PlayerModel>(PlayerModel.Boshy);
 
         public override bool RemoveCompletedTransforms => false;
 
@@ -40,7 +31,6 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         private bool midAir;
 
         public readonly Container Player;
-        private readonly Sprite drawablePlayer;
         private readonly Container bulletsContainer;
 
         public BosuPlayer()
@@ -55,11 +45,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                 Player = new Container
                 {
                     Origin = Anchor.Centre,
-                    Size = new Vector2(15),
-                    Child = drawablePlayer = new Sprite
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    }
+                    Size = new Vector2(15)
                 }
             });
         }
@@ -67,8 +53,6 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         [BackgroundDependencyLoader]
         private void load(ISampleStore samples)
         {
-            config?.BindWith(BosuRulesetSetting.PlayerModel, playerModel);
-
             jump = samples.Get("jump");
             doubleJump = samples.Get("double-jump");
             shoot = samples.Get("shoot");
@@ -78,32 +62,16 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
         {
             base.LoadComplete();
 
-            playerModel.BindValueChanged(model =>
-            {
-                switch (model.NewValue)
-                {
-                    case PlayerModel.Bosu:
-                        drawablePlayer.Texture = textures.Get("Player/bosu");
-                        return;
-
-                    case PlayerModel.Kid:
-                        drawablePlayer.Texture = textures.Get("Player/kid");
-                        return;
-
-                    default:
-                        drawablePlayer.Texture = textures.Get("Player/boshy");
-                        return;
-                }
-            }, true);
-
             Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f);
+
+            state.BindValueChanged(onStateChanged, true);
         }
 
         public Vector2 PlayerPosition(Vector2? offset = null) => new Vector2(Player.Position.X + (offset?.X ?? 0), Player.Position.Y - (offset?.Y ?? 0));
 
-        public Vector2 PlayerDrawSize() => drawablePlayer.DrawSize;
+        public Vector2 PlayerDrawSize() => Player.DrawSize;
 
-        public void PlayMissAnimation() => drawablePlayer.FlashColour(Color4.Red, 1000, Easing.OutQuint);
+        public void PlayMissAnimation() => Player.FlashColour(Color4.Red, 1000, Easing.OutQuint);
 
         public bool OnPressed(BosuAction action)
         {
@@ -157,31 +125,43 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             base.Update();
 
             // Collided with the ground, reset jump logic
-            if (Player.Y > (BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f) || Player.Y < 0)
+            if (Player.Y > (BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f))
             {
-                availableJumpCount = 2;
-                verticalSpeed = 0;
-                midAir = false;
+                resetJumpLogic();
                 Player.Y = BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f;
             }
+
+            // Collided with the ceiling
+            if (Player.Y < (PlayerDrawSize().Y - 5) / 2f)
+                verticalSpeed = 0;
 
             if (midAir)
             {
                 verticalSpeed -= (float)Clock.ElapsedFrameTime / 3.5f;
+
+                // Limit maximum falling speed
+                if (verticalSpeed < -100)
+                    verticalSpeed = -100;
+
                 Player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.0045);
             }
 
             if (horizontalDirection != 0)
             {
-                var position = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, PlayerDrawSize().X / 2f, BosuPlayfield.BASE_SIZE.X - PlayerDrawSize().X / 2f);
+                var xPos = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, PlayerDrawSize().X / 2f, BosuPlayfield.BASE_SIZE.X - PlayerDrawSize().X / 2f);
 
                 Player.Scale = new Vector2(Math.Abs(Scale.X) * (horizontalDirection > 0 ? 1 : -1), Player.Scale.Y);
-
-                if (position == Player.X)
-                    return;
-
-                Player.X = (float)position;
+                Player.X = (float)xPos;
             }
+
+            updatePlayerState();
+        }
+
+        private void resetJumpLogic()
+        {
+            availableJumpCount = 2;
+            verticalSpeed = 0;
+            midAir = false;
         }
 
         private void onJumpPressed()
@@ -220,7 +200,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             shoot.Play();
             bulletsContainer.Add(new Bullet(Player.Scale.X > 0, Clock.CurrentTime)
             {
-                Position = PlayerPosition(new Vector2(0, 1))
+                Position = PlayerPosition(new Vector2(0, -1))
             });
         }
 
@@ -232,6 +212,31 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             {
                 Player.X = state.Position.Value;
             }
+        }
+
+        private void onStateChanged(ValueChangedEvent<PlayerState> s) => Player.Child = new PlayerAnimation(s.NewValue);
+
+        private void updatePlayerState()
+        {
+            if (verticalSpeed < 0)
+            {
+                state.Value = PlayerState.Fall;
+                return;
+            }
+
+            if (verticalSpeed > 0)
+            {
+                state.Value = PlayerState.Jump;
+                return;
+            }
+
+            if (horizontalDirection != 0)
+            {
+                state.Value = PlayerState.Run;
+                return;
+            }
+
+            state.Value = PlayerState.Idle;
         }
     }
 }
