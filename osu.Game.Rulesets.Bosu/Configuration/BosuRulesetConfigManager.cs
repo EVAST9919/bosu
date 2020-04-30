@@ -27,7 +27,6 @@ namespace osu.Game.Rulesets.Bosu.Configuration
     public enum BackgroundType
     {
         None,
-        Red,
         White
     }
 }

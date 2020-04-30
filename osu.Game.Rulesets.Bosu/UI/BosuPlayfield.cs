@@ -8,6 +8,7 @@ using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.Scoring;
 using osu.Game.Rulesets.Bosu.UI.Objects;
+using osu.Game.Rulesets.Bosu.UI.Objects.Playfield;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osuTK;
@@ -29,7 +30,8 @@ namespace osu.Game.Rulesets.Bosu.UI
 
             InternalChildren = new Drawable[]
             {
-                new BosuBackground(),
+                new PlayfieldBackground(),
+                new PlayfieldBorder(),
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
