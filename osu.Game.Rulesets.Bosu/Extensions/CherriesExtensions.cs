@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             if (indexInCurrentCombo == 0)
             {
-                hitObjects.AddRange(generateShape(
+                hitObjects.AddRange(generatePolygonExplosion(
                     obj.StartTime,
                     5,
                     3,
@@ -126,17 +126,17 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             }
         }
 
-        private static IEnumerable<BosuHitObject> generateShape(double startTime, int bullets_per_side, int verticesCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0)
+        private static IEnumerable<BosuHitObject> generatePolygonExplosion(double startTime, int bullets_per_side, int verticesCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
             for (int i = 0; i < verticesCount; i++)
-                hitObjects.AddRange(generateShapeLine(startTime, bullets_per_side, verticesCount, position, comboData, isKiai, index, i * (360f / verticesCount) + angleOffset));
+                hitObjects.AddRange(generatePolygonLine(startTime, bullets_per_side, verticesCount, position, comboData, isKiai, index, i * (360f / verticesCount) + angleOffset));
 
             return hitObjects;
         }
 
-        private static IEnumerable<AngledCherry> generateShapeLine(double startTime, int bullets_per_side, int verticesCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float additionalOffset = 0)
+        private static IEnumerable<AngledCherry> generatePolygonLine(double startTime, int bullets_per_side, int verticesCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float additionalOffset = 0)
         {
             var s = 1.0;
             var side = s / (2 * Math.Sin(360.0 / (2 * verticesCount) * Math.PI / 180));
