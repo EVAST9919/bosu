@@ -46,9 +46,10 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             if (indexInCurrentCombo == 0)
             {
-                hitObjects.AddRange(generateTriangularExplosion(
+                hitObjects.AddRange(generateShape(
                     obj.StartTime,
                     5,
+                    3,
                     circlePosition,
                     comboData,
                     isKiai,
@@ -125,27 +126,29 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             }
         }
 
-        private static IEnumerable<BosuHitObject> generateTriangularExplosion(double startTime, int bullets_per_side, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0)
+        private static IEnumerable<BosuHitObject> generateShape(double startTime, int bullets_per_side, int verticesCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
-            for (int i = 0; i < 3; i++)
-                hitObjects.AddRange(generateShapeLine(startTime, bullets_per_side, position, comboData, isKiai, index, i * 120 + angleOffset));
+            for (int i = 0; i < verticesCount; i++)
+                hitObjects.AddRange(generateShapeLine(startTime, bullets_per_side, verticesCount, position, comboData, isKiai, index, i * (360f / verticesCount) + angleOffset));
 
             return hitObjects;
         }
 
-        private static IEnumerable<AngledCherry> generateShapeLine(double startTime, int bullets_per_side, Vector2 position, IHasCombo comboData, bool isKiai, int index, float additionalOffset = 0)
+        private static IEnumerable<AngledCherry> generateShapeLine(double startTime, int bullets_per_side, int verticesCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float additionalOffset = 0)
         {
-            var side = Math.Sqrt(3) / 3;
-            var partDistance = 1.0 / bullets_per_side;
+            var s = 1.0;
+            var side = s / (2 * Math.Sin(360.0 / (2 * verticesCount) * Math.PI / 180));
+            var partDistance = s / bullets_per_side;
+            var partialAngle = 180 * (verticesCount - 2) / (2 * verticesCount);
 
             for (int i = 0; i < bullets_per_side; i++)
             {
                 var c = (float)partDistance * i;
-                var length = Math.Sqrt(MathExtensions.Pow((float)side) + MathExtensions.Pow(c) - (2 * side * c * Math.Cos(30 * Math.PI / 180)));
+                var length = Math.Sqrt(MathExtensions.Pow((float)side) + MathExtensions.Pow(c) - (2 * side * c * Math.Cos(partialAngle * Math.PI / 180)));
                 var missingAngle = Math.Acos((MathExtensions.Pow((float)side) + MathExtensions.Pow((float)length) - MathExtensions.Pow(c)) / (2 * side * length)) * 180 / Math.PI;
-                var currentAngle = 240 - missingAngle;
+                var currentAngle = 180 + (90 - partialAngle) - missingAngle;
 
                 yield return new AngledCherry
                 {
