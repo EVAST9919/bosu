@@ -48,7 +48,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             {
                 hitObjects.AddRange(generateTriangularExplosion(
                     obj.StartTime,
-                    16,
+                    5,
                     circlePosition,
                     comboData,
                     isKiai,
@@ -125,16 +125,32 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             }
         }
 
-        private static IEnumerable<AngledCherry> generateTriangularExplosion(double startTime, int bulletCount, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0)
+        private static IEnumerable<BosuHitObject> generateTriangularExplosion(double startTime, int bullets_per_side, Vector2 position, IHasCombo comboData, bool isKiai, int index, float angleOffset = 0)
         {
-            for (int i = 0; i < bulletCount; i++)
+            List<BosuHitObject> hitObjects = new List<BosuHitObject>();
+
+            for (int i = 0; i < 3; i++)
+                hitObjects.AddRange(generateShapeLine(startTime, bullets_per_side, position, comboData, isKiai, index, i * 120 + angleOffset));
+
+            return hitObjects;
+        }
+
+        private static IEnumerable<AngledCherry> generateShapeLine(double startTime, int bullets_per_side, Vector2 position, IHasCombo comboData, bool isKiai, int index, float additionalOffset = 0)
+        {
+            var side = Math.Sqrt(3) / 3;
+            var partDistance = 1.0 / bullets_per_side;
+
+            for (int i = 0; i < bullets_per_side; i++)
             {
-                var angle = (float)i / bulletCount * 360f;
+                var c = (float)partDistance * i;
+                var length = Math.Sqrt(MathExtensions.Pow((float)side) + MathExtensions.Pow(c) - (2 * side * c * Math.Cos(30 * Math.PI / 180)));
+                var missingAngle = Math.Acos((MathExtensions.Pow((float)side) + MathExtensions.Pow((float)length) - MathExtensions.Pow(c)) / (2 * side * length)) * 180 / Math.PI;
+                var currentAngle = 240 - missingAngle;
 
                 yield return new AngledCherry
                 {
-                    Angle = angle,
-                    DeltaMultiplier = getTriangularDelta(angle + angleOffset),
+                    Angle = (float)currentAngle + additionalOffset,
+                    DeltaMultiplier = length / side,
                     StartTime = startTime,
                     Position = position,
                     NewCombo = comboData?.NewCombo ?? false,
@@ -407,17 +423,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 return false;
 
             return true;
-        }
-
-        private static double getTriangularDelta(float angle)
-        {
-            while (angle > 120)
-                angle -= 120;
-
-            if (angle > 60)
-                angle = 120 - angle;
-
-            return 0.5f / Math.Cos(angle * Math.PI / 180) * 1.5f;
         }
     }
 }
