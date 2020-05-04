@@ -78,7 +78,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasEndTime endTime, double beatLength, bool isKiai, int index, int stageIndex)
+        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasEndTime endTime, double beatLength, bool isKiai, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
