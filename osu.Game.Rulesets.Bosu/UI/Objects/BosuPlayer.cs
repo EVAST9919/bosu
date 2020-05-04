@@ -73,6 +73,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
 
         public void PlayMissAnimation() => Player.FlashColour(Color4.Red, 1000, Easing.OutQuint);
 
+        public PlayerState GetCurrentState() => state.Value;
+
         public bool OnPressed(BosuAction action)
         {
             switch (action)
@@ -118,6 +120,10 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
             }
         }
 
+        private bool rightwards = true;
+
+        public bool Rightwards() => rightwards;
+
         protected override void Update()
         {
             updateReplayState();
@@ -151,6 +157,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects
                 var xPos = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, PlayerDrawSize().X / 2f, BosuPlayfield.BASE_SIZE.X - PlayerDrawSize().X / 2f);
 
                 Player.Scale = new Vector2(Math.Abs(Scale.X) * (horizontalDirection > 0 ? 1 : -1), Player.Scale.Y);
+                rightwards = horizontalDirection > 0;
                 Player.X = (float)xPos;
             }
 

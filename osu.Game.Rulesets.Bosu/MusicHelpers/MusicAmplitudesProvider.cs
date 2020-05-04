@@ -15,6 +15,8 @@ namespace osu.Game.Rulesets.Bosu.MusicHelpers
             IsKiai.Value = Beatmap.Value?.Beatmap.ControlPointInfo.EffectPointAt(track?.CurrentTime ?? 0).KiaiMode ?? false;
         }
 
-        protected abstract void OnAmplitudesUpdate(float[] amplitudes);
+        protected virtual void OnAmplitudesUpdate(float[] amplitudes)
+        {
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace osu.Game.Rulesets.Bosu.UI
 
         private readonly BosuHealthProcessor healthProcessor;
         private readonly DeathOverlay deathOverlay;
+        private readonly PlayerTrailController playerTrailController;
 
         public BosuPlayfield(BosuHealthProcessor healthProcessor)
         {
@@ -34,11 +35,14 @@ namespace osu.Game.Rulesets.Bosu.UI
                     Children = new Drawable[]
                     {
                         HitObjectContainer,
+                        playerTrailController = new PlayerTrailController(),
                         Player = new BosuPlayer()
                     }
                 },
                 deathOverlay = new DeathOverlay(Player)
             };
+
+            playerTrailController.Player = Player;
         }
 
         private bool failInvoked;
