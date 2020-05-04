@@ -21,10 +21,10 @@ namespace osu.Game.Rulesets.Bosu.UI
 
             Children = new Drawable[]
             {
-                new SettingsEnumDropdown<BackgroundType>
+                new SettingsCheckbox
                 {
-                    LabelText = "Background type",
-                    Bindable = config.GetBindable<BackgroundType>(BosuRulesetSetting.Background)
+                    LabelText = "Enable background",
+                    Bindable = config.GetBindable<bool>(BosuRulesetSetting.EnableBackground)
                 },
                 new SettingsSlider<double>
                 {
