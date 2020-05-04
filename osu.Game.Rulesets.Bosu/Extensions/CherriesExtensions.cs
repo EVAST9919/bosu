@@ -153,7 +153,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 yield return new AngledCherry
                 {
                     Angle = (float)currentAngle + additionalOffset,
-                    DeltaMultiplier = length / side,
+                    DeltaMultiplier = length / side * 1.2f,
                     StartTime = startTime,
                     Position = position,
                     NewCombo = comboData?.NewCombo ?? false,
