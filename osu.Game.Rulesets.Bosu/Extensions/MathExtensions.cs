@@ -91,5 +91,24 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             return x * x;
         }
+
+        public static float GetSafeAngle(float angle)
+        {
+            if (angle < 0)
+            {
+                while (angle < 0)
+                    angle += 360;
+
+                return angle;
+            }
+
+            if (angle > 360)
+            {
+                angle %= 360f;
+                return angle;
+            }
+
+            return angle;
+        }
     }
 }

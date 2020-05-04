@@ -1,6 +1,4 @@
-﻿using osu.Framework.Graphics;
-using osu.Game.Rulesets.Bosu.Objects;
-using osu.Game.Rulesets.Bosu.Objects.Drawables;
+﻿using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 
@@ -8,19 +6,16 @@ namespace osu.Game.Rulesets.Bosu.Mods
 {
     public class BosuModHidden : ModHidden
     {
-        public override string Description => @"Play with fading fruits.";
+        public override string Description => @"Play with fading cherries.";
         public override double ScoreMultiplier => 1.06;
 
         protected override void ApplyHiddenState(DrawableHitObject drawable, ArmedState state)
         {
-            if (!(drawable is DrawableAngledCherry))
+            if (!(drawable is DrawableCherry))
                 return;
 
-            var drawableCherry = (DrawableAngledCherry)drawable;
-            var cherry = (AngledCherry)drawableCherry.HitObject;
-
-            using (drawableCherry.BeginAbsoluteSequence(cherry.StartTime, true))
-                drawableCherry.FadeOut(cherry.TimePreempt * 1.5f);
+            var drawableCherry = (DrawableCherry)drawable;
+            drawableCherry.HiddenApplied = true;
         }
     }
 }
