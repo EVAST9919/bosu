@@ -46,7 +46,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Width = 0.7f,
+                    Width = 0.8f,
                     Alpha = 0,
                     FillMode = FillMode.Fit,
                 }
@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
             }
 
             player.FadeOut();
-            tint.FadeTo(0.7f, 1000, Easing.OutQuint);
+            tint.FadeTo(0.6f, 2000, Easing.OutQuint);
             failSprite.FadeTo(1, 1000, Easing.OutQuint);
             deathSound.Play();
         }
