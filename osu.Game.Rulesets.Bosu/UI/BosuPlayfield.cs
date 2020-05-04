@@ -1,10 +1,5 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Audio.Sample;
-using osu.Framework.Audio.Track;
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.Textures;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.Scoring;
 using osu.Game.Rulesets.Bosu.UI.Objects;
@@ -22,7 +17,7 @@ namespace osu.Game.Rulesets.Bosu.UI
         internal readonly BosuPlayer Player;
 
         private readonly BosuHealthProcessor healthProcessor;
-        private readonly Sprite failSprite;
+        private readonly DeathOverlay deathOverlay;
 
         public BosuPlayfield(BosuHealthProcessor healthProcessor)
         {
@@ -42,25 +37,8 @@ namespace osu.Game.Rulesets.Bosu.UI
                         Player = new BosuPlayer()
                     }
                 },
-                failSprite = new Sprite
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Width = 0.7f,
-                    Alpha = 0,
-                    FillMode = FillMode.Fit,
-                }
+                deathOverlay = new DeathOverlay(Player)
             };
-        }
-
-        private SampleChannel death;
-
-        [BackgroundDependencyLoader]
-        private void load(TextureStore textures, ISampleStore samples)
-        {
-            failSprite.Texture = textures.Get("game-over");
-            death = samples.Get("death");
         }
 
         private bool failInvoked;
@@ -79,11 +57,7 @@ namespace osu.Game.Rulesets.Bosu.UI
             failInvoked = true;
         }
 
-        private void onFail()
-        {
-            failSprite.FadeIn();
-            death.Play();
-        }
+        private void onFail() => deathOverlay.OnDeath();
 
         public override void Add(DrawableHitObject h)
         {
