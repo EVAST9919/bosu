@@ -147,7 +147,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             {
                 var c = (float)partDistance * i;
                 var length = Math.Sqrt(MathExtensions.Pow((float)side) + MathExtensions.Pow(c) - (2 * side * c * Math.Cos(partialAngle * Math.PI / 180)));
-                var missingAngle = Math.Acos((MathExtensions.Pow((float)side) + MathExtensions.Pow((float)length) - MathExtensions.Pow(c)) / (2 * side * length)) * 180 / Math.PI;
+                var missingAngle = c == 0 ? 0 : Math.Acos((MathExtensions.Pow((float)side) + MathExtensions.Pow((float)length) - MathExtensions.Pow(c)) / (2 * side * length)) * 180 / Math.PI;
                 var currentAngle = 180 + (90 - partialAngle) - missingAngle;
 
                 yield return new AngledCherry
