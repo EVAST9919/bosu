@@ -14,6 +14,9 @@ namespace osu.Game.Rulesets.Bosu.UI
     {
         public static readonly Vector2 BASE_SIZE = new Vector2(512, 384);
 
+        public bool Zoom { get; set; }
+        public double ZoomLevel;
+
         internal readonly BosuPlayer Player;
 
         private readonly BosuHealthProcessor healthProcessor;
@@ -47,11 +50,22 @@ namespace osu.Game.Rulesets.Bosu.UI
             playerTrailController.Player = Player;
         }
 
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            if (Zoom)
+                Scale = new Vector2((float)ZoomLevel);
+        }
+
         private bool failInvoked;
 
         protected override void Update()
         {
             base.Update();
+
+            if (Zoom)
+                zoomMod();
 
             trackHealth();
         }
@@ -66,6 +80,13 @@ namespace osu.Game.Rulesets.Bosu.UI
 
             deathOverlay.OnDeath();
             failInvoked = true;
+        }
+
+        private void zoomMod()
+        {
+            var playerPosition = Player.PlayerPosition();
+
+            Position = new Vector2(-(playerPosition.X - BASE_SIZE.X / 2f), -(playerPosition.Y - BASE_SIZE.Y / 2f) + 50) * Scale;
         }
 
         public override void Add(DrawableHitObject h)
