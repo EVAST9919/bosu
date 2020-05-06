@@ -24,6 +24,8 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             this.healthProcessor = healthProcessor;
 
+            Origin = Anchor.Centre;
+            Anchor = Anchor.Centre;
             InternalChildren = new Drawable[]
             {
                 new PlayfieldBackground(),
@@ -51,17 +53,20 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             base.Update();
 
+            trackHealth();
+        }
+
+        private void trackHealth()
+        {
             if (!healthProcessor.HasFailed)
                 return;
 
             if (failInvoked)
                 return;
 
-            onFail();
+            deathOverlay.OnDeath();
             failInvoked = true;
         }
-
-        private void onFail() => deathOverlay.OnDeath();
 
         public override void Add(DrawableHitObject h)
         {
