@@ -22,6 +22,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
         private readonly Container<DeathParticle> particlesContainer;
         private readonly Box tint;
         private readonly Sprite failSprite;
+        private readonly Sprite deathCircle;
 
         public DeathOverlay(BosuPlayer player)
         {
@@ -34,6 +35,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                 {
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
+                },
+                deathCircle = new Sprite
+                {
+                    Size = new Vector2(85),
+                    Scale = Vector2.Zero,
+                    AlwaysPresent = true,
+                    Origin = Anchor.Centre
                 },
                 tint = new Box
                 {
@@ -58,6 +66,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
         {
             failSprite.Texture = textures.Get("game-over");
             deathSound = samples.Get("death");
+            deathCircle.Texture = textures.Get("death-circle");
         }
 
         public void OnDeath()
@@ -79,6 +88,11 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
             }
 
             player.FadeOut();
+
+            deathCircle.Position = position;
+            deathCircle.ScaleTo(Vector2.One, 1500, Easing.OutQuint);
+            deathCircle.FadeOut(600);
+
             tint.FadeTo(0.6f, 2000, Easing.OutQuint);
             failSprite.FadeTo(1, 1000, Easing.OutQuint);
             deathSound.Play();
