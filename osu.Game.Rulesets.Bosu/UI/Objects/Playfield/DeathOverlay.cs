@@ -87,7 +87,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                 particle.FadeOut(2000, Easing.OutQuint);
             }
 
-            player.FadeOut();
+            player.Player.FadeOut();
 
             deathCircle.Position = position;
             deathCircle.ScaleTo(Vector2.One, 1500, Easing.OutQuint);
