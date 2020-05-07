@@ -23,7 +23,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const int max_visuals_per_slider_span = 100;
 
         private const int bullets_per_spinner_span = 20;
-        private const float spinner_angle_per_span = 8f;
 
         public static List<BosuHitObject> ConvertSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, bool isKiai, int index)
         {
@@ -82,7 +81,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
-            var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
 
             // Fast bpm spinners are almost impossible to pass, nerf them.
@@ -94,16 +92,38 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             var spansPerSpinner = endTime.Duration / beatLength;
 
+            for (int j = 0; j < bullets_per_spinner_span; j++)
+            {
+                hitObjects.Add(new SpinnerCherry
+                {
+                    EndTime = endTime,
+                    InitialAngle = (float)j / bullets_per_spinner_span * 360,
+                    StartTime = obj.StartTime,
+                    NewCombo = comboData?.NewCombo ?? false,
+                    ComboOffset = comboData?.ComboOffset ?? 0,
+                    IndexInBeatmap = index,
+                    IsKiai = isKiai,
+                });
+            }
+
             for (int i = 0; i < spansPerSpinner; i++)
             {
-                hitObjects.AddRange(generateExplosion(
-                    obj.StartTime + i * beatLength,
-                    bullets_per_spinner_span,
-                    objPosition * new Vector2(1, 0.5f),
-                    comboData,
-                    isKiai,
-                    index,
-                    i * spinner_angle_per_span));
+                var spinnerProgress = i / spansPerSpinner;
+
+                for (int j = 0; j < bullets_per_spinner_span; j++)
+                {
+                    hitObjects.Add(new SpinnerBurstCherry
+                    {
+                        Angle = (float)j / bullets_per_spinner_span * 360,
+                        SpinnerDuration = endTime.Duration,
+                        SpinnerProgress = spinnerProgress,
+                        StartTime = obj.StartTime + spinnerProgress * endTime.Duration,
+                        NewCombo = comboData?.NewCombo ?? false,
+                        ComboOffset = comboData?.ComboOffset ?? 0,
+                        IndexInBeatmap = index,
+                        IsKiai = isKiai,
+                    });
+                }
             }
 
             return hitObjects;

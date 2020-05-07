@@ -36,6 +36,12 @@ namespace osu.Game.Rulesets.Bosu.UI
                 case SoundHitObject sound:
                     return new DrawableSoundHitObject(sound);
 
+                case SpinnerCherry spinner:
+                    return new DrawableSpinnerCherry(spinner);
+
+                case SpinnerBurstCherry spinnerBurst:
+                    return new DrawableSpinnerBurstCherry(spinnerBurst);
+
                 case SliderPartCherry sliderPart:
                     return new DrawableSliderPartCherry(sliderPart);
 
