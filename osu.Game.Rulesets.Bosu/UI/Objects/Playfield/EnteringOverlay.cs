@@ -13,19 +13,30 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
         public override bool RemoveCompletedTransforms => false;
 
         private readonly Box box;
+        private readonly BeatmapCard card;
         private SampleChannel enteringSample;
 
         public EnteringOverlay()
         {
             RelativeSizeAxes = Axes.Both;
+            Masking = true;
 
-            InternalChild = box = new Box
+            AddRangeInternal(new Drawable[]
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-                Colour = Color4.Black
-            };
+                box = new Box
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = Color4.Black
+                },
+                card = new BeatmapCard
+                {
+                    Anchor = Anchor.TopRight,
+                    Origin = Anchor.TopRight,
+                    Y = -BeatmapCard.SIZE.Y,
+                }
+            });
         }
 
         [BackgroundDependencyLoader]
@@ -36,8 +47,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 
         public void Enter(double delay)
         {
-            box.Delay(delay).ResizeHeightTo(0, 700, Easing.OutQuint);
             Scheduler.AddDelayed(() => enteringSample.Play(), delay);
+
+            using (box.BeginDelayedSequence(delay))
+                box.ResizeHeightTo(0, 800, Easing.Out);
+
+            using (card.BeginDelayedSequence(delay))
+                card.MoveToY(0, 900).Delay(2200).MoveToY(-BeatmapCard.SIZE.Y, 800, Easing.Out);
         }
     }
 }
