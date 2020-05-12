@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using osu.Game.Rulesets.Bosu.Extensions;
 using osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces;
 using osu.Framework.Allocation;
-using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {

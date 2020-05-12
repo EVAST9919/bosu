@@ -1,4 +1,4 @@
-﻿using osu.Game.Rulesets.Bosu.UI.Objects;
+﻿using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
 using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables

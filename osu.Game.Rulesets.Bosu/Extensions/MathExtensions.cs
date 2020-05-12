@@ -1,4 +1,4 @@
-﻿using osu.Game.Rulesets.Bosu.UI.Objects;
+﻿using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
 using osuTK;
 using System;
 

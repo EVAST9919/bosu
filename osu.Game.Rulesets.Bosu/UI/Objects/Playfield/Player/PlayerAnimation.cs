@@ -3,7 +3,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;
 using osu.Framework.Graphics.Textures;
 
-namespace osu.Game.Rulesets.Bosu.UI.Objects
+namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class PlayerAnimation : TextureAnimation
     {

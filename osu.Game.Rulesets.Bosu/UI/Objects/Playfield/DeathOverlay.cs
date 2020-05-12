@@ -7,6 +7,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Utils;
+using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
 using osuTK;
 using osuTK.Graphics;
 

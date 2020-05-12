@@ -11,7 +11,7 @@ using osu.Framework.Audio.Track;
 using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Bosu.Replays;
 
-namespace osu.Game.Rulesets.Bosu.UI.Objects
+namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {

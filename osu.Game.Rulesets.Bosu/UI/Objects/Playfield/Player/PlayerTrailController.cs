@@ -1,7 +1,7 @@
 ﻿using osu.Framework.Graphics;
 using osu.Game.Rulesets.Bosu.MusicHelpers;
 
-namespace osu.Game.Rulesets.Bosu.UI.Objects
+namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class PlayerTrailController : MusicAmplitudesProvider
     {

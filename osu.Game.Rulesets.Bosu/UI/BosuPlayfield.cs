@@ -2,8 +2,8 @@
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.Scoring;
-using osu.Game.Rulesets.Bosu.UI.Objects;
 using osu.Game.Rulesets.Bosu.UI.Objects.Playfield;
+using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
 using osuTK;

@@ -5,7 +5,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Textures;
 
-namespace osu.Game.Rulesets.Bosu.UI.Objects
+namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class Bullet : CompositeDrawable
     {
