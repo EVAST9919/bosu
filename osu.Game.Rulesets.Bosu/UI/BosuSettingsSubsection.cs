@@ -23,6 +23,11 @@ namespace osu.Game.Rulesets.Bosu.UI
             {
                 new SettingsCheckbox
                 {
+                    LabelText = "Show hitboxes",
+                    Bindable = config.GetBindable<bool>(BosuRulesetSetting.EnableHitboxes)
+                },
+                new SettingsCheckbox
+                {
                     LabelText = "Enable background",
                     Bindable = config.GetBindable<bool>(BosuRulesetSetting.EnableBackground)
                 },

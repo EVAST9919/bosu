@@ -14,6 +14,7 @@ namespace osu.Game.Rulesets.Bosu.Configuration
         {
             base.InitialiseDefaults();
             Set(BosuRulesetSetting.EnableBackground, true);
+            Set(BosuRulesetSetting.EnableHitboxes, false);
             Set(BosuRulesetSetting.PlayfieldDim, 0.5, 0, 1);
         }
     }
@@ -22,5 +23,6 @@ namespace osu.Game.Rulesets.Bosu.Configuration
     {
         EnableBackground,
         PlayfieldDim,
+        EnableHitboxes
     }
 }

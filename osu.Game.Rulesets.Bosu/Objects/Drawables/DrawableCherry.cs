@@ -9,6 +9,10 @@ using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
+using osu.Framework.Bindables;
+using osu.Game.Rulesets.Bosu.Configuration;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
@@ -28,7 +32,13 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         protected virtual float GetWallCheckOffset() => 0;
 
+        private readonly Bindable<bool> hitboxEnabed = new Bindable<bool>(false);
+
+        [Resolved(canBeNull: true)]
+        private BosuRulesetConfigManager config { get; set; }
+
         private readonly CherryPiece cherry;
+        private readonly Container hitbox;
         private readonly KiaiCherryPiece kiaiCherry;
         private readonly float finalSize;
         private double missTime;
@@ -58,6 +68,18 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 Origin = Anchor.Centre,
                 RelativeSizeAxes = Axes.Both,
             });
+
+            AddInternal(hitbox = new Container
+            {
+                Size = new Vector2(finalSize),
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+                Child = new Circle
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = Color4.Red,
+                }
+            });
         }
 
         [BackgroundDependencyLoader]
@@ -70,6 +92,15 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
                 cherry.Colour = accent.NewValue;
             }, true);
+
+            config?.BindWith(BosuRulesetSetting.EnableHitboxes, hitboxEnabed);
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            hitboxEnabed.BindValueChanged(enabled => hitbox.Alpha = enabled.NewValue ? 1 : 0, true);
         }
 
         protected override void UpdateInitialTransforms()

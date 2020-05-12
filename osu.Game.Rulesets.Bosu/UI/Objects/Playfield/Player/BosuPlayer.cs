@@ -11,6 +11,7 @@ using osu.Framework.Audio.Track;
 using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Bosu.Replays;
 using osu.Framework.Graphics.Shapes;
+using osu.Game.Rulesets.Bosu.Configuration;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
@@ -19,6 +20,10 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private const double base_speed = 1.0 / 6.5;
 
         private readonly Bindable<PlayerState> state = new Bindable<PlayerState>(PlayerState.Idle);
+        private readonly Bindable<bool> hitboxEnabed = new Bindable<bool>(false);
+
+        [Resolved(canBeNull: true)]
+        private BosuRulesetConfigManager config { get; set; }
 
         private SampleChannel jump;
         private SampleChannel doubleJump;
@@ -34,6 +39,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         public readonly Container Player;
         private readonly Container bulletsContainer;
         private readonly Container animationContainer;
+        private readonly Container hitbox;
 
         public BosuPlayer()
         {
@@ -57,12 +63,16 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                             X = -1.5f,
                             Size = new Vector2(12.5f)
                         },
-                        //new Box
-                        //{
-                        //    RelativeSizeAxes = Axes.Both,
-                        //    Colour = Color4.Red,
-                        //    Alpha = 0.5f,
-                        //}
+                        hitbox = new Container
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Child = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = Color4.Red,
+                                Alpha = 0.5f,
+                            }
+                        }
                     }
                 }
             });
@@ -74,6 +84,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             jump = samples.Get("jump");
             doubleJump = samples.Get("double-jump");
             shoot = samples.Get("shoot");
+
+            config?.BindWith(BosuRulesetSetting.EnableHitboxes, hitboxEnabed);
         }
 
         protected override void LoadComplete()
@@ -83,6 +95,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f);
 
             state.BindValueChanged(onStateChanged, true);
+            hitboxEnabed.BindValueChanged(enabled => hitbox.Alpha = enabled.NewValue ? 1 : 0, true);
         }
 
         public Vector2 PlayerPosition() => Player.Position;
