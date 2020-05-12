@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
-        private const double base_speed = 1.0 / 6;
+        private const double base_speed = 1.0 / 6.5;
 
         private readonly Bindable<PlayerState> state = new Bindable<PlayerState>(PlayerState.Idle);
 
@@ -143,11 +143,11 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
             if (midAir)
             {
-                verticalSpeed -= (float)Clock.ElapsedFrameTime / 3.5f;
+                verticalSpeed -= (float)Clock.ElapsedFrameTime / 4;
 
                 // Limit maximum falling speed
-                if (verticalSpeed < -100)
-                    verticalSpeed = -100;
+                if (verticalSpeed < -80)
+                    verticalSpeed = -80;
 
                 Player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.0045);
             }
