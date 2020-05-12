@@ -110,5 +110,12 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             return angle;
         }
+
+        public static bool Collided(float circleRadius, Vector2 circlePosition, Vector2 rectPosition, Vector2 rectSize)
+        {
+            var deltaX = circlePosition.X - Math.Max(rectPosition.X, Math.Min(circlePosition.X, rectPosition.X + rectSize.X));
+            var deltaY = circlePosition.Y - Math.Max(rectPosition.Y, Math.Min(circlePosition.Y, rectPosition.Y + rectSize.Y));
+            return Pow(deltaX) + Pow(deltaY) < Pow(circleRadius);
+        }
     }
 }
