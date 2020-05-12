@@ -42,9 +42,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                     {
                         s.Font = OsuFont.GetFont(size: 12, weight: FontWeight.SemiBold);
                         s.Shadow = true;
+                        s.Anchor = Anchor.BottomCentre;
+                        s.Origin = Anchor.BottomCentre;
                     })
                     {
-                        AutoSizeAxes = Axes.Both,
+                        AutoSizeAxes = Axes.Y,
+                        RelativeSizeAxes = Axes.X,
                         Anchor = Anchor.BottomCentre,
                         Origin = Anchor.BottomCentre,
                         Text = Beatmap.Value.Beatmap.Metadata.Title,
