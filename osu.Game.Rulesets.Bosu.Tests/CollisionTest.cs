@@ -10,6 +10,8 @@ namespace osu.Game.Rulesets.Bosu.Tests
 {
     public class CollisionTest : OsuTestScene
     {
+        private const int radius = 50;
+
         private readonly Circle circle;
         private readonly Box box;
         private readonly Container container;
@@ -31,11 +33,11 @@ namespace osu.Game.Rulesets.Bosu.Tests
                     box = new Box
                     {
                         Position = new Vector2(100),
-                        Size = new Vector2(50, 100),
+                        Size = new Vector2(75, 200),
                     },
                     circle = new Circle
                     {
-                        Size = new Vector2(100),
+                        Size = new Vector2(radius * 2),
                         Origin = Anchor.Centre,
                     }
                 }
@@ -47,7 +49,7 @@ namespace osu.Game.Rulesets.Bosu.Tests
             base.Update();
             circle.Position = container.ToLocalSpace(GetContainingInputManager().CurrentState.Mouse.Position);
 
-            circle.Colour = MathExtensions.Collided(50, circle.Position, box.Position, box.Size) ? Color4.Red : Color4.White;
+            circle.Colour = MathExtensions.Collided(radius, circle.Position, box.Position, box.Size) ? Color4.Red : Color4.White;
         }
     }
 }
