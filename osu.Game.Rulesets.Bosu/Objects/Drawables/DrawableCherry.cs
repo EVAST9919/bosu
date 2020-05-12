@@ -144,19 +144,15 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         private bool collidedWithPlayer(BosuPlayer player)
         {
-            // Let's assume that player is a circle for simplicity
-            // Very rough calculations, want to improve in the future
-
             var playerPosition = player.PlayerPosition();
-            var adjustedPosition = new Vector2(playerPosition.X, playerPosition.Y + 2);
-            var distance = MathExtensions.Distance(adjustedPosition, Position);
-            var playerRadius = player.PlayerDrawSize().X * 0.9f / 2f;
-            var cherryRadius = finalSize / 2f;
+            var playerSize = player.PlayerSize();
 
-            if (distance < playerRadius + cherryRadius)
-                return true;
+            var adjustedX = playerPosition.X - playerSize.X / 2;
+            var adjustedY = playerPosition.Y - playerSize.Y / 2;
 
-            return false;
+            var adjustedPlayerPosition = new Vector2(adjustedX, adjustedY);
+
+            return MathExtensions.Collided(finalSize / 2, Position, adjustedPlayerPosition, playerSize);
         }
     }
 }

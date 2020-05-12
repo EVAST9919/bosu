@@ -10,6 +10,7 @@ using osu.Framework.Audio.Sample;
 using osu.Framework.Audio.Track;
 using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Bosu.Replays;
+using osu.Framework.Graphics.Shapes;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
@@ -32,6 +33,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         public readonly Container Player;
         private readonly Container bulletsContainer;
+        private readonly Container animationContainer;
 
         public BosuPlayer()
         {
@@ -45,7 +47,23 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                 Player = new Container
                 {
                     Origin = Anchor.Centre,
-                    Size = new Vector2(15)
+                    Size = new Vector2(5.5f, 10.5f),
+                    Children = new Drawable[]
+                    {
+                        animationContainer = new Container
+                        {
+                            Anchor = Anchor.BottomCentre,
+                            Origin = Anchor.BottomCentre,
+                            X = -1.5f,
+                            Size = new Vector2(12.5f)
+                        },
+                        //new Box
+                        //{
+                        //    RelativeSizeAxes = Axes.Both,
+                        //    Colour = Color4.Red,
+                        //    Alpha = 0.5f,
+                        //}
+                    }
                 }
             });
         }
@@ -62,14 +80,14 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         {
             base.LoadComplete();
 
-            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f);
+            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f);
 
             state.BindValueChanged(onStateChanged, true);
         }
 
-        public Vector2 PlayerPosition(Vector2? offset = null) => new Vector2(Player.Position.X + (offset?.X ?? 0), Player.Position.Y - (offset?.Y ?? 0));
+        public Vector2 PlayerPosition() => Player.Position;
 
-        public Vector2 PlayerDrawSize() => Player.DrawSize;
+        public Vector2 PlayerSize() => Player.Size;
 
         public void PlayMissAnimation() => Player.FlashColour(Color4.Red, 1000, Easing.OutQuint);
 
@@ -131,14 +149,14 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             base.Update();
 
             // Collided with the ground, reset jump logic
-            if (Player.Y > (BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f))
+            if (Player.Y > (BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f))
             {
                 resetJumpLogic();
-                Player.Y = BosuPlayfield.BASE_SIZE.Y - PlayerDrawSize().Y / 2f;
+                Player.Y = BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f;
             }
 
             // Collided with the ceiling
-            if (Player.Y < (PlayerDrawSize().Y - 5) / 2f)
+            if (Player.Y < PlayerSize().Y / 2)
                 verticalSpeed = 0;
 
             if (midAir)
@@ -154,10 +172,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
             if (horizontalDirection != 0)
             {
-                var xPos = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, PlayerDrawSize().X / 2f, BosuPlayfield.BASE_SIZE.X - PlayerDrawSize().X / 2f);
+                var xPos = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, PlayerSize().X / 2, BosuPlayfield.BASE_SIZE.X - PlayerSize().X / 2);
 
-                Player.Scale = new Vector2(Math.Abs(Scale.X) * (horizontalDirection > 0 ? 1 : -1), Player.Scale.Y);
                 rightwards = horizontalDirection > 0;
+
+                animationContainer.Scale = new Vector2(rightwards ? 1 : -1, 1);
+                animationContainer.X = rightwards ? -1.5f : 1.5f;
+
                 Player.X = (float)xPos;
             }
 
@@ -184,12 +205,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             {
                 case 1:
                     jump.Play();
-                    verticalSpeed = 90;
+                    verticalSpeed = 80;
                     break;
 
                 case 0:
                     doubleJump.Play();
-                    verticalSpeed = 80;
+                    verticalSpeed = 70;
                     break;
             }
         }
@@ -205,9 +226,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private void onShoot()
         {
             shoot.Play();
-            bulletsContainer.Add(new Bullet(Player.Scale.X > 0, Clock.CurrentTime)
+            bulletsContainer.Add(new Bullet(Rightwards(), Clock.CurrentTime)
             {
-                Position = PlayerPosition(new Vector2(0, -1))
+                Position = PlayerPosition()
             });
         }
 
@@ -221,7 +242,10 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             }
         }
 
-        private void onStateChanged(ValueChangedEvent<PlayerState> s) => Player.Child = new PlayerAnimation(s.NewValue);
+        private void onStateChanged(ValueChangedEvent<PlayerState> s)
+        {
+            animationContainer.Child = new PlayerAnimation(s.NewValue);
+        }
 
         private void updatePlayerState()
         {
