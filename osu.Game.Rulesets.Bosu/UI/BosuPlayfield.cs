@@ -1,7 +1,4 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Audio.Sample;
-using osu.Framework.Audio.Track;
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.Scoring;
@@ -22,14 +19,10 @@ namespace osu.Game.Rulesets.Bosu.UI
 
         internal readonly BosuPlayer Player;
 
-        [Resolved]
-        private ISampleStore samples { get; set; }
-
-        private SampleChannel enteringSample;
-
         private readonly BosuHealthProcessor healthProcessor;
         private readonly DeathOverlay deathOverlay;
         private readonly PlayerTrailController playerTrailController;
+        private readonly EnteringOverlay enteringOverlay;
 
         public BosuPlayfield(BosuHealthProcessor healthProcessor)
         {
@@ -52,7 +45,8 @@ namespace osu.Game.Rulesets.Bosu.UI
                         Player = new BosuPlayer()
                     }
                 },
-                deathOverlay = new DeathOverlay(Player)
+                deathOverlay = new DeathOverlay(Player),
+                enteringOverlay = new EnteringOverlay()
             };
 
             playerTrailController.Player = Player;
@@ -61,10 +55,7 @@ namespace osu.Game.Rulesets.Bosu.UI
         protected override void LoadComplete()
         {
             base.LoadComplete();
-
-            enteringSample = samples.Get("entering");
-
-            Scheduler.AddDelayed(() => enteringSample.Play(), 250);
+            enteringOverlay.Enter(250);
 
             if (Zoom)
                 Scale = new Vector2((float)ZoomLevel);
