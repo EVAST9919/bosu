@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Bosu.Maps
         public char GetTileAt(int x, int y)
         {
             if (x >= BosuPlayfield.TILES_WIDTH || x < 0 || y >= BosuPlayfield.TILES_HEIGHT || y < 0)
-                throw new IndexOutOfRangeException("Incorrect input parameters");
+                throw new IndexOutOfRangeException($"Incorrect input parameters: x: {x}, y: {y}");
 
             return playfield.ElementAt(y * BosuPlayfield.TILES_WIDTH + x);
         }

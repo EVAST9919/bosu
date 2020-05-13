@@ -12,12 +12,13 @@ using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Bosu.Replays;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Bosu.Configuration;
+using osu.Game.Rulesets.Bosu.Maps;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
-        private const double base_speed = 1.0 / 6.5;
+        private const double base_speed = 1.0 / 8;
 
         private readonly Bindable<PlayerState> state = new Bindable<PlayerState>(PlayerState.Idle);
         private readonly Bindable<bool> hitboxEnabed = new Bindable<bool>(false);
@@ -40,9 +41,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private readonly Container bulletsContainer;
         private readonly Container animationContainer;
         private readonly Container hitbox;
+        private readonly Map map;
 
-        public BosuPlayer()
+        public BosuPlayer(Map map)
         {
+            this.map = map;
+
             RelativeSizeAxes = Axes.Both;
             AddRangeInternal(new Drawable[]
             {
@@ -92,7 +96,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         {
             base.LoadComplete();
 
-            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f);
+            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f - Tile.SIZE);
 
             state.BindValueChanged(onStateChanged, true);
             hitboxEnabed.BindValueChanged(enabled => hitbox.Alpha = enabled.NewValue ? 1 : 0, true);
@@ -157,20 +161,28 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         protected override void Update()
         {
-            updateReplayState();
-
             base.Update();
 
-            // Collided with the ground, reset jump logic
-            if (Player.Y > (BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f))
+            updateReplayState();
+
+            if (horizontalDirection != 0)
             {
-                resetJumpLogic();
-                Player.Y = BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f;
+                rightwards = horizontalDirection > 0;
+
+                animationContainer.Scale = new Vector2(rightwards ? 1 : -1, 1);
+                animationContainer.X = rightwards ? -1.5f : 1.5f;
+
+                if (rightwards)
+                    checkRightCollision();
+                else
+                    checkLeftCollision();
             }
 
-            // Collided with the ceiling
-            if (Player.Y < PlayerSize().Y / 2)
-                verticalSpeed = 0;
+            if (verticalSpeed < 0)
+                checkBottomCollision();
+
+            if (verticalSpeed > 0)
+                checkTopCollision();
 
             if (midAir)
             {
@@ -183,19 +195,91 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                 Player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.0045);
             }
 
-            if (horizontalDirection != 0)
-            {
-                var xPos = Math.Clamp(Player.X + Math.Sign(horizontalDirection) * Clock.ElapsedFrameTime * base_speed, PlayerSize().X / 2, BosuPlayfield.BASE_SIZE.X - PlayerSize().X / 2);
-
-                rightwards = horizontalDirection > 0;
-
-                animationContainer.Scale = new Vector2(rightwards ? 1 : -1, 1);
-                animationContainer.X = rightwards ? -1.5f : 1.5f;
-
-                Player.X = (float)xPos;
-            }
-
             updatePlayerState();
+        }
+
+        private void checkRightCollision()
+        {
+            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2) / Tile.SIZE);
+            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2 + 1) / Tile.SIZE);
+            var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
+            var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
+
+            var topTile = map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
+            var middleTile = map.GetTileAt(playerRightBorderPosition, playerMiddleBorderPosition);
+            var bottomTile = map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
+
+            var bottomIsSolid = bottomTile != ' ';
+
+            if (topTile != ' ' || middleTile != ' ')
+            {
+                Player.X = playerRightBorderPosition * Tile.SIZE - PlayerSize().X / 2;
+            }
+            else
+            {
+                Player.X += (float)(Clock.ElapsedFrameTime * base_speed);
+
+                if (!bottomIsSolid)
+                    midAir = true;
+            }
+        }
+
+        private void checkLeftCollision()
+        {
+            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2) / Tile.SIZE);
+            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2 + 1) / Tile.SIZE);
+            var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
+            var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
+
+            var topTile = map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
+            var middleTile = map.GetTileAt(playerLeftBorderPosition, playerMiddleBorderPosition);
+            var bottomTile = map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
+
+            var bottomIsSolid = bottomTile != ' ';
+
+            if (topTile != ' ' || middleTile != ' ')
+            {
+                Player.X = (playerLeftBorderPosition + 1) * Tile.SIZE + PlayerSize().X / 2;
+            }
+            else
+            {
+                Player.X -= (float)(Clock.ElapsedFrameTime * base_speed);
+
+                if (!bottomIsSolid)
+                    midAir = true;
+            }
+        }
+
+        private void checkTopCollision()
+        {
+            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2) / Tile.SIZE);
+            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
+            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
+
+            var leftTile = map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
+            var rightTile = map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
+
+            if (leftTile != ' ' || rightTile != ' ')
+            {
+                Player.Y = (playerTopBorderPosition + 1) * Tile.SIZE + PlayerSize().Y / 2;
+                verticalSpeed = 0;
+            }
+        }
+
+        private void checkBottomCollision()
+        {
+            var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2) / Tile.SIZE);
+            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
+            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
+
+            var leftTile = map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
+            var rightTile = map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
+
+            if (leftTile != ' ' || rightTile != ' ')
+            {
+                resetJumpLogic();
+                Player.Y = playerBottomBorderPosition * Tile.SIZE - PlayerSize().Y / 2;
+            }
         }
 
         private void resetJumpLogic()

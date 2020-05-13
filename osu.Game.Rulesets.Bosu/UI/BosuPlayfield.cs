@@ -31,12 +31,14 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             this.healthProcessor = healthProcessor;
 
+            var map = new EmptyMap();
+
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
             InternalChildren = new Drawable[]
             {
                 new PlayfieldBackground(),
-                new DrawableMap(new EmptyMap()),
+                new DrawableMap(map),
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -45,7 +47,7 @@ namespace osu.Game.Rulesets.Bosu.UI
                     {
                         HitObjectContainer,
                         playerTrailController = new PlayerTrailController(),
-                        Player = new BosuPlayer()
+                        Player = new BosuPlayer(map)
                     }
                 },
                 deathOverlay = new DeathOverlay(Player),
