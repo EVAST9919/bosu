@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics;
 using osuTK;
-using System;
 using osuTK.Graphics;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Allocation;
@@ -18,7 +17,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
-        private const double base_speed = 1.0 / 8;
+        private const double base_speed = 1.0 / 13.5;
 
         private readonly Bindable<PlayerState> state = new Bindable<PlayerState>(PlayerState.Idle);
         private readonly Bindable<bool> hitboxEnabed = new Bindable<bool>(false);
