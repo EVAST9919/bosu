@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Game.Rulesets.Bosu.Maps;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.Scoring;
 using osu.Game.Rulesets.Bosu.UI.Objects.Playfield;
@@ -35,7 +36,7 @@ namespace osu.Game.Rulesets.Bosu.UI
             InternalChildren = new Drawable[]
             {
                 new PlayfieldBackground(),
-                new PlayfieldBorder(),
+                new DrawableMap(new EmptyMap()),
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,

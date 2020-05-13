@@ -4,6 +4,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Allocation;
 using System;
+using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 {
@@ -19,6 +20,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
         public Tile(TileType type)
         {
             this.type = type;
+            Size = new Vector2(SIZE);
         }
 
         [BackgroundDependencyLoader]
