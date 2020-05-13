@@ -9,7 +9,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 {
     public class Tile : CompositeDrawable
     {
-        public const int SIZE = 20;
+        public const int SIZE = 16;
 
         [Resolved]
         private TextureStore textures { get; set; }
