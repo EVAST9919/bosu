@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             this.state = state;
 
             Size = new Vector2(12.5f);
-            Origin = Anchor.Centre;
+            Origin = Anchor.BottomCentre;
             AddInternal(sprite = new Sprite
             {
                 RelativeSizeAxes = Axes.Both,

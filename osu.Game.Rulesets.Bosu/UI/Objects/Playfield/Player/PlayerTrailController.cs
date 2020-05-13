@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Graphics;
 using osu.Game.Rulesets.Bosu.MusicHelpers;
+using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
@@ -34,9 +35,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             if (Player == null)
                 return;
 
+            var playerPos = Player.PlayerPosition();
+            var x = playerPos.X;
+            var y = playerPos.Y + Player.PlayerSize().Y / 2;
+
             var frame = new PlayerStopFrame(Player.GetCurrentState(), Player.Rightwards())
             {
-                Position = Player.PlayerPosition()
+                Position = new Vector2(x, y)
             };
 
             AddInternal(frame);
