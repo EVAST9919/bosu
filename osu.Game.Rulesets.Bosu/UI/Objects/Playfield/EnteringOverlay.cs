@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                 {
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
-                    Y = -BeatmapCard.SIZE.Y,
+                    Y = -BeatmapCard.SIZE.Y - 1,
                 }
             });
         }
@@ -53,7 +53,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                 box.ResizeHeightTo(0, 800, Easing.Out);
 
             using (card.BeginDelayedSequence(delay))
-                card.MoveToY(0, 900).Delay(2200).MoveToY(-BeatmapCard.SIZE.Y, 800, Easing.Out);
+                card.MoveToY(0, 900).Delay(2200).MoveToY(-BeatmapCard.SIZE.Y - 1, 800, Easing.Out);
         }
     }
 }

@@ -21,9 +21,9 @@ namespace osu.Game.Rulesets.Bosu.Maps
         [BackgroundDependencyLoader]
         private void load()
         {
-            for (int i = 0; i < BosuPlayfield.TILES_WIDTH; i++)
+            for (int i = 1; i < BosuPlayfield.TILES_WIDTH - 1; i++)
             {
-                for (int j = 0; j < BosuPlayfield.TILES_HEIGHT; j++)
+                for (int j = 1; j < BosuPlayfield.TILES_HEIGHT - 1; j++)
                 {
                     var tile = map.GetTileAt(i, j);
 
@@ -31,7 +31,8 @@ namespace osu.Game.Rulesets.Bosu.Maps
                     {
                         AddInternal(new Tile(getTileType(tile))
                         {
-                            Position = new Vector2(i * Tile.SIZE, j * Tile.SIZE)
+                            Position = new Vector2(i * Tile.SIZE, j * Tile.SIZE),
+                            Size = new Vector2(Tile.SIZE + 0.1f)
                         });
                     }                        
                 }

@@ -1,14 +1,11 @@
-﻿using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Sprites;
+﻿using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Allocation;
 using System;
-using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 {
-    public class Tile : CompositeDrawable
+    public class Tile : Sprite
     {
         public const int SIZE = 16;
 
@@ -17,20 +14,16 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 
         private readonly TileType type;
 
-        public Tile(TileType type)
+        public Tile(TileType type, bool wrap = false)
         {
             this.type = type;
-            Size = new Vector2(SIZE + 0.1f);
+            WrapTexture = wrap;
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            AddInternal(new Sprite
-            {
-                RelativeSizeAxes = Axes.Both,
-                Texture = getTexture()
-            });
+            Texture = getTexture();
         }
 
         private Texture getTexture()

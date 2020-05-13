@@ -43,13 +43,11 @@ namespace osu.Game.Rulesets.Bosu.UI
                 {
                     RelativeSizeAxes = Axes.Both,
                     Masking = true,
-                    Children = new Drawable[]
-                    {
-                        HitObjectContainer,
-                        playerTrailController = new PlayerTrailController(),
-                        Player = new BosuPlayer(map)
-                    }
+                    Child = HitObjectContainer
                 },
+                new PlayfieldBorder(),
+                playerTrailController = new PlayerTrailController(),
+                Player = new BosuPlayer(map),
                 deathOverlay = new DeathOverlay(Player),
                 enteringOverlay = new EnteringOverlay()
             };
