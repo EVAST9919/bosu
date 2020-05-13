@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
             var circlePosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
-            circlePosition = toPlayfieldSpace(circlePosition) * new Vector2(1, 0.5f);
+            circlePosition = toPlayfieldSpace(circlePosition) * new Vector2(1, 0.4f);
             var comboData = obj as IHasCombo;
 
             if (indexInCurrentCombo == 0)
@@ -226,7 +226,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
             {
                 var curvePosition = curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition;
-                var sliderEventPosition = toPlayfieldSpace(curvePosition) * new Vector2(1, 0.5f);
+                var sliderEventPosition = toPlayfieldSpace(curvePosition) * new Vector2(1, 0.4f);
 
                 switch (e.Type)
                 {
@@ -331,7 +331,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
             {
-                var sliderEventPosition = toPlayfieldSpace(objPosition) * new Vector2(1, 0.5f);
+                var sliderEventPosition = toPlayfieldSpace(objPosition) * new Vector2(1, 0.4f);
 
                 switch (e.Type)
                 {
@@ -412,7 +412,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             {
                 var progress = (float)i / bodyCherriesCount;
                 var position = curve.CurvePositionAt(progress) + objPosition;
-                position = toPlayfieldSpace(position) * new Vector2(1, 0.5f);
+                position = toPlayfieldSpace(position) * new Vector2(1, 0.4f);
 
                 if (positionIsValid(position))
                 {

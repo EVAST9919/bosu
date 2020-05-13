@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
-        private const double base_speed = 1.0 / 13.5;
+        private const double base_speed = 1.0 / 8; // 13.5 is almost 1:1 with original;
 
         private readonly Bindable<PlayerState> state = new Bindable<PlayerState>(PlayerState.Idle);
         private readonly Bindable<bool> hitboxEnabed = new Bindable<bool>(false);
@@ -301,12 +301,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             {
                 case 1:
                     jump.Play();
-                    verticalSpeed = 80;
+                    verticalSpeed = 70;
                     break;
 
                 case 0:
                     doubleJump.Play();
-                    verticalSpeed = 70;
+                    verticalSpeed = 60;
                     break;
             }
         }

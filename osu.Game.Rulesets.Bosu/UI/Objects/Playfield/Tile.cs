@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
         public Tile(TileType type)
         {
             this.type = type;
-            Size = new Vector2(SIZE);
+            Size = new Vector2(SIZE + 0.1f);
         }
 
         [BackgroundDependencyLoader]
