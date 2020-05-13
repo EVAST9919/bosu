@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         public DrawableAngledCherry(AngledCherry h)
             : base(h)
         {
-            SpeedMultiplier = (float)(MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 1, 1.2f) * h.DeltaMultiplier / 4.5f);
+            SpeedMultiplier = (float)(MathExtensions.Map((float)h.SpeedMultiplier, 0, 3, 1, 1.2f) * h.DeltaMultiplier / 5.5);
         }
 
         protected override bool AffectPlayer() => true;

@@ -2,7 +2,7 @@
 {
     public class DrawableTickCherry : DrawableHomingCherry
     {
-        protected override float GetBaseSize() => 15;
+        protected override float GetBaseSize() => 10;
 
         public DrawableTickCherry(TickCherry h)
             : base(h)

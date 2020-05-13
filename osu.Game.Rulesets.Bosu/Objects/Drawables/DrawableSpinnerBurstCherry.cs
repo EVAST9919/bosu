@@ -8,7 +8,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
     public class DrawableSpinnerBurstCherry : DrawableAngledCherry
     {
         public static float FULL_ROTATION_DURATION = 2000;
-        public static float DISTANCE = 40;
+        public static float DISTANCE = 30;
 
         private readonly float burstAngle;
         private readonly Vector2 initialPosition;

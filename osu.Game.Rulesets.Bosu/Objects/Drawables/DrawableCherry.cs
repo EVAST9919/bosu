@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override Color4 GetComboColour(IReadOnlyList<Color4> comboColours) =>
             comboColours[(HitObject.IndexInBeatmap + 1) % comboColours.Count];
 
-        protected virtual float GetBaseSize() => 25;
+        protected virtual float GetBaseSize() => 20;
 
         protected virtual bool AffectPlayer() => false;
 

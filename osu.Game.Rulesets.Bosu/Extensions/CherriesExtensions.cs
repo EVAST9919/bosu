@@ -14,6 +14,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 {
     public static class CherriesExtensions
     {
+        private static readonly Vector2 osu_playfield_size = new Vector2(512, 384);
+
         private const int bullets_per_hitcircle = 10;
         private const int hitcircle_angle_offset = 5;
 
@@ -40,7 +42,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
             var circlePosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
-            circlePosition *= new Vector2(1, 0.5f);
+            circlePosition = toPlayfieldSpace(circlePosition) * new Vector2(1, 0.5f);
             var comboData = obj as IHasCombo;
 
             if (indexInCurrentCombo == 0)
@@ -223,7 +225,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
             {
-                var sliderEventPosition = (curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition) * new Vector2(1, 0.5f);
+                var curvePosition = curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition;
+                var sliderEventPosition = toPlayfieldSpace(curvePosition) * new Vector2(1, 0.5f);
 
                 switch (e.Type)
                 {
@@ -328,7 +331,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
             {
-                var sliderEventPosition = objPosition * new Vector2(1, 0.5f);
+                var sliderEventPosition = toPlayfieldSpace(objPosition) * new Vector2(1, 0.5f);
 
                 switch (e.Type)
                 {
@@ -409,8 +412,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             {
                 var progress = (float)i / bodyCherriesCount;
                 var position = curve.CurvePositionAt(progress) + objPosition;
-
-                position *= new Vector2(1, 0.5f);
+                position = toPlayfieldSpace(position) * new Vector2(1, 0.5f);
 
                 if (positionIsValid(position))
                 {
@@ -429,10 +431,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        private static Vector2 getSymmetricalXPosition(Vector2 input) => new Vector2(BosuPlayfield.BASE_SIZE.X - input.X, input.Y);
-
-        private static Vector2 getSymmetricalYPosition(Vector2 input) => new Vector2(input.X, BosuPlayfield.BASE_SIZE.Y - input.Y);
-
         private static List<HitSampleInfo> getTickSamples(IList<HitSampleInfo> objSamples) => objSamples.Select(s => new HitSampleInfo
         {
             Bank = s.Bank,
@@ -446,6 +444,13 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 return false;
 
             return true;
+        }
+
+        private static Vector2 toPlayfieldSpace(Vector2 input)
+        {
+            var newX = input.X / osu_playfield_size.X * BosuPlayfield.BASE_SIZE.X;
+            var newY = input.Y / osu_playfield_size.Y * BosuPlayfield.BASE_SIZE.Y;
+            return new Vector2(newX, newY);
         }
     }
 }

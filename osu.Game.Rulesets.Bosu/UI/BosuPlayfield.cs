@@ -12,7 +12,9 @@ namespace osu.Game.Rulesets.Bosu.UI
 {
     public class BosuPlayfield : Playfield
     {
-        public static readonly Vector2 BASE_SIZE = new Vector2(512, 384);
+        public static readonly Vector2 BASE_SIZE = new Vector2(384, 304);
+        public static readonly int TILES_WIDTH = 24;
+        public static readonly int TILES_HEIGHT = 19;
 
         public bool Zoom { get; set; }
         public double ZoomLevel;
