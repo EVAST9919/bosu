@@ -27,11 +27,15 @@ namespace osu.Game.Rulesets.Bosu.UI
         private readonly PlayerTrailController playerTrailController;
         private readonly EnteringOverlay enteringOverlay;
 
+        private readonly bool customMap;
+
         public BosuPlayfield(BosuHealthProcessor healthProcessor)
         {
             this.healthProcessor = healthProcessor;
 
-            var map = new EmptyMap();
+            Map map = new EmptyMap();
+
+            customMap = !(map is EmptyMap);
 
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
@@ -92,7 +96,7 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             var playerPosition = Player.PlayerPosition();
 
-            Position = new Vector2(-(playerPosition.X - BASE_SIZE.X / 2f), -(playerPosition.Y - BASE_SIZE.Y / 2f) + 50) * Scale;
+            Position = new Vector2(-(playerPosition.X - BASE_SIZE.X / 2f), -(playerPosition.Y - BASE_SIZE.Y / 2f) + (customMap ? 0 : 50)) * Scale;
         }
 
         public override void Add(DrawableHitObject h)
