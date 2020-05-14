@@ -1,4 +1,5 @@
-﻿using osu.Framework.Graphics;
+﻿using osu.Framework.Allocation;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Bosu.Maps;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
@@ -20,29 +21,30 @@ namespace osu.Game.Rulesets.Bosu.UI
         public bool Zoom { get; set; }
         public double ZoomLevel;
 
-        internal readonly BosuPlayer Player;
+        public bool CustomMap { get; set; }
+
+        internal BosuPlayer Player;
 
         private readonly BosuHealthProcessor healthProcessor;
         private readonly DeathOverlay deathOverlay;
         private readonly PlayerTrailController playerTrailController;
         private readonly EnteringOverlay enteringOverlay;
-
-        private readonly bool customMap;
+        private readonly Container drawableMapContainer;
 
         public BosuPlayfield(BosuHealthProcessor healthProcessor)
         {
             this.healthProcessor = healthProcessor;
 
-            Map map = new EmptyMap();
-
-            customMap = !(map is EmptyMap);
-
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
-            InternalChildren = new Drawable[]
+
+            AddRangeInternal(new Drawable[]
             {
                 new PlayfieldBackground(),
-                new DrawableMap(map),
+                drawableMapContainer = new Container
+                {
+                    RelativeSizeAxes = Axes.Both
+                },
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -51,10 +53,10 @@ namespace osu.Game.Rulesets.Bosu.UI
                 },
                 new PlayfieldBorder(),
                 playerTrailController = new PlayerTrailController(),
-                Player = new BosuPlayer(map),
+                Player = new BosuPlayer(),
                 deathOverlay = new DeathOverlay(Player),
                 enteringOverlay = new EnteringOverlay()
-            };
+            });
 
             playerTrailController.Player = Player;
         }
@@ -62,6 +64,12 @@ namespace osu.Game.Rulesets.Bosu.UI
         protected override void LoadComplete()
         {
             base.LoadComplete();
+
+            Map map = createMap();
+
+            drawableMapContainer.Add(new DrawableMap(map));
+            Player.Map = map;
+
             enteringOverlay.Enter(250);
 
             if (Zoom)
@@ -96,7 +104,15 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             var playerPosition = Player.PlayerPosition();
 
-            Position = new Vector2(-(playerPosition.X - BASE_SIZE.X / 2f), -(playerPosition.Y - BASE_SIZE.Y / 2f) + (customMap ? 0 : 50)) * Scale;
+            Position = new Vector2(-(playerPosition.X - BASE_SIZE.X / 2f), -(playerPosition.Y - BASE_SIZE.Y / 2f) + (CustomMap ? 0 : 50)) * Scale;
+        }
+
+        private Map createMap()
+        {
+            if (CustomMap)
+                return new BossMap();
+
+            return new EmptyMap();
         }
 
         public override void Add(DrawableHitObject h)

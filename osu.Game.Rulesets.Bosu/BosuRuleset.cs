@@ -112,7 +112,8 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
-                        new BosuModZoom()
+                        new BosuModZoom(),
+                        new BosuModCustomMap()
                     };
 
                 default:

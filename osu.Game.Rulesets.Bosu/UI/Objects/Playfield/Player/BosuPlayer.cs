@@ -31,6 +31,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         public override bool RemoveCompletedTransforms => false;
 
+        public Map Map { get; set; }
+
         private int horizontalDirection;
         private int availableJumpCount = 2;
         private float verticalSpeed;
@@ -40,12 +42,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private readonly Container bulletsContainer;
         private readonly Container animationContainer;
         private readonly Container hitbox;
-        private readonly Map map;
 
-        public BosuPlayer(Map map)
+        public BosuPlayer()
         {
-            this.map = map;
-
             RelativeSizeAxes = Axes.Both;
             AddRangeInternal(new Drawable[]
             {
@@ -204,9 +203,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
             var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
 
-            var topTile = map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
-            var middleTile = map.GetTileAt(playerRightBorderPosition, playerMiddleBorderPosition);
-            var bottomTile = map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
+            var topTile = Map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
+            var middleTile = Map.GetTileAt(playerRightBorderPosition, playerMiddleBorderPosition);
+            var bottomTile = Map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
 
             var bottomIsSolid = bottomTile != ' ';
 
@@ -233,9 +232,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
             var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
 
-            var topTile = map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
-            var middleTile = map.GetTileAt(playerLeftBorderPosition, playerMiddleBorderPosition);
-            var bottomTile = map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
+            var topTile = Map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
+            var middleTile = Map.GetTileAt(playerLeftBorderPosition, playerMiddleBorderPosition);
+            var bottomTile = Map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
 
             var bottomIsSolid = bottomTile != ' ';
 
@@ -261,8 +260,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
             var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
 
-            var leftTile = map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
-            var rightTile = map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
+            var leftTile = Map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
+            var rightTile = Map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
 
             if (leftTile != ' ' || rightTile != ' ')
             {
@@ -277,8 +276,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
             var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
 
-            var leftTile = map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
-            var rightTile = map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
+            var leftTile = Map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
+            var rightTile = Map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
 
             if (leftTile != ' ' || rightTile != ' ')
             {
