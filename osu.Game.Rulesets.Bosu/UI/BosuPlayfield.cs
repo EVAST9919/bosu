@@ -1,5 +1,4 @@
-﻿using osu.Framework.Allocation;
-using osu.Framework.Graphics;
+﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Bosu.Maps;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;

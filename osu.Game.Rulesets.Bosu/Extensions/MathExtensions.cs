@@ -38,20 +38,8 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
         public static float GetRandomTimedAngleOffset(double time)
         {
-            var random = new Random((int)Math.Round(time));
+            var random = new Random((int)Math.Round(time * 100));
             return (float)random.NextDouble() * 360f;
-        }
-
-        public static float[] GetRandomTimedXPosition(double time, int count, float xRange)
-        {
-            var random = new Random((int)Math.Round(time));
-
-            float[] randoms = new float[count];
-
-            for (int i = 0; i < count; i++)
-                randoms[i] = (float)random.NextDouble() * xRange;
-
-            return randoms;
         }
 
         public static float GetPlayerAngle(BosuPlayer player, Vector2 input)
