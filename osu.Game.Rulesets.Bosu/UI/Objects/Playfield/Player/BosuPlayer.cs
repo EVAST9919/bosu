@@ -33,6 +33,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         public Map Map { get; set; }
 
+        public bool Dead { get; set; }
+
         private int horizontalDirection;
         private int availableJumpCount = 2;
         private float verticalSpeed;
@@ -162,6 +164,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             base.Update();
 
             updateReplayState();
+
+            if (Dead)
+                return;
 
             if (verticalSpeed < 0)
                 checkBottomCollision();

@@ -97,6 +97,7 @@ namespace osu.Game.Rulesets.Bosu.UI
                 return;
 
             deathOverlay.OnDeath();
+            Player.Dead = true;
             failInvoked = true;
         }
 
