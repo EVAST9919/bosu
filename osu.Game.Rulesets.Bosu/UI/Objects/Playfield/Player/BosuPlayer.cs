@@ -164,6 +164,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
             updateReplayState();
 
+            if (verticalSpeed < 0)
+                checkBottomCollision();
+
+            if (verticalSpeed > 0)
+                checkTopCollision();
+
             if (horizontalDirection != 0)
             {
                 rightwards = horizontalDirection > 0;
@@ -176,12 +182,6 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                 else
                     checkLeftCollision();
             }
-
-            if (verticalSpeed < 0)
-                checkBottomCollision();
-
-            if (verticalSpeed > 0)
-                checkTopCollision();
 
             if (midAir)
             {
@@ -218,8 +218,11 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             {
                 Player.X += (float)(Clock.ElapsedFrameTime * base_speed);
 
-                if (!bottomIsSolid)
+                if (!midAir && !bottomIsSolid)
+                {
                     midAir = true;
+                    availableJumpCount = 1;
+                }
             }
         }
 
@@ -244,8 +247,11 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             {
                 Player.X -= (float)(Clock.ElapsedFrameTime * base_speed);
 
-                if (!bottomIsSolid)
+                if (!midAir && !bottomIsSolid)
+                {
                     midAir = true;
+                    availableJumpCount = 1;
+                }
             }
         }
 
