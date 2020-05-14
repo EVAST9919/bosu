@@ -199,8 +199,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         private void checkRightCollision()
         {
-            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2) / Tile.SIZE);
-            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2 + 1) / Tile.SIZE);
+            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 + 1) / Tile.SIZE);
+            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2) / Tile.SIZE);
             var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
             var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
 
@@ -225,8 +225,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         private void checkLeftCollision()
         {
-            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2) / Tile.SIZE);
-            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2 + 1) / Tile.SIZE);
+            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 - 1) / Tile.SIZE);
+            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2) / Tile.SIZE);
             var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
             var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
 
@@ -251,7 +251,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         private void checkTopCollision()
         {
-            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2) / Tile.SIZE);
+            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2 - 1) / Tile.SIZE);
             var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
             var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
 
@@ -267,7 +267,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         private void checkBottomCollision()
         {
-            var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2) / Tile.SIZE);
+            var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
             var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
             var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
 
