@@ -204,13 +204,15 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private void checkRightCollision()
         {
             var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 + 1) / Tile.SIZE);
+            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 - 1) / Tile.SIZE);
+
             var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2) / Tile.SIZE);
             var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
             var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
 
-            var topTile = Map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
-            var middleTile = Map.GetTileAt(playerRightBorderPosition, playerMiddleBorderPosition);
-            var bottomTile = Map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
+            var topTile = map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
+            var middleTile = map.GetTileAt(playerRightBorderPosition, playerMiddleBorderPosition);
+            var bottomTile = map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
 
             var bottomIsSolid = bottomTile != ' ';
 
@@ -233,13 +235,15 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private void checkLeftCollision()
         {
             var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 - 1) / Tile.SIZE);
+            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 + 1) / Tile.SIZE);
+
             var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2) / Tile.SIZE);
             var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
             var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
 
-            var topTile = Map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
-            var middleTile = Map.GetTileAt(playerLeftBorderPosition, playerMiddleBorderPosition);
-            var bottomTile = Map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
+            var topTile = map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
+            var middleTile = map.GetTileAt(playerLeftBorderPosition, playerMiddleBorderPosition);
+            var bottomTile = map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
 
             var bottomIsSolid = bottomTile != ' ';
 
