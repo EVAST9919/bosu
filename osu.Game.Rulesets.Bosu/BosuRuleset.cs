@@ -65,9 +65,6 @@ namespace osu.Game.Rulesets.Bosu
             if (mods.HasFlag(LegacyMods.Easy))
                 yield return new BosuModEasy();
 
-            if (mods.HasFlag(LegacyMods.Relax))
-                yield return new BosuModRelax();
-
             if (mods.HasFlag(LegacyMods.Hidden))
                 yield return new BosuModHidden();
 
@@ -105,7 +102,6 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new MultiMod(new BosuModAutoplay(), new BosuModCinema()),
-                        new BosuModRelax(),
                     };
 
                 case ModType.Fun:
@@ -113,7 +109,6 @@ namespace osu.Game.Rulesets.Bosu
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
                         new BosuModZoom(),
-                        //new BosuModCustomMap()
                     };
 
                 default:

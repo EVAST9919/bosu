@@ -20,15 +20,12 @@ namespace osu.Game.Rulesets.Bosu.UI
         public bool Zoom { get; set; }
         public double ZoomLevel;
 
-        public bool CustomMap { get; set; }
-
         internal BosuPlayer Player;
 
         private readonly BosuHealthProcessor healthProcessor;
         private readonly DeathOverlay deathOverlay;
         private readonly PlayerTrailController playerTrailController;
         private readonly EnteringOverlay enteringOverlay;
-        private readonly Container drawableMapContainer;
 
         public BosuPlayfield(BosuHealthProcessor healthProcessor)
         {
@@ -37,13 +34,12 @@ namespace osu.Game.Rulesets.Bosu.UI
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
 
+            var map = new EmptyMap();
+
             AddRangeInternal(new Drawable[]
             {
                 new PlayfieldBackground(),
-                drawableMapContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
+                new DrawableMap(map),
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -52,7 +48,7 @@ namespace osu.Game.Rulesets.Bosu.UI
                 },
                 new PlayfieldBorder(),
                 playerTrailController = new PlayerTrailController(),
-                Player = new BosuPlayer(),
+                Player = new BosuPlayer(map),
                 deathOverlay = new DeathOverlay(Player),
                 enteringOverlay = new EnteringOverlay()
             });
@@ -63,11 +59,6 @@ namespace osu.Game.Rulesets.Bosu.UI
         protected override void LoadComplete()
         {
             base.LoadComplete();
-
-            Map map = createMap();
-
-            drawableMapContainer.Add(new DrawableMap(map));
-            Player.Map = map;
 
             enteringOverlay.Enter(250);
 
@@ -104,15 +95,7 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             var playerPosition = Player.PlayerPosition();
 
-            Position = new Vector2(-(playerPosition.X - BASE_SIZE.X / 2f), -(playerPosition.Y - BASE_SIZE.Y / 2f) + (CustomMap ? 0 : 50)) * Scale;
-        }
-
-        private Map createMap()
-        {
-            if (CustomMap)
-                return new BossMap();
-
-            return new EmptyMap();
+            Position = new Vector2(-(playerPosition.X - BASE_SIZE.X / 2f), -(playerPosition.Y - BASE_SIZE.Y / 2f) + 50) * Scale;
         }
 
         public override void Add(DrawableHitObject h)

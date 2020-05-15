@@ -31,8 +31,6 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         public override bool RemoveCompletedTransforms => false;
 
-        public Map Map { get; set; }
-
         public bool Dead { get; set; }
 
         private int horizontalDirection;
@@ -44,9 +42,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private readonly Container bulletsContainer;
         private readonly Container animationContainer;
         private readonly Container hitbox;
+        private readonly Map map;
 
-        public BosuPlayer()
+        public BosuPlayer(Map map)
         {
+            this.map = map;
+
             RelativeSizeAxes = Axes.Both;
             AddRangeInternal(new Drawable[]
             {
@@ -269,8 +270,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
             var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
 
-            var leftTile = Map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
-            var rightTile = Map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
+            var leftTile = map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
+            var rightTile = map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
 
             if (leftTile != ' ' || rightTile != ' ')
             {
@@ -285,8 +286,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
             var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
 
-            var leftTile = Map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
-            var rightTile = Map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
+            var leftTile = map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
+            var rightTile = map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
 
             if (leftTile != ' ' || rightTile != ' ')
             {
