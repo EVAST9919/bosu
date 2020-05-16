@@ -74,6 +74,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 Size = new Vector2(finalSize),
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
+                Alpha = 0,
                 Child = new Circle
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -100,7 +101,11 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.LoadComplete();
 
-            hitboxEnabed.BindValueChanged(enabled => hitbox.Alpha = enabled.NewValue ? 1 : 0, true);
+            hitboxEnabed.BindValueChanged(enabled =>
+            {
+                if (AffectPlayer())
+                    hitbox.Alpha = enabled.NewValue ? 1 : 0;
+            }, true);
         }
 
         protected override void UpdateInitialTransforms()
