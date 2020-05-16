@@ -42,6 +42,12 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return (float)random.NextDouble() * 360f;
         }
 
+        public static bool GetRandomTimedBool(double time)
+        {
+            var random = new Random((int)Math.Round(time * 100));
+            return random.NextDouble() > 0.5f;
+        }
+
         public static float GetPlayerAngle(BosuPlayer player, Vector2 input)
         {
             var playerPosition = player.PlayerPosition();

@@ -41,33 +41,60 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
+            if (indexInCurrentCombo == 0)
+                hitObjects.AddRange(convertImpactCircle(obj, isKiai, index));
+            else
+                hitObjects.AddRange(convertDefaultCircle(obj, isKiai, index, indexInCurrentCombo));
+
+            return hitObjects;
+        }
+
+        private static List<BosuHitObject> convertDefaultCircle(HitObject obj, bool isKiai, int index, int indexInCurrentCombo)
+        {
+            List<BosuHitObject> hitObjects = new List<BosuHitObject>();
+
             var circlePosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             circlePosition = toPlayfieldSpace(circlePosition) * new Vector2(1, 0.4f);
             var comboData = obj as IHasCombo;
 
-            if (indexInCurrentCombo == 0)
+            hitObjects.AddRange(generateExplosion(
+                obj.StartTime,
+                bullets_per_hitcircle,
+                circlePosition,
+                comboData,
+                isKiai,
+                index,
+                hitcircle_angle_offset * indexInCurrentCombo));
+
+            hitObjects.Add(new SoundHitObject
             {
-                hitObjects.AddRange(generatePolygonExplosion(
-                    obj.StartTime,
-                    5,
-                    3,
-                    circlePosition,
-                    comboData,
-                    isKiai,
-                    index,
-                    MathExtensions.GetRandomTimedAngleOffset(obj.StartTime)));
-            }
-            else
-            {
-                hitObjects.AddRange(generateExplosion(
-                    obj.StartTime,
-                    bullets_per_hitcircle,
-                    circlePosition,
-                    comboData,
-                    isKiai,
-                    index,
-                    hitcircle_angle_offset * indexInCurrentCombo));
-            }
+                StartTime = obj.StartTime,
+                Samples = obj.Samples,
+                Position = circlePosition
+            });
+
+            return hitObjects;
+        }
+
+        private static List<BosuHitObject> convertImpactCircle(HitObject obj, bool isKiai, int index)
+        {
+            List<BosuHitObject> hitObjects = new List<BosuHitObject>();
+
+            var circlePosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
+            circlePosition = toPlayfieldSpace(circlePosition) * new Vector2(1, 0.4f);
+            var comboData = obj as IHasCombo;
+
+            var randomBool = MathExtensions.GetRandomTimedBool(obj.StartTime);
+
+            hitObjects.AddRange(generatePolygonExplosion(
+                obj.StartTime,
+                5,
+                randomBool ? 3 : 4,
+                circlePosition,
+                comboData,
+                isKiai,
+                index,
+                MathExtensions.GetRandomTimedAngleOffset(obj.StartTime)));
 
             hitObjects.Add(new SoundHitObject
             {
