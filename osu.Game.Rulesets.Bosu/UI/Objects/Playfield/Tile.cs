@@ -7,7 +7,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 {
     public class Tile : Sprite
     {
-        public const int SIZE = 16;
+        public const int SIZE = 32;
 
         [Resolved]
         private TextureStore textures { get; set; }

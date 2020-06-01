@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             : base(h)
         {
             Origin = Anchor.Centre;
-            Size = new Vector2(GetBaseSize() * MathExtensions.Map(h.CircleSize, 0, 10, 0.2f, 1));
+            Size = new Vector2(GetBaseSize() * MathExtensions.Map(h.CircleSize, 0, 10, 0.5f, 1.5f));
             Position = h.Position;
             Scale = Vector2.Zero;
 

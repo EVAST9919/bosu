@@ -11,6 +11,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
     {
         private readonly Sprite sprite;
 
+        private const double speed = 16.0;
+
         private readonly bool right;
         private readonly double spawnTime;
 
@@ -47,14 +49,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
             this.FadeIn();
 
-            if (Position.X > BosuPlayfield.BASE_SIZE.X || Position.X < 0)
+            if (Position.X > BosuPlayfield.BASE_SIZE.X - Tile.SIZE || Position.X < Tile.SIZE)
             {
                 Expire();
                 return;
             }
 
-            var delta = (right ? 1 : -1) * (float)Clock.ElapsedFrameTime / 2;
-
+            var delta = (right ? 1 : -1) * (float)(speed / 20 * Clock.ElapsedFrameTime);
             X += delta;
         }
     }

@@ -11,13 +11,22 @@ using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Bosu.Replays;
 using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Bosu.Configuration;
-using osu.Game.Rulesets.Bosu.Maps;
+using System;
+using osu.Framework.Utils;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
     public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
-        private const double base_speed = 1.0 / 8; // 13.5 is almost 1:1 with original;
+        private static Vector2 size = new Vector2(11, 21);
+
+        // Legacy constants
+        private const double max_horizontal_speed = 0.2; // 0.15 is legacy
+        private const double vertical_stop_speed_multiplier = 0.45;
+        private const double jump_speed = 8.5;
+        private const double jump2_speed = 7;
+        private const double gravity = 0.45; // 0.4 is legacy, but this one matches better for some reason
+        private const double max_vertical_speed = 9;
 
         private readonly Bindable<PlayerState> state = new Bindable<PlayerState>(PlayerState.Idle);
         private readonly Bindable<bool> hitboxEnabed = new Bindable<bool>(false);
@@ -35,19 +44,16 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         private int horizontalDirection;
         private int availableJumpCount = 2;
-        private float verticalSpeed;
+        private double verticalSpeed;
         private bool midAir;
 
         public readonly Container Player;
         private readonly Container bulletsContainer;
         private readonly Container animationContainer;
         private readonly Container hitbox;
-        private readonly Map map;
 
-        public BosuPlayer(Map map)
+        public BosuPlayer()
         {
-            this.map = map;
-
             RelativeSizeAxes = Axes.Both;
             AddRangeInternal(new Drawable[]
             {
@@ -58,7 +64,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                 Player = new Container
                 {
                     Origin = Anchor.Centre,
-                    Size = new Vector2(5.5f, 10.5f),
+                    Size = size,
                     Children = new Drawable[]
                     {
                         animationContainer = new Container
@@ -66,7 +72,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                             Anchor = Anchor.BottomCentre,
                             Origin = Anchor.BottomCentre,
                             X = -1.5f,
-                            Size = new Vector2(12.5f)
+                            Size = new Vector2(Tile.SIZE)
                         },
                         hitbox = new Container
                         {
@@ -97,7 +103,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         {
             base.LoadComplete();
 
-            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - PlayerSize().Y / 2f - Tile.SIZE);
+            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - size.Y / 2f - Tile.SIZE);
 
             state.BindValueChanged(onStateChanged, true);
             hitboxEnabed.BindValueChanged(enabled => hitbox.Alpha = enabled.NewValue ? 1 : 0, true);
@@ -169,11 +175,23 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             if (Dead)
                 return;
 
-            if (verticalSpeed < 0)
-                checkBottomCollision();
+            var elapsedFrameTime = Clock.ElapsedFrameTime;
 
-            if (verticalSpeed > 0)
-                checkTopCollision();
+            // Limit vertical speed
+            if (Math.Abs(verticalSpeed) > max_vertical_speed)
+                verticalSpeed = Math.Sign(verticalSpeed) * max_vertical_speed;
+
+            if (Precision.AlmostEquals(verticalSpeed, 0, 0.0001))
+                verticalSpeed = 0;
+
+            if (verticalSpeed < 0)
+            {
+                if (PlayerPosition().Y < 0 || PlayerPosition().Y + size.Y / 2f > BosuPlayfield.BASE_SIZE.Y - Tile.SIZE)
+                {
+                    Player.Y = BosuPlayfield.BASE_SIZE.Y - Tile.SIZE - size.Y / 2f;
+                    resetJumpLogic();
+                }
+            }
 
             if (horizontalDirection != 0)
             {
@@ -182,118 +200,22 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                 animationContainer.Scale = new Vector2(rightwards ? 1 : -1, 1);
                 animationContainer.X = rightwards ? -1.5f : 1.5f;
 
-                if (rightwards)
-                    checkRightCollision();
-                else
-                    checkLeftCollision();
+                Player.X += (float)(elapsedFrameTime * max_horizontal_speed) * (rightwards ? 1 : -1);
+
+                Player.X = Math.Clamp(Player.X, Tile.SIZE + size.X / 2f, BosuPlayfield.BASE_SIZE.X - Tile.SIZE - size.X / 2f);
             }
 
             if (midAir)
             {
-                verticalSpeed -= (float)Clock.ElapsedFrameTime / 4;
+                var legacyDistance = verticalSpeed;
+                var adjustedDistance = legacyDistance * (elapsedFrameTime / 20);
 
-                // Limit maximum falling speed
-                if (verticalSpeed < -80)
-                    verticalSpeed = -80;
+                Player.Y -= (float)adjustedDistance;
 
-                Player.Y -= (float)(Clock.ElapsedFrameTime * verticalSpeed * 0.0045);
+                verticalSpeed -= gravity * (elapsedFrameTime / 20);
             }
 
             updatePlayerState();
-        }
-
-        private void checkRightCollision()
-        {
-            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 + 1) / Tile.SIZE);
-            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 - 1) / Tile.SIZE);
-
-            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2) / Tile.SIZE);
-            var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
-            var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
-
-            var topTile = map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
-            var middleTile = map.GetTileAt(playerRightBorderPosition, playerMiddleBorderPosition);
-            var bottomTile = map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
-
-            var bottomIsSolid = bottomTile != ' ';
-
-            if (topTile != ' ' || middleTile != ' ')
-            {
-                Player.X = playerRightBorderPosition * Tile.SIZE - PlayerSize().X / 2;
-            }
-            else
-            {
-                Player.X += (float)(Clock.ElapsedFrameTime * base_speed);
-
-                if (!midAir && !bottomIsSolid)
-                {
-                    midAir = true;
-                    availableJumpCount = 1;
-                }
-            }
-        }
-
-        private void checkLeftCollision()
-        {
-            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 - 1) / Tile.SIZE);
-            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 + 1) / Tile.SIZE);
-
-            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2) / Tile.SIZE);
-            var playerMiddleBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 - 1) / Tile.SIZE);
-            var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
-
-            var topTile = map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
-            var middleTile = map.GetTileAt(playerLeftBorderPosition, playerMiddleBorderPosition);
-            var bottomTile = map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
-
-            var bottomIsSolid = bottomTile != ' ';
-
-            if (topTile != ' ' || middleTile != ' ')
-            {
-                Player.X = (playerLeftBorderPosition + 1) * Tile.SIZE + PlayerSize().X / 2;
-            }
-            else
-            {
-                Player.X -= (float)(Clock.ElapsedFrameTime * base_speed);
-
-                if (!midAir && !bottomIsSolid)
-                {
-                    midAir = true;
-                    availableJumpCount = 1;
-                }
-            }
-        }
-
-        private void checkTopCollision()
-        {
-            var playerTopBorderPosition = (int)((Player.Y - PlayerSize().Y / 2 - 1) / Tile.SIZE);
-            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
-            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
-
-            var leftTile = map.GetTileAt(playerLeftBorderPosition, playerTopBorderPosition);
-            var rightTile = map.GetTileAt(playerRightBorderPosition, playerTopBorderPosition);
-
-            if (leftTile != ' ' || rightTile != ' ')
-            {
-                Player.Y = (playerTopBorderPosition + 1) * Tile.SIZE + PlayerSize().Y / 2;
-                verticalSpeed = 0;
-            }
-        }
-
-        private void checkBottomCollision()
-        {
-            var playerBottomBorderPosition = (int)((Player.Y + PlayerSize().Y / 2 + 1) / Tile.SIZE);
-            var playerLeftBorderPosition = (int)((Player.X - PlayerSize().X / 2 + 1) / Tile.SIZE);
-            var playerRightBorderPosition = (int)((Player.X + PlayerSize().X / 2 - 1) / Tile.SIZE);
-
-            var leftTile = map.GetTileAt(playerLeftBorderPosition, playerBottomBorderPosition);
-            var rightTile = map.GetTileAt(playerRightBorderPosition, playerBottomBorderPosition);
-
-            if (leftTile != ' ' || rightTile != ' ')
-            {
-                resetJumpLogic();
-                Player.Y = playerBottomBorderPosition * Tile.SIZE - PlayerSize().Y / 2;
-            }
         }
 
         private void resetJumpLogic()
@@ -316,12 +238,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             {
                 case 1:
                     jump.Play();
-                    verticalSpeed = 70;
+                    verticalSpeed = jump_speed;
                     break;
 
                 case 0:
                     doubleJump.Play();
-                    verticalSpeed = 60;
+                    verticalSpeed = jump2_speed;
                     break;
             }
         }
@@ -331,7 +253,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
             if (verticalSpeed < 0)
                 return;
 
-            verticalSpeed /= 2;
+            verticalSpeed *= vertical_stop_speed_multiplier;
         }
 
         private void onShoot()

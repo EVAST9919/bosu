@@ -1,6 +1,5 @@
 ﻿using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Game.Rulesets.Bosu.Maps;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.Scoring;
 using osu.Game.Rulesets.Bosu.UI.Objects.Playfield;
@@ -13,7 +12,7 @@ namespace osu.Game.Rulesets.Bosu.UI
 {
     public class BosuPlayfield : Playfield
     {
-        public static readonly Vector2 BASE_SIZE = new Vector2(384, 304);
+        public static readonly Vector2 BASE_SIZE = new Vector2(768, 608);
         public static readonly int TILES_WIDTH = 24;
         public static readonly int TILES_HEIGHT = 19;
 
@@ -34,12 +33,9 @@ namespace osu.Game.Rulesets.Bosu.UI
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
 
-            var map = new EmptyMap();
-
             AddRangeInternal(new Drawable[]
             {
                 new PlayfieldBackground(),
-                new DrawableMap(map),
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -48,7 +44,7 @@ namespace osu.Game.Rulesets.Bosu.UI
                 },
                 new PlayfieldBorder(),
                 playerTrailController = new PlayerTrailController(),
-                Player = new BosuPlayer(map),
+                Player = new BosuPlayer(),
                 deathOverlay = new DeathOverlay(Player),
                 enteringOverlay = new EnteringOverlay()
             });

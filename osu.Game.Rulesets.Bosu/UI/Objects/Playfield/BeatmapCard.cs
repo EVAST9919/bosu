@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 {
     public class BeatmapCard : CurrentBeatmapProvider
     {
-        public static readonly Vector2 SIZE = new Vector2(145, 75);
+        public static readonly Vector2 SIZE = new Vector2(290, 150);
 
         public BeatmapCard()
         {
@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                     Padding = new MarginPadding(5),
                     Child = new TextFlowContainer(s =>
                     {
-                        s.Font = OsuFont.GetFont(size: 10, weight: FontWeight.SemiBold);
+                        s.Font = OsuFont.GetFont(size: 20, weight: FontWeight.SemiBold);
                         s.Shadow = true;
                         s.Anchor = Anchor.BottomCentre;
                         s.Origin = Anchor.BottomCentre;
