@@ -3,6 +3,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Bosu.Scoring;
 using osu.Game.Rulesets.Bosu.UI.Objects.Playfield;
+using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Death;
 using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
@@ -45,11 +46,13 @@ namespace osu.Game.Rulesets.Bosu.UI
                 new PlayfieldBorder(),
                 playerTrailController = new PlayerTrailController(),
                 Player = new BosuPlayer(),
-                deathOverlay = new DeathOverlay(Player),
+                deathOverlay = new DeathOverlay(),
                 enteringOverlay = new EnteringOverlay()
             });
 
             playerTrailController.Player = Player;
+
+            Player.OnDeath += deathOverlay.Play;
         }
 
         protected override void LoadComplete()
@@ -82,8 +85,7 @@ namespace osu.Game.Rulesets.Bosu.UI
             if (failInvoked)
                 return;
 
-            deathOverlay.OnDeath();
-            Player.Dead = true;
+            Player.ForceDeath();
             failInvoked = true;
         }
 

@@ -31,6 +31,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private readonly Bindable<PlayerState> state = new Bindable<PlayerState>(PlayerState.Idle);
         private readonly Bindable<bool> hitboxEnabed = new Bindable<bool>(false);
 
+        public Action<(Vector2, Vector2)> OnDeath;
+
         [Resolved(canBeNull: true)]
         private BosuRulesetConfigManager config { get; set; }
 
@@ -45,6 +47,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         private int horizontalDirection;
         private int availableJumpCount = 2;
         private double verticalSpeed;
+        private double horizontalSpeed;
         private bool midAir;
 
         public readonly Container Player;
@@ -113,7 +116,20 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
         public Vector2 PlayerSize() => Player.Size;
 
-        public void PlayMissAnimation() => Player.FlashColour(Color4.Red, 1000, Easing.OutQuint);
+        public void PlayMissAnimation()
+        {
+            if (Dead)
+                return;
+
+            Player.FlashColour(Color4.Red, 1000, Easing.OutQuint);
+        }
+
+        public void ForceDeath()
+        {
+            Dead = true;
+            OnDeath?.Invoke((PlayerPosition(), new Vector2((float)horizontalSpeed, (float)verticalSpeed)));
+            Player.Hide();
+        }
 
         public PlayerState GetCurrentState() => state.Value;
 
@@ -200,7 +216,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                 animationContainer.Scale = new Vector2(rightwards ? 1 : -1, 1);
                 animationContainer.X = rightwards ? -1.5f : 1.5f;
 
-                Player.X += (float)(elapsedFrameTime * max_horizontal_speed) * (rightwards ? 1 : -1);
+                horizontalSpeed = max_horizontal_speed * (rightwards ? 1 : -1);
+
+                Player.X += (float)(elapsedFrameTime * horizontalSpeed);
 
                 Player.X = Math.Clamp(Player.X, Tile.SIZE + size.X / 2f, BosuPlayfield.BASE_SIZE.X - Tile.SIZE - size.X / 2f);
             }
