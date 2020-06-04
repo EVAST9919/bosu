@@ -4,6 +4,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Textures;
+using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
@@ -49,7 +50,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
             this.FadeIn();
 
-            if (Position.X > BosuPlayfield.BASE_SIZE.X - Tile.SIZE || Position.X < Tile.SIZE)
+            if (Position.X > BosuPlayfield.BASE_SIZE.X - CherriesExtensions.TILE_SIZE || Position.X < CherriesExtensions.TILE_SIZE)
             {
                 Expire();
                 return;

@@ -37,7 +37,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Death
                 },
                 circle = new Sprite
                 {
-                    Size = new Vector2(Tile.SIZE * 5),
+                    Size = new Vector2(CherriesExtensions.TILE_SIZE * 5),
                     Origin = Anchor.Centre,
                     Scale = Vector2.Zero,
                     Alpha = 0,

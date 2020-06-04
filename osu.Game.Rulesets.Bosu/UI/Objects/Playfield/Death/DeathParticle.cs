@@ -6,6 +6,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Allocation;
 using osu.Framework.Utils;
 using System;
+using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Death
 {
@@ -24,7 +25,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Death
 
             Origin = Anchor.Centre;
             Position = position;
-            Size = new Vector2(Tile.SIZE);
+            Size = new Vector2(CherriesExtensions.TILE_SIZE);
         }
 
         private Sprite glow;

@@ -13,6 +13,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Game.Rulesets.Bosu.Configuration;
 using System;
 using osu.Framework.Utils;
+using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
@@ -75,7 +76,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
                             Anchor = Anchor.BottomCentre,
                             Origin = Anchor.BottomCentre,
                             X = -1.5f,
-                            Size = new Vector2(Tile.SIZE)
+                            Size = new Vector2(CherriesExtensions.TILE_SIZE)
                         },
                         hitbox = new Container
                         {
@@ -106,7 +107,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         {
             base.LoadComplete();
 
-            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - size.Y / 2f - Tile.SIZE);
+            Player.Position = new Vector2(BosuPlayfield.BASE_SIZE.X / 2f, BosuPlayfield.BASE_SIZE.Y - size.Y / 2f - CherriesExtensions.TILE_SIZE);
 
             state.BindValueChanged(onStateChanged, true);
             hitboxEnabed.BindValueChanged(enabled => hitbox.Alpha = enabled.NewValue ? 1 : 0, true);
@@ -202,9 +203,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
             if (verticalSpeed < 0)
             {
-                if (PlayerPosition().Y < 0 || PlayerPosition().Y + size.Y / 2f > BosuPlayfield.BASE_SIZE.Y - Tile.SIZE)
+                if (PlayerPosition().Y < 0 || PlayerPosition().Y + size.Y / 2f > BosuPlayfield.BASE_SIZE.Y - CherriesExtensions.TILE_SIZE)
                 {
-                    Player.Y = BosuPlayfield.BASE_SIZE.Y - Tile.SIZE - size.Y / 2f;
+                    Player.Y = BosuPlayfield.BASE_SIZE.Y - CherriesExtensions.TILE_SIZE - size.Y / 2f;
                     resetJumpLogic();
                 }
             }
@@ -220,7 +221,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 
                 Player.X += (float)(elapsedFrameTime * horizontalSpeed);
 
-                Player.X = Math.Clamp(Player.X, Tile.SIZE + size.X / 2f, BosuPlayfield.BASE_SIZE.X - Tile.SIZE - size.X / 2f);
+                Player.X = Math.Clamp(Player.X, CherriesExtensions.TILE_SIZE + size.X / 2f, BosuPlayfield.BASE_SIZE.X - CherriesExtensions.TILE_SIZE - size.X / 2f);
             }
 
             if (midAir)

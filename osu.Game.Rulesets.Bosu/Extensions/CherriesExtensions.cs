@@ -15,6 +15,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 {
     public static class CherriesExtensions
     {
+        public static readonly int TILE_SIZE = 32;
         private static readonly Vector2 osu_playfield_size = new Vector2(512, 384);
 
         private const int bullets_per_hitcircle = 10;

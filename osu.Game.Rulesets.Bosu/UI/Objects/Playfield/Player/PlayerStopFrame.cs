@@ -4,6 +4,7 @@ using osuTK;
 using osu.Framework.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Textures;
+using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
 {
@@ -16,7 +17,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player
         {
             this.state = state;
 
-            Size = new Vector2(Tile.SIZE);
+            Size = new Vector2(CherriesExtensions.TILE_SIZE);
             Origin = Anchor.BottomCentre;
             AddInternal(sprite = new Sprite
             {
