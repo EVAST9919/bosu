@@ -37,13 +37,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
                 },
-                new Tile(TileType.PlatformMiddle, true)
+                new Tile(TileType.PlatformMiddle)
                 {
                     Size = new Vector2((BosuPlayfield.TILES_WIDTH - 2) * Tile.SIZE, Tile.SIZE + 1),
                     X = Tile.SIZE,
                     Y = -1
                 },
-                new Tile(TileType.PlatformMiddle, true)
+                new Tile(TileType.PlatformMiddle)
                 {
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
@@ -51,13 +51,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
                     Y = 1,
                     X = Tile.SIZE
                 },
-                new Tile(TileType.PlatformMiddleRotated, true)
+                new Tile(TileType.PlatformMiddleRotated)
                 {
                     Size = new Vector2(Tile.SIZE + 1, (BosuPlayfield.TILES_HEIGHT - 2) * Tile.SIZE),
                     X = -1,
                     Y = Tile.SIZE
                 },
-                new Tile(TileType.PlatformMiddleRotated, true)
+                new Tile(TileType.PlatformMiddleRotated)
                 {
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,

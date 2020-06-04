@@ -14,10 +14,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 
         private readonly TileType type;
 
-        public Tile(TileType type, bool wrap = false)
+        public Tile(TileType type)
         {
             this.type = type;
-            WrapTexture = wrap;
         }
 
         [BackgroundDependencyLoader]

@@ -38,11 +38,11 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
 
             switch (obj)
             {
-                case IHasCurve curve:
+                case IHasPathWithRepeats curve:
                     hitObjects.AddRange(CherriesExtensions.ConvertSlider(obj, beatmap, curve, kiai, index));
                     break;
 
-                case IHasEndTime endTime:
+                case IHasDuration endTime:
                     hitObjects.AddRange(CherriesExtensions.ConvertSpinner(obj, endTime, beatmap.ControlPointInfo.TimingPointAt(obj.StartTime).BeatLength, kiai, index));
                     break;
 

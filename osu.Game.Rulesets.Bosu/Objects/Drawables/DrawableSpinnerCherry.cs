@@ -12,7 +12,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
     public class DrawableSpinnerCherry : DrawableCherry
     {
         private readonly Vector2 initialPosition;
-        private readonly IHasEndTime endTime;
+        private readonly IHasDuration endTime;
         private readonly float initialAngle;
 
         public DrawableSpinnerCherry(SpinnerCherry h)

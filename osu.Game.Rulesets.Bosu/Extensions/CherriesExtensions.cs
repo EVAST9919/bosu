@@ -9,6 +9,7 @@ using osuTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace osu.Game.Rulesets.Bosu.Extensions
 {
@@ -26,7 +27,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
         private const int bullets_per_spinner_span = 20;
 
-        public static List<BosuHitObject> ConvertSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, bool isKiai, int index)
+        public static List<BosuHitObject> ConvertSlider(HitObject obj, IBeatmap beatmap, IHasPathWithRepeats curve, bool isKiai, int index)
         {
             double spanDuration = curve.Duration / (curve.RepeatCount + 1);
             bool isRepeatSpam = spanDuration < 75 && curve.RepeatCount > 0;
@@ -106,7 +107,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasEndTime endTime, double beatLength, bool isKiai, int index)
+        public static List<BosuHitObject> ConvertSpinner(HitObject obj, IHasDuration endTime, double beatLength, bool isKiai, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -231,7 +232,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             }
         }
 
-        private static List<BosuHitObject> generateDefaultSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, double spanDuration, bool isKiai, int index)
+        private static List<BosuHitObject> generateDefaultSlider(HitObject obj, IBeatmap beatmap, IHasPathWithRepeats curve, double spanDuration, bool isKiai, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -250,7 +251,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             double legacyLastTickOffset = (obj as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0;
 
-            foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
+            foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, new CancellationToken()))
             {
                 var curvePosition = curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + objPosition;
                 var sliderEventPosition = toPlayfieldSpace(curvePosition) * new Vector2(1, 0.4f);
@@ -337,7 +338,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        private static List<BosuHitObject> generateRepeatSpamSlider(HitObject obj, IBeatmap beatmap, IHasCurve curve, double spanDuration, bool isKiai, int index)
+        private static List<BosuHitObject> generateRepeatSpamSlider(HitObject obj, IBeatmap beatmap, IHasPathWithRepeats curve, double spanDuration, bool isKiai, int index)
         {
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
 
@@ -356,7 +357,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             double legacyLastTickOffset = (obj as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0;
 
-            foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset))
+            foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, new CancellationToken()))
             {
                 var sliderEventPosition = toPlayfieldSpace(objPosition) * new Vector2(1, 0.4f);
 
@@ -426,7 +427,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return hitObjects;
         }
 
-        private static List<SliderPartCherry> generateSliderBody(HitObject obj, IHasCurve curve, bool isKiai, int index)
+        private static List<SliderPartCherry> generateSliderBody(HitObject obj, IHasPathWithRepeats curve, bool isKiai, int index)
         {
             var objPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
             var comboData = obj as IHasCombo;
