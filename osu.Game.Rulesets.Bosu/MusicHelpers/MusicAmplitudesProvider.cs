@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Bindables;
+using System;
 
 namespace osu.Game.Rulesets.Bosu.MusicHelpers
 {
@@ -11,11 +12,11 @@ namespace osu.Game.Rulesets.Bosu.MusicHelpers
             base.Update();
 
             var track = Beatmap.Value?.Track;
-            OnAmplitudesUpdate(track?.CurrentAmplitudes.FrequencyAmplitudes ?? new float[256]);
+            OnAmplitudesUpdate(track?.CurrentAmplitudes.FrequencyAmplitudes ?? new ReadOnlyMemory<float>());
             IsKiai.Value = Beatmap.Value?.Beatmap.ControlPointInfo.EffectPointAt(track?.CurrentTime ?? 0).KiaiMode ?? false;
         }
 
-        protected virtual void OnAmplitudesUpdate(float[] amplitudes)
+        protected virtual void OnAmplitudesUpdate(ReadOnlyMemory<float> amplitudes)
         {
         }
     }

@@ -1,5 +1,6 @@
 ﻿using osu.Framework.Bindables;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using System;
 
 namespace osu.Game.Rulesets.Bosu.MusicHelpers
 {
@@ -7,10 +8,10 @@ namespace osu.Game.Rulesets.Bosu.MusicHelpers
     {
         public readonly BindableFloat Intensity = new BindableFloat();
 
-        protected override void OnAmplitudesUpdate(float[] amplitudes)
+        protected override void OnAmplitudesUpdate(ReadOnlyMemory<float> amplitudes)
         {
             float sum = 0;
-            amplitudes.ForEach(amp => sum += amp);
+            amplitudes.Span.ToArray().ForEach(amp => sum += amp);
 
             if (IsKiai.Value)
                 sum *= 1.2f;
