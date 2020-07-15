@@ -1,9 +1,6 @@
 # bosu
 A custom game mode for osu!lazer project based on "I wanna be the Boshy" game.
 
-Install guide:
-https://www.youtube.com/watch?v=LF6hKh6FBtU
-
 Support:
 https://www.patreon.com/evast
 
