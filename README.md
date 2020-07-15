@@ -6,7 +6,7 @@ https://www.patreon.com/evast
 
 Follow me:
 
-https://discord.gg/YqXk9ZZ
+https://discord.gg/HQgy3Ey
 
 https://twitter.com/ev4st
 
