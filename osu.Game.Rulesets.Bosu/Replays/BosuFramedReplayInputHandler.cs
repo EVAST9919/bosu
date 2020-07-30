@@ -28,18 +28,16 @@ namespace osu.Game.Rulesets.Bosu.Replays
             }
         }
 
-        public override List<IInput> GetPendingInputs()
+        public override void CollectPendingInputs(List<IInput> inputs)
         {
-            if (!Position.HasValue) return new List<IInput>();
-
-            return new List<IInput>
+            if (Position.HasValue)
             {
-                new BosuReplayState
+                inputs.Add(new BosuReplayState
                 {
                     PressedActions = CurrentFrame?.Actions ?? new List<BosuAction>(),
                     Position = Position.Value
-                },
-            };
+                });
+            }
         }
 
         public class BosuReplayState : ReplayState<BosuAction>
