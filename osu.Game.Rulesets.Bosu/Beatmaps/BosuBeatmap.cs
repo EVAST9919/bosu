@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Bosu.Objects;
 
@@ -20,13 +19,13 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 {
                     Name = @"Cherries",
                     Content = angled.ToString(),
-                    Icon = FontAwesome.Regular.Circle
+                    CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles)
                 },
                 new BeatmapStatistic
                 {
                     Name = @"Visuals",
                     Content = (totalCount - angled - sound).ToString(),
-                    Icon = FontAwesome.Regular.Circle
+                    CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners)
                 }
             };
         }

@@ -1,5 +1,4 @@
-﻿using osu.Game.Rulesets.Bosu.Judgements;
-using osu.Game.Rulesets.Judgements;
+﻿using osu.Game.Rulesets.Judgements;
 
 namespace osu.Game.Rulesets.Bosu.Objects
 {
@@ -8,6 +7,6 @@ namespace osu.Game.Rulesets.Bosu.Objects
     /// </summary>
     public class SoundHitObject : BosuHitObject
     {
-        public override Judgement CreateJudgement() => new NullJudgement();
+        public override Judgement CreateJudgement() => new IgnoreJudgement();
     }
 }

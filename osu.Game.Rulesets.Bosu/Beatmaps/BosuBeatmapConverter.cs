@@ -6,6 +6,7 @@ using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.Extensions;
 using osu.Game.Beatmaps.Timing;
+using System.Threading;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -21,7 +22,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         private int index = -1;
         private int objectIndexInCurrentCombo = 0;
 
-        protected override IEnumerable<BosuHitObject> ConvertHitObject(HitObject obj, IBeatmap beatmap)
+        protected override IEnumerable<BosuHitObject> ConvertHitObject(HitObject obj, IBeatmap beatmap, CancellationToken cancellationToken)
         {
             var comboData = obj as IHasCombo;
             if (comboData?.NewCombo ?? false)

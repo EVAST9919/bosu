@@ -11,7 +11,7 @@ namespace osu.Game.Rulesets.Bosu.Objects
 
         public bool IsKiai { get; set; }
 
-        public override Judgement CreateJudgement() => new NullJudgement();
+        public override Judgement CreateJudgement() => new IgnoreJudgement();
 
         protected override void ApplyDefaultsToSelf(ControlPointInfo controlPointInfo, BeatmapDifficulty difficulty)
         {

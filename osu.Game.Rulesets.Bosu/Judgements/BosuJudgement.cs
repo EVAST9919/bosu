@@ -21,17 +21,5 @@ namespace osu.Game.Rulesets.Bosu.Judgements
                     return 0;
             }
         }
-
-        protected override int NumericResultFor(HitResult result)
-        {
-            switch (result)
-            {
-                default:
-                    return 0;
-
-                case HitResult.Perfect:
-                    return 300;
-            }
-        }
     }
 }
