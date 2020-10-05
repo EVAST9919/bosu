@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
             if (timeOffset > endTime.EndTime - HitObject.StartTime)
-                ApplyResult(r => r.Type = HitResult.Meh);
+                ApplyResult(r => r.Type = HitResult.IgnoreHit);
         }
 
         protected override void UpdateStateTransforms(ArmedState state)
