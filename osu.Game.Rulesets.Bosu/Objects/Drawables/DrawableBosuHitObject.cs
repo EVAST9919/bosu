@@ -15,16 +15,5 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
 
         public void GetPlayerToTrace(BosuPlayer player) => Player = player;
-
-        protected override void UpdateStateTransforms(ArmedState state)
-        {
-            switch (state)
-            {
-                case ArmedState.Idle:
-                    // Manually set to reduce the number of future alive objects to a bare minimum.
-                    LifetimeStart = HitObject.StartTime - HitObject.TimePreempt;
-                    break;
-            }
-        }
     }
 }

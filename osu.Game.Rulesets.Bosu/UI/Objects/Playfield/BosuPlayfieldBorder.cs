@@ -6,9 +6,9 @@ using osu.Framework.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.UI.Objects.Playfield
 {
-    public class PlayfieldBorder : Sprite
+    public class BosuPlayfieldBorder : Sprite
     {
-        public PlayfieldBorder()
+        public BosuPlayfieldBorder()
         {
             Size = BosuPlayfield.BASE_SIZE + Vector2.One;
             Anchor = Anchor.Centre;

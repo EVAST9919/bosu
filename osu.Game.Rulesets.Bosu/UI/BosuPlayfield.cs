@@ -43,7 +43,7 @@ namespace osu.Game.Rulesets.Bosu.UI
                     Masking = true,
                     Child = HitObjectContainer
                 },
-                new PlayfieldBorder(),
+                new BosuPlayfieldBorder(),
                 playerTrailController = new PlayerTrailController(),
                 Player = new BosuPlayer(),
                 deathOverlay = new DeathOverlay(),

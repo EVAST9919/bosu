@@ -24,17 +24,17 @@ namespace osu.Game.Rulesets.Bosu.UI
                 new SettingsCheckbox
                 {
                     LabelText = "Show hitboxes",
-                    Bindable = config.GetBindable<bool>(BosuRulesetSetting.EnableHitboxes)
+                    Current = config.GetBindable<bool>(BosuRulesetSetting.EnableHitboxes)
                 },
                 new SettingsCheckbox
                 {
                     LabelText = "Enable background",
-                    Bindable = config.GetBindable<bool>(BosuRulesetSetting.EnableBackground)
+                    Current = config.GetBindable<bool>(BosuRulesetSetting.EnableBackground)
                 },
                 new SettingsSlider<double>
                 {
                     LabelText = "Playfield dim",
-                    Bindable = config.GetBindable<double>(BosuRulesetSetting.PlayfieldDim),
+                    Current = config.GetBindable<double>(BosuRulesetSetting.PlayfieldDim),
                     KeyboardStep = 0.01f,
                     DisplayAsPercentage = true
                 }

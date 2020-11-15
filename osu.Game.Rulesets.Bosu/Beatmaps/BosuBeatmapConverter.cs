@@ -5,7 +5,6 @@ using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.Extensions;
-using osu.Game.Beatmaps.Timing;
 using System.Threading;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
@@ -30,8 +29,6 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 objectIndexInCurrentCombo = 0;
                 index++;
             }
-
-            var beatmapStageIndex = getBeatmapStageIndex(beatmap, obj.StartTime);
 
             bool kiai = beatmap.ControlPointInfo.EffectPointAt(obj.StartTime).KiaiMode;
 
@@ -58,24 +55,5 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         }
 
         protected override Beatmap<BosuHitObject> CreateBeatmap() => new BosuBeatmap();
-
-        private static int getBeatmapStageIndex(IBeatmap beatmap, double time)
-        {
-            if (beatmap.Breaks.Count == 0)
-                return 1;
-
-            BreakPeriod latestBreak = null;
-
-            beatmap.Breaks.ForEach(b =>
-            {
-                if (b.EndTime < time)
-                    latestBreak = b;
-            });
-
-            if (latestBreak == null)
-                return 1;
-
-            return beatmap.Breaks.IndexOf(latestBreak) + 2;
-        }
     }
 }
