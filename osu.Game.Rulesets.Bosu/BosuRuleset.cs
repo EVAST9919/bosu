@@ -94,7 +94,7 @@ namespace osu.Game.Rulesets.Bosu
                     {
                         new BosuModSuddenDeath(),
                         new MultiMod(new BosuModDoubleTime(), new BosuModNightcore()),
-                        new BosuModHidden(),
+                        //new BosuModHidden(),
                         new BosuModFlashlight()
                     };
 

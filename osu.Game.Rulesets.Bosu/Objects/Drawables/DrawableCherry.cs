@@ -165,15 +165,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             }
         }
 
-        protected override void UpdateStateTransforms(ArmedState state)
+        protected override void UpdateHitStateTransforms(ArmedState state)
         {
-            base.UpdateStateTransforms(state);
+            base.UpdateHitStateTransforms(state);
 
             switch (state)
             {
                 case ArmedState.Miss:
-                    // Check DrawableHitCircle L#168
-                    this.Delay(missTime).FadeOut();
+                    this.FadeOut();
                     break;
             }
         }

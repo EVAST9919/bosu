@@ -67,12 +67,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 ApplyResult(r => r.Type = HitResult.IgnoreHit);
         }
 
-        protected override void UpdateStateTransforms(ArmedState state)
+        protected override void UpdateHitStateTransforms(ArmedState state)
         {
+            base.UpdateHitStateTransforms(state);
+
             switch (state)
             {
                 case ArmedState.Hit:
-                    this.Delay(endTime.EndTime - HitObject.StartTime).Then().ScaleTo(0, 150).Then().FadeOut();
+                    this.ScaleTo(0, 150).Then().FadeOut();
                     break;
             }
         }
