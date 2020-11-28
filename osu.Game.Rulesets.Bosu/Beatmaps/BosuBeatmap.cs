@@ -11,7 +11,6 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         {
             var totalCount = HitObjects.Count();
             var angled = HitObjects.Count(s => s is AngledCherry);
-            var sound = HitObjects.Count(s => s is SoundHitObject);
 
             return new[]
             {
@@ -24,7 +23,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 new BeatmapStatistic
                 {
                     Name = @"Visuals",
-                    Content = (totalCount - angled - sound).ToString(),
+                    Content = (totalCount - angled).ToString(),
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners)
                 }
             };

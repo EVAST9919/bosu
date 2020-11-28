@@ -68,13 +68,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 index,
                 hitcircle_angle_offset * indexInCurrentCombo));
 
-            hitObjects.Add(new SoundHitObject
-            {
-                StartTime = obj.StartTime,
-                Samples = obj.Samples,
-                Position = circlePosition
-            });
-
             return hitObjects;
         }
 
@@ -97,13 +90,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 isKiai,
                 index,
                 MathExtensions.GetRandomTimedAngleOffset(obj.StartTime)));
-
-            hitObjects.Add(new SoundHitObject
-            {
-                StartTime = obj.StartTime,
-                Samples = obj.Samples,
-                Position = circlePosition
-            });
 
             return hitObjects;
         }
@@ -259,17 +245,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
                 switch (e.Type)
                 {
-                    case SliderEventType.Head:
-
-                        hitObjects.Add(new SoundHitObject
-                        {
-                            StartTime = obj.StartTime,
-                            Samples = obj.Samples,
-                            Position = sliderEventPosition
-                        });
-
-                        break;
-
                     case SliderEventType.Tick:
 
                         if (positionIsValid(sliderEventPosition))
@@ -285,13 +260,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                                 IsKiai = isKiai
                             });
                         }
-
-                        hitObjects.Add(new SoundHitObject
-                        {
-                            StartTime = e.Time,
-                            Samples = getTickSamples(obj.Samples),
-                            Position = sliderEventPosition
-                        });
                         break;
 
                     case SliderEventType.Repeat:
@@ -304,13 +272,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             isKiai,
                             index,
                             MathExtensions.GetRandomTimedAngleOffset(e.Time)));
-
-                        hitObjects.Add(new SoundHitObject
-                        {
-                            StartTime = e.Time,
-                            Samples = obj.Samples,
-                            Position = sliderEventPosition
-                        });
                         break;
 
                     case SliderEventType.Tail:
@@ -323,13 +284,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             isKiai,
                             index,
                             MathExtensions.GetRandomTimedAngleOffset(e.Time)));
-
-                        hitObjects.Add(new SoundHitObject
-                        {
-                            StartTime = curve.EndTime,
-                            Samples = obj.Samples,
-                            Position = sliderEventPosition
-                        });
                         break;
                 }
             }
@@ -373,14 +327,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             comboData,
                             isKiai,
                             index));
-
-                        hitObjects.Add(new SoundHitObject
-                        {
-                            StartTime = obj.StartTime,
-                            Samples = obj.Samples,
-                            Position = sliderEventPosition
-                        });
-
                         break;
 
                     case SliderEventType.Repeat:
@@ -393,13 +339,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             isKiai,
                             index,
                             slider_angle_per_span * (e.SpanIndex + 1)));
-
-                        hitObjects.Add(new SoundHitObject
-                        {
-                            StartTime = e.Time,
-                            Samples = obj.Samples,
-                            Position = sliderEventPosition
-                        });
                         break;
 
                     case SliderEventType.Tail:
@@ -412,13 +351,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                             isKiai,
                             index,
                             slider_angle_per_span * (curve.RepeatCount + 1)));
-
-                        hitObjects.Add(new SoundHitObject
-                        {
-                            StartTime = curve.EndTime,
-                            Samples = obj.Samples,
-                            Position = sliderEventPosition
-                        });
                         break;
                 }
             }
