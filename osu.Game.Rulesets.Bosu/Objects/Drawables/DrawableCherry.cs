@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Graphics;
 using osuTK;
 using osuTK.Graphics;
-using System.Collections.Generic;
 using osu.Game.Rulesets.Bosu.Extensions;
 using osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces;
 using osu.Framework.Allocation;
@@ -23,9 +22,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         public bool HiddenApplied;
 
-        protected override Color4 GetComboColour(IReadOnlyList<Color4> comboColours) =>
-            comboColours[(HitObject.IndexInBeatmap + 1) % comboColours.Count];
-
         protected virtual float GetBaseSize() => 18;
 
         protected virtual bool AffectPlayer() => false;
@@ -41,7 +37,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private readonly Container hitbox;
         private readonly KiaiCherryPiece kiaiCherry;
         private readonly float finalSize;
-        private double missTime;
 
         protected DrawableCherry(Cherry h)
             : base(h)
@@ -148,7 +143,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                     if (collidedWithPlayer(Player))
                     {
                         Player.PlayMissAnimation();
-                        missTime = timeOffset;
                         ApplyResult(r => r.Type = HitResult.Miss);
                         return;
                     }

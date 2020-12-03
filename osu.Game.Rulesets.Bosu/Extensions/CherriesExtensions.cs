@@ -1,5 +1,4 @@
-﻿using osu.Game.Audio;
-using osu.Game.Beatmaps;
+﻿using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.UI;
@@ -8,7 +7,6 @@ using osu.Game.Rulesets.Objects.Types;
 using osuTK;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace osu.Game.Rulesets.Bosu.Extensions
@@ -391,13 +389,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             return hitObjects;
         }
-
-        private static List<HitSampleInfo> getTickSamples(IList<HitSampleInfo> objSamples) => objSamples.Select(s => new HitSampleInfo
-        {
-            Bank = s.Bank,
-            Name = @"slidertick",
-            Volume = s.Volume
-        }).ToList();
 
         private static bool positionIsValid(Vector2 position)
         {
