@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using osu.Game.Beatmaps;
 using osu.Game.Replays.Legacy;
+using osu.Game.Rulesets.Bosu.Extensions;
+using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.Replays.Types;
+using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.Replays
 {
     public class BosuReplayFrame : ReplayFrame, IConvertibleReplayFrame
     {
         public List<BosuAction> Actions = new List<BosuAction>();
-        public float Position;
+        public Vector2 Position;
         public bool Jumping;
         public bool Shooting;
 
@@ -17,10 +20,10 @@ namespace osu.Game.Rulesets.Bosu.Replays
         {
         }
 
-        public BosuReplayFrame(double time, float? position = null, bool jumping = false, bool shooting = false, BosuReplayFrame lastFrame = null)
+        public BosuReplayFrame(double time, Vector2? position = null, bool jumping = false, bool shooting = false, BosuReplayFrame lastFrame = null)
             : base(time)
         {
-            Position = position ?? -100;
+            Position = position ?? new Vector2(-100, BosuPlayfield.BASE_SIZE.Y - IWannaExtensions.PLAYER_SIZE.Y / 2f - IWannaExtensions.TILE_SIZE);
             Jumping = jumping;
             Shooting = shooting;
 
@@ -32,16 +35,16 @@ namespace osu.Game.Rulesets.Bosu.Replays
 
             if (lastFrame != null)
             {
-                if (Position > lastFrame.Position)
+                if (Position.X > lastFrame.Position.X)
                     lastFrame.Actions.Add(BosuAction.MoveRight);
-                else if (Position < lastFrame.Position)
+                else if (Position.X < lastFrame.Position.X)
                     lastFrame.Actions.Add(BosuAction.MoveLeft);
             }
         }
 
         public void FromLegacy(LegacyReplayFrame currentFrame, IBeatmap beatmap, ReplayFrame lastFrame = null)
         {
-            Position = currentFrame.Position.X;
+            Position = currentFrame.Position;
             Jumping = currentFrame.ButtonState == ReplayButtonState.Left1;
             Shooting = currentFrame.ButtonState == ReplayButtonState.Left2;
 
@@ -53,9 +56,9 @@ namespace osu.Game.Rulesets.Bosu.Replays
 
             if (lastFrame is BosuReplayFrame lastBosuFrame)
             {
-                if (Position > lastBosuFrame.Position)
+                if (Position.X > lastBosuFrame.Position.X)
                     lastBosuFrame.Actions.Add(BosuAction.MoveRight);
-                else if (Position < lastBosuFrame.Position)
+                else if (Position.X < lastBosuFrame.Position.X)
                     lastBosuFrame.Actions.Add(BosuAction.MoveLeft);
             }
         }
@@ -67,7 +70,7 @@ namespace osu.Game.Rulesets.Bosu.Replays
             if (Actions.Contains(BosuAction.Jump)) state |= ReplayButtonState.Left1;
             if (Actions.Contains(BosuAction.Shoot)) state |= ReplayButtonState.Left2;
 
-            return new LegacyReplayFrame(Time, Position, null, state);
+            return new LegacyReplayFrame(Time, Position.X, Position.Y, state);
         }
     }
 }

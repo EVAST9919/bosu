@@ -19,7 +19,7 @@ namespace osu.Game.Rulesets.Bosu.Replays
 
         public override Replay Generate()
         {
-            Replay.Frames.Add(new BosuReplayFrame(0));
+            Replay.Frames.Add(new BosuReplayFrame(-100000));
             return Replay;
         }
     }

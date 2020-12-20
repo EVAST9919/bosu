@@ -1,111 +1,133 @@
-﻿using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
-using osu.Game.Rulesets.Bosu.Objects.Drawables;
-using osu.Game.Rulesets.Bosu.Scoring;
-using osu.Game.Rulesets.Bosu.UI.Objects.Playfield;
-using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Death;
-using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
-using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.UI;
+﻿using osu.Game.Rulesets.UI;
 using osuTK;
+using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
+using osu.Game.Rulesets.Bosu.UI.Player;
+using osu.Framework.Allocation;
+using osu.Game.Rulesets.Bosu.Objects;
+using osu.Game.Rulesets.Bosu.Objects.Drawables;
+using osu.Game.Rulesets.Objects.Drawables;
+using osu.Game.Rulesets.Bosu.Extensions;
+using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Bosu.Scoring;
+using osu.Game.Rulesets.Bosu.UI.Death;
+using osu.Game.Rulesets.Bosu.UI.Entering;
+using osu.Game.Rulesets.Bosu.Configuration;
+using osu.Framework.Bindables;
 
 namespace osu.Game.Rulesets.Bosu.UI
 {
     public class BosuPlayfield : Playfield
     {
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 608);
-        public static readonly int TILES_WIDTH = 24;
-        public static readonly int TILES_HEIGHT = 19;
 
-        public bool Zoom { get; set; }
-        public double ZoomLevel;
+        protected virtual bool UseEnteringAnimation { get; set; } = true;
 
-        internal BosuPlayer Player;
+        [Resolved(canBeNull: true)]
+        private BosuRulesetConfigManager config { get; set; }
 
-        private readonly BosuHealthProcessor healthProcessor;
-        private readonly DeathOverlay deathOverlay;
-        private readonly PlayerTrailController playerTrailController;
+        private readonly Bindable<bool> transparentBackground = new Bindable<bool>();
+
+        public readonly BosuPlayer Player;
+        private readonly PlayfieldBackground bg;
         private readonly EnteringOverlay enteringOverlay;
+        private readonly DeathOverlay deathOverlay;
 
-        public BosuPlayfield(BosuHealthProcessor healthProcessor)
+        public BosuPlayfield()
         {
-            this.healthProcessor = healthProcessor;
-
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
-
-            AddRangeInternal(new Drawable[]
+            Masking = true;
+            InternalChildren = new Drawable[]
             {
-                new PlayfieldBackground(),
+                bg = new PlayfieldBackground(),
                 new Container
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Masking = true,
                     Child = HitObjectContainer
                 },
                 new BosuPlayfieldBorder(),
-                playerTrailController = new PlayerTrailController(),
                 Player = new BosuPlayer(),
-                deathOverlay = new DeathOverlay(),
-                enteringOverlay = new EnteringOverlay()
-            });
+                enteringOverlay = new EnteringOverlay
+                {
+                    Alpha = UseEnteringAnimation ? 1 : 0
+                },
+                deathOverlay = new DeathOverlay()
+            };
+        }
 
-            playerTrailController.Player = Player;
+        [BackgroundDependencyLoader(true)]
+        private void load()
+        {
+            RegisterPool<AngeledCherry, DrawableAngeledCherry>(300, 1500);
+            RegisterPool<InstantCherry, DrawableInstantCherry>(300, 600);
 
-            Player.OnDeath += deathOverlay.Play;
+            config?.BindWith(BosuRulesetSetting.TransparentBackground, transparentBackground);
+            transparentBackground.BindValueChanged(transparent => bg.Alpha = transparent.NewValue ? 0 : 1, true);
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
 
-            enteringOverlay.Enter(250);
-
-            if (Zoom)
-                Scale = new Vector2((float)ZoomLevel);
+            if (UseEnteringAnimation)
+                enteringOverlay.Enter(250);
         }
 
-        private bool failInvoked;
-
-        protected override void Update()
+        public void ApplyHealthProcessor(BosuHealthProcessor p)
         {
-            base.Update();
-
-            if (Zoom)
-                zoomMod();
-
-            trackHealth();
+            p.Failed += onDeath;
         }
 
-        private void trackHealth()
+        private bool onDeath()
         {
-            if (!healthProcessor.HasFailed)
-                return;
-
-            if (failInvoked)
-                return;
-
-            Player.ForceDeath();
-            failInvoked = true;
+            deathOverlay.Show(Player.PlayerPosition, Player.PlayerSpeed);
+            Player.Die();
+            return true;
         }
 
-        private void zoomMod()
+        protected override void OnNewDrawableHitObject(DrawableHitObject drawableHitObject)
         {
-            var playerPosition = Player.PlayerPosition();
+            base.OnNewDrawableHitObject(drawableHitObject);
 
-            Position = new Vector2(-(playerPosition.X - BASE_SIZE.X / 2f), -(playerPosition.Y - BASE_SIZE.Y / 2f) + 50) * Scale;
-        }
-
-        public override void Add(DrawableHitObject h)
-        {
-            if (h is DrawableCherry drawable)
+            switch (drawableHitObject)
             {
-                drawable.GetPlayerToTrace(Player);
-                base.Add(drawable);
-                return;
+                case DrawableAngeledCherry cherry:
+                    cherry.CheckHit += checkHit;
+                    break;
+            }
+        }
+
+        private bool checkHit(Vector2 cherryPosition)
+        {
+            var playerPosition = Player.PlayerPosition;
+
+            return MathExtensions.Collided(
+                IWannaExtensions.CHERRY_RADIUS,
+                cherryPosition,
+                new Vector2(playerPosition.X - IWannaExtensions.PLAYER_HALF_WIDTH, playerPosition.Y - IWannaExtensions.PLAYER_HALF_HEIGHT),
+                IWannaExtensions.PLAYER_SIZE);
+        }
+
+        protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new BosuHitObjectLifetimeEntry(hitObject);
+
+        private class BosuHitObjectLifetimeEntry : HitObjectLifetimeEntry
+        {
+            public BosuHitObjectLifetimeEntry(HitObject hitObject)
+                : base(hitObject)
+            {
             }
 
-            base.Add(h);
+            protected override double InitialLifetimeOffset
+            {
+                get
+                {
+                    if (HitObject is Cherry cherry)
+                        return cherry.TimePreempt;
+
+                    return base.InitialLifetimeOffset;
+                }
+            }
         }
     }
 }

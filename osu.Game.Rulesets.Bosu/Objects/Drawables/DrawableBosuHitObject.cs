@@ -1,19 +1,16 @@
-﻿using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
+﻿using JetBrains.Annotations;
 using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public abstract class DrawableBosuHitObject : DrawableHitObject<BosuHitObject>
+    public abstract class DrawableBosuHitObject<T> : DrawableHitObject<BosuHitObject>
+        where T : BosuHitObject
     {
-        protected BosuPlayer Player;
+        protected new T HitObject => (T)base.HitObject;
 
-        protected DrawableBosuHitObject(BosuHitObject hitObject)
-            : base(hitObject)
+        protected DrawableBosuHitObject([CanBeNull] T h = null)
+            : base(h)
         {
         }
-
-        protected sealed override double InitialLifetimeOffset => HitObject.TimePreempt;
-
-        public void GetPlayerToTrace(BosuPlayer player) => Player = player;
     }
 }

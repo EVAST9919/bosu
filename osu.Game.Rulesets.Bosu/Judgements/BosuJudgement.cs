@@ -9,17 +9,10 @@ namespace osu.Game.Rulesets.Bosu.Judgements
 
         protected override double HealthIncreaseFor(HitResult result)
         {
-            switch (result)
-            {
-                case HitResult.Perfect:
-                    return 0.0006f;
+            if (result == HitResult.Perfect)
+                return 0.0006f;
 
-                case HitResult.Miss:
-                    return -0.15f;
-
-                default:
-                    return 0;
-            }
+            return base.HealthIncreaseFor(result);
         }
     }
 }

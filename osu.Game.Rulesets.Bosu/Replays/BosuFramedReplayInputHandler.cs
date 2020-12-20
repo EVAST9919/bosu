@@ -2,6 +2,7 @@
 using osu.Framework.Utils;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Replays;
+using osuTK;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Bosu.Replays
@@ -15,7 +16,7 @@ namespace osu.Game.Rulesets.Bosu.Replays
 
         protected override bool IsImportant(BosuReplayFrame frame) => true;
 
-        protected float? Position
+        protected Vector2? Position
         {
             get
             {
@@ -24,7 +25,11 @@ namespace osu.Game.Rulesets.Bosu.Replays
                 if (frame == null)
                     return null;
 
-                return NextFrame != null ? Interpolation.ValueAt(CurrentTime.Value, frame.Position, NextFrame.Position, frame.Time, NextFrame.Time) : frame.Position;
+                return NextFrame != null ?
+                    new Vector2(
+                    Interpolation.ValueAt(CurrentTime.Value, frame.Position.X, NextFrame.Position.X, frame.Time, NextFrame.Time),
+                    Interpolation.ValueAt(CurrentTime.Value, frame.Position.Y, NextFrame.Position.Y, frame.Time, NextFrame.Time))
+                    : frame.Position;
             }
         }
 
@@ -42,7 +47,7 @@ namespace osu.Game.Rulesets.Bosu.Replays
 
         public class BosuReplayState : ReplayState<BosuAction>
         {
-            public float? Position { get; set; }
+            public Vector2? Position { get; set; }
         }
     }
 }

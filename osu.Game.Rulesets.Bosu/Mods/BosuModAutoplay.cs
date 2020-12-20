@@ -4,7 +4,6 @@ using osu.Game.Rulesets.Bosu.Replays;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Scoring;
 using osu.Game.Users;
-using System;
 
 namespace osu.Game.Rulesets.Bosu.Mods
 {
@@ -14,17 +13,6 @@ namespace osu.Game.Rulesets.Bosu.Mods
         {
             ScoreInfo = new ScoreInfo { User = new User { Username = "bosu!" } },
             Replay = new BosuAutoGenerator(beatmap).Generate(),
-        };
-
-        public override string Name => "Visual";
-
-        public override string Acronym => "VS";
-
-        public override string Description => "Watch patterns";
-
-        public override Type[] IncompatibleMods => new[]
-        {
-            typeof(ModFlashlight)
         };
     }
 }

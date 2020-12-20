@@ -13,16 +13,12 @@ namespace osu.Game.Rulesets.Bosu.Configuration
         protected override void InitialiseDefaults()
         {
             base.InitialiseDefaults();
-            Set(BosuRulesetSetting.EnableBackground, true);
-            Set(BosuRulesetSetting.EnableHitboxes, false);
-            Set(BosuRulesetSetting.PlayfieldDim, 0.5, 0, 1);
+            Set(BosuRulesetSetting.TransparentBackground, false);
         }
     }
 
     public enum BosuRulesetSetting
     {
-        EnableBackground,
-        PlayfieldDim,
-        EnableHitboxes
+        TransparentBackground
     }
 }

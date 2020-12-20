@@ -1,161 +1,71 @@
-﻿using osu.Framework.Graphics;
+﻿using JetBrains.Annotations;
+using osu.Framework.Allocation;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osuTK;
-using osuTK.Graphics;
+using System;
 using osu.Game.Rulesets.Bosu.Extensions;
 using osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces;
-using osu.Framework.Allocation;
-using osu.Game.Rulesets.Scoring;
-using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Objects.Drawables;
-using osu.Game.Rulesets.Bosu.UI.Objects.Playfield.Player;
-using osu.Framework.Bindables;
-using osu.Game.Rulesets.Bosu.Configuration;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public abstract class DrawableCherry : DrawableBosuHitObject
+    public abstract class DrawableCherry<T> : DrawableBosuHitObject<T>
+        where T : Cherry
     {
-        private const int hidden_distance = 70;
-        private const int hidden_distance_buffer = 50;
+        public readonly IBindable<Vector2> PositionBindable = new Bindable<Vector2>();
+        public readonly Bindable<int> IndexInBeatmap = new Bindable<int>();
 
-        public bool HiddenApplied;
+        protected abstract bool CanHitPlayer { get; set; }
 
-        protected virtual float GetBaseSize() => 18;
+        public Func<Vector2, bool> CheckHit;
 
-        protected virtual bool AffectPlayer() => false;
+        private CherryPiece piece;
 
-        protected virtual float GetWallCheckOffset() => 0;
-
-        private readonly Bindable<bool> hitboxEnabed = new Bindable<bool>(false);
-
-        [Resolved(canBeNull: true)]
-        private BosuRulesetConfigManager config { get; set; }
-
-        private readonly CherryPiece cherry;
-        private readonly Container hitbox;
-        private readonly KiaiCherryPiece kiaiCherry;
-        private readonly float finalSize;
-
-        protected DrawableCherry(Cherry h)
+        protected DrawableCherry([CanBeNull] T h = null)
             : base(h)
         {
-            Origin = Anchor.Centre;
-            Size = new Vector2(GetBaseSize() * MathExtensions.Map(h.CircleSize, 0, 10, 0.5f, 1.5f));
-            Position = h.Position;
-            Scale = Vector2.Zero;
-
-            finalSize = Size.X;
-
-            if (h.IsKiai)
-                AddInternal(kiaiCherry = new KiaiCherryPiece
-                {
-                    Scale = new Vector2(1.8f),
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                });
-
-            AddInternal(cherry = new CherryPiece
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                RelativeSizeAxes = Axes.Both,
-            });
-
-            AddInternal(hitbox = new Container
-            {
-                Size = new Vector2(finalSize),
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-                Alpha = 0,
-                Child = new Circle
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Colour = Color4.Red,
-                }
-            });
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            AccentColour.BindValueChanged(accent =>
-            {
-                if (kiaiCherry != null)
-                    kiaiCherry.Colour = accent.NewValue;
+            Alpha = 0;
+            Scale = Vector2.Zero;
 
-                cherry.Colour = accent.NewValue;
-            }, true);
+            Origin = Anchor.Centre;
+            Size = new Vector2(IWannaExtensions.CHERRY_DIAMETER);
+            AddInternal(piece = new CherryPiece());
 
-            config?.BindWith(BosuRulesetSetting.EnableHitboxes, hitboxEnabed);
-        }
-
-        protected override void LoadComplete()
-        {
-            base.LoadComplete();
-
-            hitboxEnabed.BindValueChanged(enabled =>
-            {
-                if (AffectPlayer())
-                    hitbox.Alpha = enabled.NewValue ? 1 : 0;
-            }, true);
+            AccentColour.BindValueChanged(c => piece.Colour = c.NewValue);
+            PositionBindable.BindValueChanged(p => Position = p.NewValue);
         }
 
         protected override void UpdateInitialTransforms()
         {
+            base.UpdateInitialTransforms();
+            this.FadeInFromZero();
             this.ScaleTo(Vector2.One, HitObject.TimePreempt);
 
-            cherry.Sprite.Delay(HitObject.TimePreempt).Then().FlashColour(Color4.White, 300);
+            using (piece.BeginDelayedSequence(HitObject.TimePreempt))
+                piece.Flash(300);
         }
 
-        protected override void Update()
-        {
-            base.Update();
-
-            if (HiddenApplied)
-            {
-                var distance = MathExtensions.Distance(Player.PlayerPosition(), Position);
-
-                if (distance > hidden_distance + hidden_distance_buffer)
-                {
-                    Alpha = 1;
-                    return;
-                }
-
-                if (distance < hidden_distance)
-                {
-                    Alpha = 0;
-                    return;
-                }
-
-                Alpha = MathExtensions.Map((float)distance - hidden_distance, 0, hidden_distance_buffer, 0, 1);
-            }
-        }
+        private double missTime;
 
         protected override void CheckForResult(bool userTriggered, double timeOffset)
         {
-            if (timeOffset > 0)
-            {
-                if (AffectPlayer())
-                {
-                    if (collidedWithPlayer(Player))
-                    {
-                        Player.PlayMissAnimation();
-                        ApplyResult(r => r.Type = HitResult.Miss);
-                        return;
-                    }
-                }
+            if (timeOffset < 0)
+                return;
 
-                if (timeOffset > GetWallCheckOffset())
-                {
-                    if (Position.X > BosuPlayfield.BASE_SIZE.X + DrawSize.X / 2f
-                    || Position.X < -DrawSize.X / 2f
-                    || Position.Y > BosuPlayfield.BASE_SIZE.Y + DrawSize.Y / 2f
-                    || Position.Y < -DrawSize.Y / 2f)
-                        ApplyResult(r => r.Type = HitResult.Perfect);
-                }
+            if (!CanHitPlayer)
+                return;
+
+            if (CheckHit?.Invoke(Position) ?? false)
+            {
+                missTime = timeOffset;
+                ApplyResult(h => h.Type = h.Judgement.MinResult);
+                return;
             }
         }
 
@@ -166,22 +76,28 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             switch (state)
             {
                 case ArmedState.Miss:
-                    this.FadeOut();
+                    this.Delay(missTime).FadeOut();
                     break;
             }
         }
 
-        private bool collidedWithPlayer(BosuPlayer player)
+        protected override void OnApply()
         {
-            var playerPosition = player.PlayerPosition();
-            var playerSize = player.PlayerSize();
+            base.OnApply();
 
-            var adjustedX = playerPosition.X - playerSize.X / 2;
-            var adjustedY = playerPosition.Y - playerSize.Y / 2;
-
-            var adjustedPlayerPosition = new Vector2(adjustedX, adjustedY);
-
-            return MathExtensions.Collided(finalSize / 2, Position, adjustedPlayerPosition, playerSize);
+            PositionBindable.BindTo(HitObject.PositionBindable);
+            IndexInBeatmap.BindTo(HitObject.IndexInBeatmapBindable);
         }
+
+        protected override void OnFree()
+        {
+            base.OnFree();
+
+            PositionBindable.UnbindFrom(HitObject.PositionBindable);
+            IndexInBeatmap.UnbindFrom(HitObject.IndexInBeatmapBindable);
+        }
+
+
+        protected override double InitialLifetimeOffset => HitObject.TimePreempt;
     }
 }

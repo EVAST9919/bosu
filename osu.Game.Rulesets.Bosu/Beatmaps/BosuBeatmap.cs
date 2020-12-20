@@ -10,21 +10,14 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         public override IEnumerable<BeatmapStatistic> GetStatistics()
         {
             var totalCount = HitObjects.Count();
-            var angled = HitObjects.Count(s => s is AngledCherry);
 
             return new[]
             {
                 new BeatmapStatistic
                 {
-                    Name = @"Cherries",
-                    Content = angled.ToString(),
+                    Name = @"Cherry Count",
+                    Content = totalCount.ToString(),
                     CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Circles)
-                },
-                new BeatmapStatistic
-                {
-                    Name = @"Visuals",
-                    Content = (totalCount - angled).ToString(),
-                    CreateIcon = () => new BeatmapStatisticIcon(BeatmapStatisticsIconType.Spinners)
                 }
             };
         }

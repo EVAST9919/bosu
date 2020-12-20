@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using osu.Game.Beatmaps;
 using osu.Game.Rulesets.Difficulty;
@@ -16,12 +17,11 @@ namespace osu.Game.Rulesets.Bosu.Difficulty
         }
 
         protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
-        {
-            return new DifficultyAttributes(mods, skills, 0);
-        }
+            => new DifficultyAttributes(mods, skills, 0);
 
-        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate) => Enumerable.Empty<DifficultyHitObject>();
+        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)
+            => Enumerable.Empty<DifficultyHitObject>();
 
-        protected override Skill[] CreateSkills(IBeatmap beatmap) => new Skill[0];
+        protected override Skill[] CreateSkills(IBeatmap beatmap) => Array.Empty<Skill>();
     }
 }

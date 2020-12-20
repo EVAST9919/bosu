@@ -23,20 +23,8 @@ namespace osu.Game.Rulesets.Bosu.UI
             {
                 new SettingsCheckbox
                 {
-                    LabelText = "Show hitboxes",
-                    Current = config.GetBindable<bool>(BosuRulesetSetting.EnableHitboxes)
-                },
-                new SettingsCheckbox
-                {
-                    LabelText = "Enable background",
-                    Current = config.GetBindable<bool>(BosuRulesetSetting.EnableBackground)
-                },
-                new SettingsSlider<double>
-                {
-                    LabelText = "Playfield dim",
-                    Current = config.GetBindable<double>(BosuRulesetSetting.PlayfieldDim),
-                    KeyboardStep = 0.01f,
-                    DisplayAsPercentage = true
+                    LabelText = "Transparent background",
+                    Current = config.GetBindable<bool>(BosuRulesetSetting.TransparentBackground)
                 }
             };
         }

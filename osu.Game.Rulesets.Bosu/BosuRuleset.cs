@@ -10,33 +10,46 @@ using System;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Bindings;
 using osu.Game.Rulesets.Bosu.Scoring;
-using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Bosu.Difficulty;
 using osu.Game.Rulesets.Bosu.Beatmaps;
-using osu.Game.Beatmaps.Legacy;
+using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Bosu.Mods;
+using osu.Game.Rulesets.Bosu.Replays;
+using osu.Game.Rulesets.Replays.Types;
+using osu.Game.Rulesets.Edit;
+using osu.Game.Rulesets.Bosu.Edit;
 using osu.Game.Rulesets.Configuration;
 using osu.Game.Configuration;
-using osu.Game.Rulesets.Bosu.Configuration;
 using osu.Game.Overlays.Settings;
-using osu.Game.Rulesets.Replays.Types;
-using osu.Game.Rulesets.Bosu.Replays;
+using osu.Game.Rulesets.Bosu.Configuration;
 
 namespace osu.Game.Rulesets.Bosu
 {
     public class BosuRuleset : Ruleset
     {
-        public BosuHealthProcessor HealthProcessor { get; private set; }
+        private DrawableBosuRuleset drawableRuleset;
 
-        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => new DrawableBosuRuleset(this, beatmap, mods);
+        public override DrawableRuleset CreateDrawableRulesetWith(IBeatmap beatmap, IReadOnlyList<Mod> mods = null) => drawableRuleset = new DrawableBosuRuleset(this, beatmap, mods);
 
-        public override ScoreProcessor CreateScoreProcessor() => new BosuScoreProcessor();
-
-        public override HealthProcessor CreateHealthProcessor(double drainStartTime) => HealthProcessor = new BosuHealthProcessor();
+        public override HealthProcessor CreateHealthProcessor(double drainStartTime)
+        {
+            var hp = new BosuHealthProcessor();
+            drawableRuleset.HealthProcessor = hp;
+            return hp;
+        }
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new BosuBeatmapConverter(beatmap, this);
 
+        // Not sure why overriding bp makes combo colours work
+        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BosuBeatmapProcessor(beatmap);
+
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new BosuReplayFrame();
+
+        public override HitObjectComposer CreateHitObjectComposer() => new BosuHitObjectComposer(this);
+
+        public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new BosuRulesetConfigManager(settings, RulesetInfo);
+
+        public override RulesetSettingsSubsection CreateSettings() => new BosuSettingsSubsection(this);
 
         public override IEnumerable<KeyBinding> GetDefaultKeyBindings(int variant = 0) => new[]
         {
@@ -45,37 +58,6 @@ namespace osu.Game.Rulesets.Bosu
             new KeyBinding(InputKey.Shift, BosuAction.Jump),
             new KeyBinding(InputKey.Z, BosuAction.Shoot),
         };
-
-        public override IEnumerable<Mod> ConvertFromLegacyMods(LegacyMods mods)
-        {
-            if (mods.HasFlag(LegacyMods.Nightcore))
-                yield return new BosuModNightcore();
-            else if (mods.HasFlag(LegacyMods.DoubleTime))
-                yield return new BosuModDoubleTime();
-
-            if (mods.HasFlag(LegacyMods.SuddenDeath))
-                yield return new BosuModSuddenDeath();
-
-            if (mods.HasFlag(LegacyMods.NoFail))
-                yield return new BosuModNoFail();
-
-            if (mods.HasFlag(LegacyMods.HalfTime))
-                yield return new BosuModHalfTime();
-
-            if (mods.HasFlag(LegacyMods.Easy))
-                yield return new BosuModEasy();
-
-            if (mods.HasFlag(LegacyMods.Hidden))
-                yield return new BosuModHidden();
-
-            if (mods.HasFlag(LegacyMods.Flashlight))
-                yield return new BosuModFlashlight();
-
-            if (mods.HasFlag(LegacyMods.Cinema))
-                yield return new BosuModCinema();
-            else if (mods.HasFlag(LegacyMods.Autoplay))
-                yield return new BosuModAutoplay();
-        }
 
         public override IEnumerable<Mod> GetModsFor(ModType type)
         {
@@ -93,9 +75,7 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new BosuModSuddenDeath(),
-                        new MultiMod(new BosuModDoubleTime(), new BosuModNightcore()),
-                        //new BosuModHidden(),
-                        new BosuModFlashlight()
+                        new MultiMod(new BosuModDoubleTime(), new BosuModNightcore())
                     };
 
                 case ModType.Automation:
@@ -107,8 +87,7 @@ namespace osu.Game.Rulesets.Bosu
                 case ModType.Fun:
                     return new Mod[]
                     {
-                        new MultiMod(new ModWindUp(), new ModWindDown()),
-                        new BosuModZoom(),
+                        new MultiMod(new ModWindUp(), new ModWindDown())
                     };
 
                 default:
@@ -120,7 +99,7 @@ namespace osu.Game.Rulesets.Bosu
 
         public override string ShortName => "bosu!";
 
-        public override string PlayingVerb => "Avoiding apples";
+        public override string PlayingVerb => "Avoiding cherries";
 
         public override Drawable CreateIcon() => new Sprite
         {
@@ -129,8 +108,9 @@ namespace osu.Game.Rulesets.Bosu
 
         public override DifficultyCalculator CreateDifficultyCalculator(WorkingBeatmap beatmap) => new BosuDifficultyCalculator(this, beatmap);
 
-        public override IRulesetConfigManager CreateConfig(SettingsStore settings) => new BosuRulesetConfigManager(settings, RulesetInfo);
-
-        public override RulesetSettingsSubsection CreateSettings() => new BosuSettingsSubsection(this);
+        protected override IEnumerable<HitResult> GetValidHitResults() => new[]
+        {
+            HitResult.Perfect
+        };
     }
 }

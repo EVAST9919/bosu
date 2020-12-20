@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using osu.Game.Rulesets.Objects.Types;
 using osu.Game.Rulesets.Objects;
+using System.Threading;
 using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.Extensions;
-using System.Threading;
+using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -19,37 +20,64 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
         public override bool CanConvert() => Beatmap.HitObjects.All(h => h is IHasPosition);
 
         private int index = -1;
-        private int objectIndexInCurrentCombo = 0;
 
         protected override IEnumerable<BosuHitObject> ConvertHitObject(HitObject obj, IBeatmap beatmap, CancellationToken cancellationToken)
         {
-            var comboData = obj as IHasCombo;
-            if (comboData?.NewCombo ?? false)
-            {
-                objectIndexInCurrentCombo = 0;
-                index++;
-            }
-
-            bool kiai = beatmap.ControlPointInfo.EffectPointAt(obj.StartTime).KiaiMode;
-
             List<BosuHitObject> hitObjects = new List<BosuHitObject>();
+
+            var originalPosition = (obj as IHasPosition)?.Position ?? Vector2.Zero;
+            var comboData = obj as IHasCombo;
+
+            bool newCombo = comboData?.NewCombo ?? false;
+
+            if (newCombo)
+                index = 0;
+            else
+                index++;
 
             switch (obj)
             {
                 case IHasPathWithRepeats curve:
-                    hitObjects.AddRange(CherriesExtensions.ConvertSlider(obj, beatmap, curve, kiai, index));
+
+                    double spanDuration = curve.Duration / (curve.RepeatCount + 1);
+                    bool isBuzz = spanDuration < 75 && curve.RepeatCount > 0;
+
+                    hitObjects.AddRange(ConversionExtensions.GenerateSliderBody(obj.StartTime, curve, originalPosition));
+
+                    if (isBuzz)
+                        hitObjects.AddRange(ConversionExtensions.ConvertBuzzSlider(obj, originalPosition, beatmap, curve, spanDuration));
+                    else
+                        hitObjects.AddRange(ConversionExtensions.ConvertDefaultSlider(obj, originalPosition, beatmap, curve, spanDuration));
+
                     break;
 
                 case IHasDuration endTime:
-                    hitObjects.AddRange(CherriesExtensions.ConvertSpinner(obj, endTime, beatmap.ControlPointInfo.TimingPointAt(obj.StartTime).BeatLength, kiai, index));
+                    hitObjects.AddRange(ConversionExtensions.ConvertSpinner(obj.StartTime, endTime, beatmap.ControlPointInfo.TimingPointAt(obj.StartTime).BeatLength));
                     break;
 
                 default:
-                    hitObjects.AddRange(CherriesExtensions.ConvertHitCircle(obj, kiai, index, objectIndexInCurrentCombo));
+
+                    if (newCombo)
+                        hitObjects.AddRange(ConversionExtensions.ConvertImpactCircle(obj.StartTime, originalPosition));
+                    else
+                        hitObjects.AddRange(ConversionExtensions.ConvertDefaultCircle(obj.StartTime, originalPosition, index));
+
                     break;
             }
 
-            objectIndexInCurrentCombo++;
+            bool first = true;
+
+            foreach (var h in hitObjects)
+            {
+                if (h is Cherry c)
+                {
+                    c.NewCombo = first && newCombo;
+                    c.ComboOffset = comboData?.ComboOffset ?? 0;
+                }
+
+                if (first)
+                    first = false;
+            }
 
             return hitObjects;
         }

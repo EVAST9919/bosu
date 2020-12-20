@@ -1,14 +1,14 @@
-﻿using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Sprites;
+﻿using osu.Framework.Audio.Track;
 using osu.Framework.Graphics;
+using osu.Game.Beatmaps.ControlPoints;
+using osu.Game.Graphics.Containers;
+using osu.Game.Rulesets.Bosu.Extensions;
 using osuTK;
-using osu.Framework.Allocation;
-using osu.Framework.Graphics.Textures;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
 {
-    public class CherryPiece : CompositeDrawable
+    public class CherryPiece : BeatSyncedContainer
     {
         private Color4 colour;
 
@@ -18,46 +18,43 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
             set
             {
                 colour = value;
-                Sprite.Colour = value;
+
+                main.Colour = value;
+                additional.Colour = value;
             }
         }
 
-        public readonly Sprite Sprite;
-        private readonly Sprite overlay;
-        private readonly Sprite branch;
+        private readonly CherrySubPiece main;
+        private readonly CherrySubPiece additional;
 
         public CherryPiece()
         {
-            AddRangeInternal(new[]
+            Size = new Vector2(IWannaExtensions.CHERRY_DIAMETER);
+            AddRange(new Drawable[]
             {
-                Sprite = new Sprite
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                overlay = new Sprite
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                },
-                branch = new Sprite
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Position = new Vector2(1, -1)
-                }
+                main = new CherrySubPiece(1),
+                additional = new CherrySubPiece(2)
             });
+
+            applyClockState(true);
         }
 
-        [BackgroundDependencyLoader]
-        private void load(TextureStore textures)
+        public void Flash(double duration)
         {
-            Sprite.Texture = textures.Get("cherry");
-            overlay.Texture = textures.Get("cherry-overlay");
-            branch.Texture = textures.Get("cherry-branch");
+            main.Flash(duration);
+            additional.Flash(duration);
+        }
+
+        protected override void OnNewBeat(int beatIndex, TimingControlPoint timingPoint, EffectControlPoint effectPoint, ChannelAmplitudes amplitudes)
+        {
+            base.OnNewBeat(beatIndex, timingPoint, effectPoint, amplitudes);
+            applyClockState(beatIndex % 2 == 0);
+        }
+
+        private void applyClockState(bool state)
+        {
+            main.Alpha = state ? 1 : 0;
+            additional.Alpha = state ? 0 : 1;
         }
     }
 }
