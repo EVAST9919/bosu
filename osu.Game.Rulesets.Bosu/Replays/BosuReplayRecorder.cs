@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using osu.Game.Replays;
 using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Replays;
 using osu.Game.Rulesets.UI;
+using osu.Game.Scoring;
 using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.Replays
@@ -11,8 +11,8 @@ namespace osu.Game.Rulesets.Bosu.Replays
     {
         private readonly BosuPlayfield playfield;
 
-        public BosuReplayRecorder(Replay target, BosuPlayfield playfield)
-            : base(target)
+        public BosuReplayRecorder(Score score, BosuPlayfield playfield)
+            : base(score)
         {
             this.playfield = playfield;
         }

@@ -8,6 +8,7 @@ using osu.Game.Rulesets.Bosu.Scoring;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.UI;
+using osu.Game.Scoring;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Bosu.UI
@@ -36,7 +37,7 @@ namespace osu.Game.Rulesets.Bosu.UI
 
         public override DrawableHitObject<BosuHitObject> CreateDrawableRepresentation(BosuHitObject h) => null;
 
-        protected override ReplayRecorder CreateReplayRecorder(Replay replay) => new BosuReplayRecorder(replay, (BosuPlayfield)Playfield);
+        protected override ReplayRecorder CreateReplayRecorder(Score score) => new BosuReplayRecorder(score, (BosuPlayfield)Playfield);
 
         protected override ReplayInputHandler CreateReplayInputHandler(Replay replay) => new BosuFramedReplayInputHandler(replay);
     }
