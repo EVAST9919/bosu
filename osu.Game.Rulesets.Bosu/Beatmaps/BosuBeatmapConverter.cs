@@ -7,6 +7,7 @@ using System.Threading;
 using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.Extensions;
 using osuTK;
+using osu.Framework.Utils;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -73,6 +74,12 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 {
                     c.NewCombo = first && newCombo;
                     c.ComboOffset = comboData?.ComboOffset ?? 0;
+                }
+
+                if (h is ConstantMovingCherry m)
+                {
+                    var sv = beatmap.ControlPointInfo.DifficultyPointAt(obj.StartTime).SpeedMultiplier;
+                    m.SpeedMultiplier *= Interpolation.ValueAt(sv, 0.8f, 1.3f, 0.5, 4.5);
                 }
 
                 if (first)
