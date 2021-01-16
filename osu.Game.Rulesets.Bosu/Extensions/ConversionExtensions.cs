@@ -7,6 +7,7 @@ using osu.Game.Rulesets.Objects.Types;
 using osuTK;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace osu.Game.Rulesets.Bosu.Extensions
@@ -94,25 +95,37 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             double legacyLastTickOffset = (obj as IHasLegacyLastTickOffset)?.LegacyLastTickOffset ?? 0;
 
-            foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, new CancellationToken()))
-            {
-                var sliderEventPosition = toPlayfieldSpace(originalPosition) * new Vector2(1, 0.4f);
+            var slider = SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, new CancellationToken());
 
+            var sliderEventPosition = toPlayfieldSpace(originalPosition) * new Vector2(1, 0.4f);
+            var repeats = slider.Select(e => e.Type == SliderEventType.Repeat);
+
+            var repeatCount = repeats.Count();
+
+            var repeatsPerSecond = 1000f / (curve.Duration / repeatCount);
+
+            if (repeatsPerSecond > 10)
+                repeatsPerSecond = 10;
+
+            var totalRepeats = (int)(repeatsPerSecond * curve.Duration / 1000f);
+            var repeatDuration = curve.Duration / totalRepeats;
+
+            foreach (var e in slider)
+            {
                 switch (e.Type)
                 {
                     case SliderEventType.Head:
                         converted.AddRange(generateExplosion(e.Time, bullets_per_slider_reverse, sliderEventPosition));
                         break;
 
-                    case SliderEventType.Repeat:
-                        converted.AddRange(generateExplosion(e.Time, bullets_per_slider_reverse, sliderEventPosition, slider_angle_per_span * (e.SpanIndex + 1)));
-                        break;
-
                     case SliderEventType.Tail:
-                        converted.AddRange(generateExplosion(e.Time, bullets_per_slider_reverse, sliderEventPosition, slider_angle_per_span * (curve.RepeatCount + 1)));
+                        converted.AddRange(generateExplosion(e.Time, bullets_per_slider_reverse, sliderEventPosition, slider_angle_per_span * (repeatCount + 1)));
                         break;
                 }
             }
+
+            for (int i = 0; i < totalRepeats; i++)
+                converted.AddRange(generateExplosion(obj.StartTime + (i + 1) * repeatDuration, bullets_per_slider_reverse, sliderEventPosition, slider_angle_per_span * (i + 1)));
 
             return converted;
         }
