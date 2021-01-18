@@ -150,6 +150,11 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
             movingPlayer.Hide();
         }
 
+        public void OnHit()
+        {
+            movingPlayer.FlashColour(Colour4.Red, 250, Easing.Out);
+        }
+
         private void moveRight(double elapsedFrameTime)
         {
             movingPlayer.X += (float)(IWannaExtensions.PLAYER_MAX_HORIZONTAL_SPEED * elapsedFrameTime);

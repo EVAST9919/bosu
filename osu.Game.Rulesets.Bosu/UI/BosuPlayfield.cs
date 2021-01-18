@@ -104,12 +104,16 @@ namespace osu.Game.Rulesets.Bosu.UI
         private bool checkHit(Vector2 cherryPosition)
         {
             var playerPosition = Player.PlayerPosition;
-
-            return MathExtensions.Collided(
+            var isHit = MathExtensions.Collided(
                 IWannaExtensions.CHERRY_RADIUS,
                 cherryPosition,
                 new Vector2(playerPosition.X - IWannaExtensions.PLAYER_HALF_WIDTH, playerPosition.Y - IWannaExtensions.PLAYER_HALF_HEIGHT),
                 IWannaExtensions.PLAYER_SIZE);
+
+            if (isHit)
+                Player.OnHit();
+
+            return isHit;
         }
 
         protected override HitObjectLifetimeEntry CreateLifetimeEntry(HitObject hitObject) => new BosuHitObjectLifetimeEntry(hitObject);
