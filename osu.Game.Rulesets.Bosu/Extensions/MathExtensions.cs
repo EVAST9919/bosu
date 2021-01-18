@@ -35,9 +35,6 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             return random.NextDouble() > 0.5f;
         }
 
-        public static float Distance(Vector2 input, Vector2 target)
-            => (float)Math.Sqrt(((target.X - input.X) * (target.X - input.X)) + ((target.Y - input.Y) * (target.Y - input.Y)));
-
         public static float GetSafeAngle(float angle)
         {
             if (angle < 0)

@@ -94,9 +94,12 @@ namespace osu.Game.Rulesets.Bosu.UI
             {
                 case DrawableAngeledCherry cherry:
                     cherry.CheckHit += checkHit;
+                    cherry.DistanceToPlayer += getDistanceToPlayer;
                     break;
             }
         }
+
+        private float getDistanceToPlayer(Vector2 cherryPosition) => Vector2.Distance(cherryPosition, Player.PlayerPosition);
 
         private bool checkHit(Vector2 cherryPosition)
         {

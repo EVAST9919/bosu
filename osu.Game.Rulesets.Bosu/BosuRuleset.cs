@@ -75,6 +75,7 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new BosuModSuddenDeath(),
+                        new BosuModHidden(),
                         new MultiMod(new BosuModDoubleTime(), new BosuModNightcore())
                     };
 

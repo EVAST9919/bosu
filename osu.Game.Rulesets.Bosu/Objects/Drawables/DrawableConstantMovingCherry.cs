@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             using (BeginDelayedSequence(HitObject.TimePreempt))
             {
                 Vector2 finalPosition = getFinalPosition();
-                duration = MathExtensions.Distance(HitObject.Position, finalPosition) / SpeedMultiplierBindable.Value * 2.8f;
+                duration = Vector2.Distance(HitObject.Position, finalPosition) / SpeedMultiplierBindable.Value * 2.8f;
                 this.MoveTo(finalPosition, duration);
             }
         }
