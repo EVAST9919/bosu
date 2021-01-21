@@ -4,7 +4,6 @@ using osu.Framework.Input.Bindings;
 using osuTK;
 using osu.Game.Rulesets.Bosu.Extensions;
 using osu.Framework.Allocation;
-using osu.Framework.Audio.Track;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Utils;
 using osu.Framework.Bindables;

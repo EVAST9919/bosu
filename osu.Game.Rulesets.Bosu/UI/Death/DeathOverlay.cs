@@ -6,11 +6,11 @@ using osuTK.Graphics;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Audio.Track;
 using osu.Framework.Graphics.Audio;
 using System;
 using osu.Framework.Utils;
 using osu.Game.Rulesets.Bosu.Extensions;
+using osu.Framework.Audio.Sample;
 
 namespace osu.Game.Rulesets.Bosu.UI.Death
 {
