@@ -4,7 +4,6 @@ using osu.Framework.Graphics.Shapes;
 using osuTK.Graphics;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Allocation;
-using osu.Framework.Audio.Track;
 
 namespace osu.Game.Rulesets.Bosu.UI.Entering
 {
@@ -14,7 +13,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Entering
 
         private readonly Box box;
         private readonly BeatmapCard card;
-        private SampleChannel enteringSample;
+        private Sample enteringSample;
 
         public EnteringOverlay()
         {

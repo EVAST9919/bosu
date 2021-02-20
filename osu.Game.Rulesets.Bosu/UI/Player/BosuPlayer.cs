@@ -28,9 +28,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
         private double verticalSpeed;
         private double horizontalSpeed;
 
-        private SampleChannel jump;
-        private SampleChannel doubleJump;
-        private SampleChannel shootSample;
+        private Sample jump;
+        private Sample doubleJump;
+        private Sample shootSample;
 
         private readonly Container bulletsContainer;
         private readonly Container movingPlayer;
