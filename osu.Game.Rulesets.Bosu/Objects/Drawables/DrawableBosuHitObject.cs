@@ -8,7 +8,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
     {
         protected new T HitObject => (T)base.HitObject;
 
-        protected DrawableBosuHitObject([CanBeNull] T h = null)
+        protected DrawableBosuHitObject([CanBeNull] BosuHitObject h = null)
             : base(h)
         {
         }

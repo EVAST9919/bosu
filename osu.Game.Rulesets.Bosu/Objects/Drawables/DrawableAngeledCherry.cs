@@ -1,13 +1,12 @@
 ﻿using JetBrains.Annotations;
-using osu.Framework.Bindables;
+using osu.Framework.Graphics;
+using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableAngeledCherry : DrawableConstantMovingCherry<AngeledCherry>
+    public class DrawableAngeledCherry : DrawableCherry<AngeledCherry>
     {
-        public readonly IBindable<float> AngleBindable = new Bindable<float>();
-
-        protected override float GetTargetAngle() => AngleBindable.Value;
+        protected override bool CanHitPlayer { get; set; } = true;
 
         public DrawableAngeledCherry()
             : this(null)
@@ -19,18 +18,36 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
         }
 
-        protected override void OnApply()
+        protected override void UpdateInitialTransforms()
         {
-            base.OnApply();
+            base.UpdateInitialTransforms();
 
-            AngleBindable.BindTo(HitObject.AngleBindable);
+            using (BeginDelayedSequence(HitObject.TimePreempt))
+            {
+                this.MoveTo(HitObject.EndPosition, HitObject.Duration);
+            }
         }
 
-        protected override void OnFree()
+        protected override void UpdateHitStateTransforms(ArmedState state)
         {
-            base.OnFree();
+            base.UpdateHitStateTransforms(state);
 
-            AngleBindable.UnbindFrom(HitObject.AngleBindable);
+            switch (state)
+            {
+                case ArmedState.Hit:
+                    this.Delay(HitObject.Duration).FadeOut();
+                    break;
+            }
+        }
+
+        protected override void CheckForResult(bool userTriggered, double timeOffset)
+        {
+            base.CheckForResult(userTriggered, timeOffset);
+
+            if (timeOffset < HitObject.Duration)
+                return;
+
+            ApplyResult(r => r.Type = r.Judgement.MaxResult);
         }
     }
 }

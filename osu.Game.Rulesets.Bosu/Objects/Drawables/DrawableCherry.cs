@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         private CherryPiece piece;
 
-        protected DrawableCherry([CanBeNull] T h = null)
+        protected DrawableCherry([CanBeNull] Cherry h = null)
             : base(h)
         {
         }
