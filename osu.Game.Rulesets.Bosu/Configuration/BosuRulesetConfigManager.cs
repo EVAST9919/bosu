@@ -13,7 +13,7 @@ namespace osu.Game.Rulesets.Bosu.Configuration
         protected override void InitialiseDefaults()
         {
             base.InitialiseDefaults();
-            Set(BosuRulesetSetting.TransparentBackground, false);
+            SetValue(BosuRulesetSetting.TransparentBackground, false);
         }
     }
 

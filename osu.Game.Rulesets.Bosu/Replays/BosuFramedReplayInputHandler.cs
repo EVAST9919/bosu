@@ -27,8 +27,8 @@ namespace osu.Game.Rulesets.Bosu.Replays
 
                 return NextFrame != null ?
                     new Vector2(
-                    Interpolation.ValueAt(CurrentTime.Value, frame.Position.X, NextFrame.Position.X, frame.Time, NextFrame.Time),
-                    Interpolation.ValueAt(CurrentTime.Value, frame.Position.Y, NextFrame.Position.Y, frame.Time, NextFrame.Time))
+                    Interpolation.ValueAt(CurrentTime, frame.Position.X, NextFrame.Position.X, frame.Time, NextFrame.Time),
+                    Interpolation.ValueAt(CurrentTime, frame.Position.Y, NextFrame.Position.Y, frame.Time, NextFrame.Time))
                     : frame.Position;
             }
         }
