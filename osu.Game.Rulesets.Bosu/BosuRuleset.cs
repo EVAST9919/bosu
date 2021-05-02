@@ -88,7 +88,8 @@ namespace osu.Game.Rulesets.Bosu
                 case ModType.Fun:
                     return new Mod[]
                     {
-                        new MultiMod(new ModWindUp(), new ModWindDown())
+                        new MultiMod(new ModWindUp(), new ModWindDown()),
+                        new BosuModBarrelRoll()
                     };
 
                 default:
