@@ -32,6 +32,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Entering
                     Anchor = Anchor.TopRight,
                     Origin = Anchor.TopRight,
                     Y = -BeatmapCard.SIZE.Y - 1,
+                    Alpha = 0,
                 }
             };
         }
@@ -50,7 +51,10 @@ namespace osu.Game.Rulesets.Bosu.UI.Entering
                 box.ResizeHeightTo(0, 800, Easing.Out);
 
             using (card.BeginDelayedSequence(delay))
-                card.MoveToY(0, 900).Delay(2200).MoveToY(-BeatmapCard.SIZE.Y - 1, 800, Easing.Out);
+            {
+                card.FadeIn();
+                card.MoveToY(0, 900).Delay(2200).MoveToY(-BeatmapCard.SIZE.Y - 1, 800, Easing.Out).Then().FadeOut(100);
+            }
         }
     }
 }
