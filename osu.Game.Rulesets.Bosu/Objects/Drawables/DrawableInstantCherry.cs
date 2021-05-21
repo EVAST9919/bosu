@@ -7,7 +7,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableInstantCherry : DrawableCherry<InstantCherry>
     {
-        protected override bool CanHitPlayer { get; set; } = false;
+        protected override bool CanHitPlayer => false;
 
         public DrawableInstantCherry()
             : this(null)

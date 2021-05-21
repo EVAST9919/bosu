@@ -1,7 +1,6 @@
 ﻿using osu.Game.Rulesets.UI;
 using osuTK;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Game.Rulesets.Bosu.UI.Player;
 using osu.Framework.Allocation;
 using osu.Game.Rulesets.Bosu.Objects;
@@ -41,11 +40,7 @@ namespace osu.Game.Rulesets.Bosu.UI
             InternalChildren = new Drawable[]
             {
                 bg = new PlayfieldBackground(),
-                new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = HitObjectContainer
-                },
+                HitObjectContainer,
                 new BosuPlayfieldBorder(),
                 Player = new BosuPlayer(),
                 enteringOverlay = new EnteringOverlay
@@ -56,19 +51,20 @@ namespace osu.Game.Rulesets.Bosu.UI
             };
         }
 
-        [BackgroundDependencyLoader(true)]
+        [BackgroundDependencyLoader]
         private void load()
         {
             RegisterPool<AngeledCherry, DrawableAngeledCherry>(300, 1500);
             RegisterPool<InstantCherry, DrawableInstantCherry>(300, 600);
 
             config?.BindWith(BosuRulesetSetting.TransparentBackground, transparentBackground);
-            transparentBackground.BindValueChanged(transparent => bg.Alpha = transparent.NewValue ? 0 : 1, true);
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
+
+            transparentBackground.BindValueChanged(transparent => bg.Alpha = transparent.NewValue ? 0 : 1, true);
 
             if (UseEnteringAnimation)
                 enteringOverlay.Enter(250);

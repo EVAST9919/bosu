@@ -9,8 +9,6 @@ namespace osu.Game.Rulesets.Bosu.UI.Entering
 {
     public class EnteringOverlay : CompositeDrawable
     {
-        public override bool RemoveCompletedTransforms => false;
-
         private readonly Box box;
         private readonly BeatmapCard card;
         private Sample enteringSample;

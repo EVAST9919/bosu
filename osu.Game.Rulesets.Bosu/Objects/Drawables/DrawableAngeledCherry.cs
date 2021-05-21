@@ -6,7 +6,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
     public class DrawableAngeledCherry : DrawableCherry<AngeledCherry>
     {
-        protected override bool CanHitPlayer { get; set; } = true;
+        protected override bool CanHitPlayer => true;
 
         public DrawableAngeledCherry()
             : this(null)
