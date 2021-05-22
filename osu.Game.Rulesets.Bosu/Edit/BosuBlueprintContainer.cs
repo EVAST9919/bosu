@@ -1,8 +1,7 @@
 ﻿using osu.Game.Rulesets.Bosu.Edit.Blueprints;
-using osu.Game.Rulesets.Bosu.Objects.Drawables;
+using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Edit;
 using osu.Game.Rulesets.Objects;
-using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Screens.Edit.Compose.Components;
 
 namespace osu.Game.Rulesets.Bosu.Edit
@@ -16,18 +15,18 @@ namespace osu.Game.Rulesets.Bosu.Edit
 
         protected override SelectionHandler<HitObject> CreateSelectionHandler() => new BosuSelectionHandler();
 
-        public override OverlaySelectionBlueprint CreateBlueprintFor(DrawableHitObject hitObject)
+        public override HitObjectSelectionBlueprint CreateHitObjectBlueprintFor(HitObject hitObject)
         {
             switch (hitObject)
             {
-                case DrawableInstantCherry instant:
+                case InstantCherry instant:
                     return new InstantCherrySelectionBlueprint(instant);
 
-                case DrawableAngeledCherry angeled:
+                case AngeledCherry angeled:
                     return new AngeledCherrySelectionBlueprint(angeled);
             }
 
-            return base.CreateBlueprintFor(hitObject);
+            return base.CreateHitObjectBlueprintFor(hitObject);
         }
     }
 }
