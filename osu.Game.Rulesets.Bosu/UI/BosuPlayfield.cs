@@ -20,7 +20,7 @@ namespace osu.Game.Rulesets.Bosu.UI
     {
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 608);
 
-        protected virtual bool UseEnteringAnimation { get; set; } = true;
+        protected virtual bool EditMode { get; } = false;
 
         [Resolved(canBeNull: true)]
         private BosuRulesetConfigManager config { get; set; }
@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Bosu.UI
                 Player = new BosuPlayer(),
                 enteringOverlay = new EnteringOverlay
                 {
-                    Alpha = UseEnteringAnimation ? 1 : 0
+                    Alpha = EditMode ? 0 : 1
                 },
                 deathOverlay = new DeathOverlay()
             };
@@ -64,9 +64,12 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             base.LoadComplete();
 
-            transparentBackground.BindValueChanged(transparent => bg.Alpha = transparent.NewValue ? 0 : 1, true);
+            if (EditMode)
+                bg.Alpha = 0;
+            else
+                transparentBackground.BindValueChanged(transparent => bg.Alpha = transparent.NewValue ? 0 : 1, true);
 
-            if (UseEnteringAnimation)
+            if (!EditMode)
                 enteringOverlay.Enter(250);
         }
 
