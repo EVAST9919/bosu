@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
         private Sample doubleJump;
         private Sample shootSample;
 
-        private readonly Container bulletsContainer;
+        private readonly BulletsContainer bulletsContainer;
         private readonly Container movingPlayer;
         private readonly Container spriteContainer;
 
@@ -41,10 +41,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
             RelativeSizeAxes = Axes.Both;
             InternalChildren = new Drawable[]
             {
-                bulletsContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
+                bulletsContainer = new BulletsContainer(),
                 movingPlayer = new Container
                 {
                     Origin = Anchor.Centre,
@@ -279,20 +276,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
         private void onShoot()
         {
             shootSample.Play();
-
-            var playerPosition = PlayerPosition;
-
-            var newBullet = new DrawableBullet
-            {
-                Position = playerPosition
-            };
-
-            bulletsContainer.Add(newBullet);
-
-            var distance = (rightwards ? BosuPlayfield.BASE_SIZE.X - playerPosition.X : playerPosition.X) - IWannaExtensions.TILE_SIZE;
-            var duration = IWannaExtensions.BULLET_SPEED / 20f * distance;
-
-            newBullet.MoveToX(rightwards ? BosuPlayfield.BASE_SIZE.X - IWannaExtensions.TILE_SIZE : IWannaExtensions.TILE_SIZE, duration).Expire(true);
+            bulletsContainer.Add(PlayerPosition, rightwards);
         }
 
         private void onSpriteChanged(ValueChangedEvent<PlayerSprite> s)
