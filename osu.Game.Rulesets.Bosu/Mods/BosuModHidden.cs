@@ -1,7 +1,6 @@
 ﻿using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
-using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Bosu.Mods
 {
@@ -11,17 +10,12 @@ namespace osu.Game.Rulesets.Bosu.Mods
 
         public override string Description => "Cherries will become invisible near you.";
 
-        public override void ApplyToDrawableHitObjects(IEnumerable<DrawableHitObject> drawables)
+        public override void ApplyToDrawableHitObject(DrawableHitObject dho)
         {
-            base.ApplyToDrawableHitObjects(drawables);
+            base.ApplyToDrawableHitObject(dho);
 
-            foreach (var d in drawables)
-            {
-                if (d is DrawableAngeledCherry c)
-                {
-                    c.HiddenApplied = true;
-                }
-            }
+            if (dho is DrawableAngeledCherry c)
+                c.HiddenApplied = true;
         }
 
         protected override void ApplyIncreasedVisibilityState(DrawableHitObject hitObject, ArmedState state)
