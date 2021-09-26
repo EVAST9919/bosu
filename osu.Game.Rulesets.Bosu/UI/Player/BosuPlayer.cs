@@ -9,6 +9,7 @@ using osu.Framework.Utils;
 using osu.Framework.Bindables;
 using osu.Game.Rulesets.UI;
 using osu.Game.Rulesets.Bosu.Replays;
+using osu.Framework.Input.Events;
 
 namespace osu.Game.Rulesets.Bosu.UI.Player
 {
@@ -191,12 +192,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
                 spriteContainer.X = newX;
         }
 
-        public bool OnPressed(BosuAction action)
+        public bool OnPressed(KeyBindingPressEvent<BosuAction> e)
         {
             if (isDead)
                 return false;
 
-            switch (action)
+            switch (e.Action)
             {
                 case BosuAction.MoveLeft:
                     horizontalDirection--;
@@ -218,12 +219,12 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
             return false;
         }
 
-        public void OnReleased(BosuAction action)
+        public void OnReleased(KeyBindingReleaseEvent<BosuAction> e)
         {
             if (isDead)
                 return;
 
-            switch (action)
+            switch (e.Action)
             {
                 case BosuAction.MoveLeft:
                     horizontalDirection++;
