@@ -15,10 +15,9 @@ namespace osu.Game.Rulesets.Bosu.UI.Entering
         private readonly Sprite sprite;
 
         public BeatmapBackgroundSprite()
+            : base(cachedFrameBuffer: true)
         {
             RelativeSizeAxes = Axes.Both;
-
-            CacheDrawnFrameBuffer = true;
 
             Child = sprite = new Sprite
             {

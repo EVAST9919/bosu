@@ -10,7 +10,7 @@ namespace osu.Game.Rulesets.Bosu.Difficulty
 {
     public class BosuDifficultyCalculator : DifficultyCalculator
     {
-        public BosuDifficultyCalculator(Ruleset ruleset, WorkingBeatmap beatmap)
+        public BosuDifficultyCalculator(IRulesetInfo ruleset, IWorkingBeatmap beatmap)
             : base(ruleset, beatmap)
         {
         }

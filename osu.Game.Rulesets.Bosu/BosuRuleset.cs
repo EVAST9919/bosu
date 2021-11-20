@@ -108,11 +108,11 @@ namespace osu.Game.Rulesets.Bosu
             Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/logo"),
         };
 
-        public override DifficultyCalculator CreateDifficultyCalculator(WorkingBeatmap beatmap) => new BosuDifficultyCalculator(this, beatmap);
-
         protected override IEnumerable<HitResult> GetValidHitResults() => new[]
         {
             HitResult.Perfect
         };
+
+        public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new BosuDifficultyCalculator(RulesetInfo, beatmap);
     }
 }
