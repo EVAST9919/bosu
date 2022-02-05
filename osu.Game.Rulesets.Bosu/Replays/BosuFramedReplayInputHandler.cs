@@ -33,7 +33,7 @@ namespace osu.Game.Rulesets.Bosu.Replays
             }
         }
 
-        public override void CollectPendingInputs(List<IInput> inputs)
+        protected override void CollectReplayInputs(List<IInput> inputs)
         {
             if (Position.HasValue)
             {

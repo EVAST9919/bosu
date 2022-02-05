@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             List<BosuHitObject> converted = new List<BosuHitObject>();
 
-            var difficulty = beatmap.BeatmapInfo.BaseDifficulty;
+            var difficulty = beatmap.BeatmapInfo.Difficulty;
 
             var controlPointInfo = beatmap.ControlPointInfo;
             TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(obj.StartTime);
@@ -81,7 +81,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             List<BosuHitObject> converted = new List<BosuHitObject>();
 
-            var difficulty = beatmap.BeatmapInfo.BaseDifficulty;
+            var difficulty = beatmap.BeatmapInfo.Difficulty;
 
             var controlPointInfo = beatmap.ControlPointInfo;
             TimingControlPoint timingPoint = controlPointInfo.TimingPointAt(obj.StartTime);
