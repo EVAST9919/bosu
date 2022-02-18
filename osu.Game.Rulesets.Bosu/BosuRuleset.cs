@@ -22,6 +22,7 @@ using osu.Game.Rulesets.Configuration;
 using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Bosu.Configuration;
+using osu.Game.Scoring;
 
 namespace osu.Game.Rulesets.Bosu
 {
@@ -114,5 +115,7 @@ namespace osu.Game.Rulesets.Bosu
         };
 
         public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new BosuDifficultyCalculator(RulesetInfo, beatmap);
+
+        public override PerformanceCalculator CreatePerformanceCalculator(DifficultyAttributes attributes, ScoreInfo score) => new BosuPerformanceCalculator(this, attributes, score);
     }
 }
