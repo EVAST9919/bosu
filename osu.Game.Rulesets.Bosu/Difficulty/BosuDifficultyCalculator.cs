@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using osu.Game.Beatmaps;
+using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
@@ -17,9 +19,18 @@ namespace osu.Game.Rulesets.Bosu.Difficulty
 
         protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
         {
+            var objectCount = beatmap.HitObjects.Count(h => h is Cherry);
+            var calculatedLength = beatmap.BeatmapInfo.Length / 1000 / clockRate;
+
+            var sr = 0.0;
+            if (objectCount != 0 && calculatedLength != 0.0)
+                sr = objectCount / 15.0 / calculatedLength;
+
             return new DifficultyAttributes
             {
-                StarRating = beatmap.HitObjects.Count / 15 / (beatmap.BeatmapInfo.Length / 1000 / clockRate)
+                StarRating = sr,
+                Mods = mods,
+                MaxCombo = beatmap.HitObjects.Count(h => h is Cherry)
             };
         }
 
