@@ -1,15 +1,17 @@
-﻿using osu.Game.Beatmaps;
+﻿using System.Collections.Generic;
+using osu.Game.Beatmaps;
 using osu.Game.Replays;
 using osu.Game.Rulesets.Bosu.Beatmaps;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Replays;
 
 namespace osu.Game.Rulesets.Bosu.Replays
 {
-    internal class BosuAutoGenerator : AutoGenerator
+    public class BosuAutoGenerator : AutoGenerator
     {
         public new BosuBeatmap Beatmap => (BosuBeatmap)base.Beatmap;
 
-        public BosuAutoGenerator(IBeatmap beatmap)
+        public BosuAutoGenerator(IBeatmap beatmap, IReadOnlyList<Mod> mods)
             : base(beatmap)
         {
             Replay = new Replay();

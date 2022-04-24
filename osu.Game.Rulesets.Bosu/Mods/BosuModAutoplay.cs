@@ -1,21 +1,13 @@
 ﻿using osu.Game.Beatmaps;
-using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Rulesets.Bosu.Replays;
 using osu.Game.Rulesets.Mods;
-using osu.Game.Scoring;
 using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Bosu.Mods
 {
     public class BosuModAutoplay : ModAutoplay
     {
-        public override Score CreateReplayScore(IBeatmap beatmap, IReadOnlyList<Mod> mods) => new Score
-        {
-            ScoreInfo = new ScoreInfo
-            {
-                User = new APIUser { Username = "auto" }
-            },
-            Replay = new BosuAutoGenerator(beatmap).Generate(),
-        };
+        public override ModReplayData CreateReplayData(IBeatmap beatmap, IReadOnlyList<Mod> mods)
+            => new ModReplayData(new BosuAutoGenerator(beatmap, mods).Generate(), new ModCreatedUser { Username = "Autoplay" });
     }
 }

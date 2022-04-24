@@ -82,7 +82,7 @@ namespace osu.Game.Rulesets.Bosu
                 case ModType.Automation:
                     return new Mod[]
                     {
-                        new MultiMod(new BosuModAutoplay(), new BosuModCinema()),
+                        new BosuModAutoplay()
                     };
 
                 case ModType.Fun:
