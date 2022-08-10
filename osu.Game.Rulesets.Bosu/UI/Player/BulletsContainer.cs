@@ -2,12 +2,12 @@
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics;
 using System;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osuTK;
 using System.Collections.Generic;
 using osu.Game.Rulesets.Bosu.Extensions;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
 
 namespace osu.Game.Rulesets.Bosu.UI.Player
 {
@@ -77,7 +77,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
                 bullets.AddRange(Source.bullets);
             }
 
-            protected override void Blit(Action<TexturedVertex2D> vertexAction)
+            protected override void Blit(IRenderer renderer)
             {
                 foreach (var b in bullets)
                 {
@@ -88,12 +88,10 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
                     var rect = getBulletRectangle(position, IWannaExtensions.BULLET_SIZE);
                     var quad = getQuad(rect);
 
-                    DrawQuad(
+                    renderer.DrawQuad(
                         Texture,
                         quad,
-                        DrawColourInfo.Colour,
-                        null,
-                        vertexAction);
+                        DrawColourInfo.Colour);
                 }
             }
 

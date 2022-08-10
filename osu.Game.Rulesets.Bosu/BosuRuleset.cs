@@ -22,6 +22,8 @@ using osu.Game.Rulesets.Configuration;
 using osu.Game.Configuration;
 using osu.Game.Overlays.Settings;
 using osu.Game.Rulesets.Bosu.Configuration;
+using osu.Framework.Allocation;
+using osu.Framework.Platform;
 
 namespace osu.Game.Rulesets.Bosu
 {
@@ -103,10 +105,7 @@ namespace osu.Game.Rulesets.Bosu
 
         public override string PlayingVerb => "Avoiding cherries";
 
-        public override Drawable CreateIcon() => new Sprite
-        {
-            Texture = new TextureStore(new TextureLoaderStore(CreateResourceStore()), false).Get("Textures/logo"),
-        };
+        public override Drawable CreateIcon() => new BosuIcon(this);
 
         protected override IEnumerable<HitResult> GetValidHitResults() => new[]
         {
@@ -114,5 +113,21 @@ namespace osu.Game.Rulesets.Bosu
         };
 
         public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new BosuDifficultyCalculator(RulesetInfo, beatmap);
+
+        private class BosuIcon : Sprite
+        {
+            private readonly BosuRuleset ruleset;
+
+            public BosuIcon(BosuRuleset ruleset)
+            {
+                this.ruleset = ruleset;
+            }
+
+            [BackgroundDependencyLoader]
+            private void load(GameHost host)
+            {
+                Texture = new TextureStore(host.Renderer, new TextureLoaderStore(ruleset.CreateResourceStore()), false).Get("Textures/logo");
+            }
+        }
     }
 }
