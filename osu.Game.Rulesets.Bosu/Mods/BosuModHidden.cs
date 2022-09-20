@@ -1,4 +1,5 @@
-﻿using osu.Game.Rulesets.Bosu.Objects.Drawables;
+﻿using osu.Framework.Localisation;
+using osu.Game.Rulesets.Bosu.Objects.Drawables;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects.Drawables;
 
@@ -8,7 +9,7 @@ namespace osu.Game.Rulesets.Bosu.Mods
     {
         public override double ScoreMultiplier => 1.06;
 
-        public override string Description => "Cherries will become invisible near you.";
+        public override LocalisableString Description => "Cherries will become invisible near you.";
 
         public override void ApplyToDrawableHitObject(DrawableHitObject dho)
         {
