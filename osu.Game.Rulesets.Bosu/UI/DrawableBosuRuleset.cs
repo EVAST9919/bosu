@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Bosu.UI
 {
-    public class DrawableBosuRuleset : DrawableRuleset<BosuHitObject>
+    public partial class DrawableBosuRuleset : DrawableRuleset<BosuHitObject>
     {
         public BosuHealthProcessor HealthProcessor
         {

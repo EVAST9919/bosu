@@ -13,7 +13,7 @@ using osu.Framework.Input.Events;
 
 namespace osu.Game.Rulesets.Bosu.UI.Player
 {
-    public class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
+    public partial class BosuPlayer : CompositeDrawable, IKeyBindingHandler<BosuAction>
     {
         public readonly Bindable<PlayerSprite> Sprite = new Bindable<PlayerSprite>(PlayerSprite.Idle);
 

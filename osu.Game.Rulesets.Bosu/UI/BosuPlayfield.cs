@@ -13,10 +13,12 @@ using osu.Game.Rulesets.Bosu.UI.Death;
 using osu.Game.Rulesets.Bosu.UI.Entering;
 using osu.Game.Rulesets.Bosu.Configuration;
 using osu.Framework.Bindables;
+using osu.Game.Rulesets.Mods;
+using System.Linq;
 
 namespace osu.Game.Rulesets.Bosu.UI
 {
-    public class BosuPlayfield : Playfield
+    public partial class BosuPlayfield : Playfield
     {
         public static readonly Vector2 BASE_SIZE = new Vector2(768, 608);
 
@@ -80,6 +82,9 @@ namespace osu.Game.Rulesets.Bosu.UI
 
         private bool onDeath()
         {
+            if (!Mods.OfType<IApplicableFailOverride>().All(m => m.PerformFail()))
+                return false;
+
             deathOverlay.Show(Player.PlayerPosition, Player.PlayerSpeed);
             Player.Die();
             return true;
