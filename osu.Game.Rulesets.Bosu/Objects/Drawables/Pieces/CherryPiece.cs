@@ -12,7 +12,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
 {
-    public class CherryPiece : BeatSyncedContainer
+    public partial class CherryPiece : BeatSyncedContainer
     {
         public new Color4 Colour
         {

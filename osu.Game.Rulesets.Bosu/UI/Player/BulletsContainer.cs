@@ -11,7 +11,7 @@ using osu.Framework.Graphics.Rendering;
 
 namespace osu.Game.Rulesets.Bosu.UI.Player
 {
-    public class BulletsContainer : Sprite
+    public partial class BulletsContainer : Sprite
     {
         private readonly List<Bullet> bullets = new List<Bullet>();
 

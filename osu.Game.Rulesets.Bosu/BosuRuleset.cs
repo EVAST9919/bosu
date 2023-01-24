@@ -114,7 +114,7 @@ namespace osu.Game.Rulesets.Bosu
 
         public override DifficultyCalculator CreateDifficultyCalculator(IWorkingBeatmap beatmap) => new BosuDifficultyCalculator(RulesetInfo, beatmap);
 
-        private class BosuIcon : Sprite
+        private partial class BosuIcon : Sprite
         {
             private readonly BosuRuleset ruleset;
 
