@@ -31,7 +31,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             => generateExplosion(
                 startTime,
                 bullets_per_hitcircle,
-                toPlayfieldSpace(originalPosition) * new Vector2(1, 0.4f),
+                toPlayfieldSpace(originalPosition * new Vector2(1, 0.4f)),
                 hitcircle_angle_offset * indexInCurrentCombo);
 
         public static IEnumerable<BosuHitObject> ConvertImpactCircle(double startTime, Vector2 originalPosition)
