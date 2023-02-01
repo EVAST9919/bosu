@@ -39,7 +39,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 startTime,
                 4,
                 MathExtensions.GetRandomTimedBool(startTime) ? 3 : 4,
-                toPlayfieldSpace(originalPosition) * new Vector2(1, 0.4f),
+                toPlayfieldSpace(originalPosition * new Vector2(1, 0.4f)),
                 MathExtensions.GetRandomTimedAngleOffset(startTime));
 
         public static IEnumerable<BosuHitObject> ConvertDefaultSlider(HitObject obj, Vector2 originalPosition, IBeatmap beatmap, IHasPathWithRepeats curve, double spanDuration)
@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             foreach (var e in SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, new CancellationToken()))
             {
                 var curvePosition = curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + originalPosition;
-                var sliderEventPosition = toPlayfieldSpace(curvePosition) * new Vector2(1, 0.4f);
+                var sliderEventPosition = toPlayfieldSpace(curvePosition * new Vector2(1, 0.4f));
 
                 switch (e.Type)
                 {
@@ -96,7 +96,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             var slider = SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, new CancellationToken());
 
-            var sliderEventPosition = toPlayfieldSpace(originalPosition) * new Vector2(1, 0.4f);
+            var sliderEventPosition = toPlayfieldSpace(originalPosition * new Vector2(1, 0.4f));
             var repeats = slider.Select(e => e.Type == SliderEventType.Repeat);
 
             var repeatCount = repeats.Count();
@@ -137,7 +137,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
             {
                 var progress = i / bodyCherriesCount;
                 var position = curve.CurvePositionAt(progress) + originalPosition;
-                position = toPlayfieldSpace(position) * new Vector2(1, 0.4f);
+                position = toPlayfieldSpace(position * new Vector2(1, 0.4f));
 
                 if (withinPlayfield(position))
                 {
@@ -246,7 +246,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
         private static bool withinPlayfield(Vector2 position)
         {
-            return position.X > IWannaExtensions.TILE_SIZE && position.Y < BosuPlayfield.BASE_SIZE.X - IWannaExtensions.TILE_SIZE && position.Y > IWannaExtensions.TILE_SIZE && position.Y < BosuPlayfield.BASE_SIZE.Y - IWannaExtensions.TILE_SIZE;
+            return position.X > IWannaExtensions.TILE_SIZE && position.X < BosuPlayfield.BASE_SIZE.X - IWannaExtensions.TILE_SIZE && position.Y > IWannaExtensions.TILE_SIZE && position.Y < BosuPlayfield.BASE_SIZE.Y - IWannaExtensions.TILE_SIZE;
         }
     }
 }
