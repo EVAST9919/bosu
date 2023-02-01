@@ -1,4 +1,5 @@
-﻿using osu.Game.Beatmaps;
+﻿using osu.Framework.Utils;
+using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.UI;
@@ -134,15 +135,18 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             for (int i = 0; i < bodyCherriesCount; i++)
             {
-                var progress = (float)i / bodyCherriesCount;
+                var progress = i / bodyCherriesCount;
                 var position = curve.CurvePositionAt(progress) + originalPosition;
                 position = toPlayfieldSpace(position) * new Vector2(1, 0.4f);
 
-                yield return new InstantCherry
+                if (withinPlayfield(position))
                 {
-                    StartTime = startTime + curve.Duration * progress,
-                    Position = position
-                };
+                    yield return new InstantCherry
+                    {
+                        StartTime = startTime + curve.Duration * progress,
+                        Position = position
+                    };
+                }
             }
         }
 
@@ -182,23 +186,29 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
         private static IEnumerable<BosuHitObject> generateExplosion(double startTime, int bulletCount, Vector2 position, float angleOffset = 0, float angleRange = 360f)
         {
-            for (int i = 0; i < bulletCount; i++)
+            if (withinPlayfield(position))
             {
-                yield return new AngeledCherry
+                for (int i = 0; i < bulletCount; i++)
                 {
-                    Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i, angleOffset),
-                    StartTime = startTime,
-                    Position = position,
-                };
+                    yield return new AngeledCherry
+                    {
+                        Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i, angleOffset),
+                        StartTime = startTime,
+                        Position = position,
+                    };
+                }
             }
         }
 
         private static IEnumerable<BosuHitObject> generatePolygonExplosion(double startTime, int bullets_per_side, int verticesCount, Vector2 position, float angleOffset = 0)
         {
-            for (int i = 0; i < verticesCount; i++)
+            if (withinPlayfield(position))
             {
-                foreach (var h in generatePolygonLine(startTime, bullets_per_side, verticesCount, position, i * (360f / verticesCount) + angleOffset))
-                    yield return h;
+                for (int i = 0; i < verticesCount; i++)
+                {
+                    foreach (var h in generatePolygonLine(startTime, bullets_per_side, verticesCount, position, i * (360f / verticesCount) + angleOffset))
+                        yield return h;
+                }
             }
         }
 
@@ -228,9 +238,15 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
         private static Vector2 toPlayfieldSpace(Vector2 input)
         {
-            var newX = input.X / osu_playfield_size.X * BosuPlayfield.BASE_SIZE.X;
-            var newY = input.Y / osu_playfield_size.Y * BosuPlayfield.BASE_SIZE.Y + IWannaExtensions.TILE_SIZE;
+            var newX = Interpolation.ValueAt(Math.Clamp(input.X / osu_playfield_size.X, 0f, 1f), IWannaExtensions.TILE_SIZE, BosuPlayfield.BASE_SIZE.X - IWannaExtensions.TILE_SIZE, 0f, 1f);
+            var newY = Interpolation.ValueAt(Math.Clamp(input.Y / osu_playfield_size.Y, 0f, 1f), IWannaExtensions.TILE_SIZE, BosuPlayfield.BASE_SIZE.Y - IWannaExtensions.TILE_SIZE, 0f, 1f);
+
             return new Vector2(newX, newY);
+        }
+
+        private static bool withinPlayfield(Vector2 position)
+        {
+            return position.X > IWannaExtensions.TILE_SIZE && position.Y < BosuPlayfield.BASE_SIZE.X - IWannaExtensions.TILE_SIZE && position.Y > IWannaExtensions.TILE_SIZE && position.Y < BosuPlayfield.BASE_SIZE.Y - IWannaExtensions.TILE_SIZE;
         }
     }
 }
