@@ -63,6 +63,9 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 var curvePosition = curve.CurvePositionAt(e.PathProgress / (curve.RepeatCount + 1)) + originalPosition;
                 var sliderEventPosition = toPlayfieldSpace(curvePosition * new Vector2(1, 0.4f));
 
+                if (!withinPlayfield(sliderEventPosition))
+                    continue;
+
                 switch (e.Type)
                 {
                     case SliderEventType.Repeat:
@@ -96,7 +99,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
             var slider = SliderEventGenerator.Generate(obj.StartTime, spanDuration, velocity, tickDistance, curve.Path.Distance, curve.RepeatCount + 1, legacyLastTickOffset, new CancellationToken());
 
-            var sliderEventPosition = toPlayfieldSpace(originalPosition * new Vector2(1, 0.4f));
+            var buzzPosition = toPlayfieldSpace(originalPosition * new Vector2(1, 0.4f));
             var repeats = slider.Select(e => e.Type == SliderEventType.Repeat);
 
             var repeatCount = repeats.Count();
@@ -114,23 +117,25 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 switch (e.Type)
                 {
                     case SliderEventType.Head:
-                        converted.AddRange(generateExplosion(e.Time, bullets_per_slider_reverse, sliderEventPosition));
+                        converted.AddRange(generateExplosion(e.Time, bullets_per_slider_reverse, buzzPosition));
                         break;
 
                     case SliderEventType.Tail:
-                        converted.AddRange(generateExplosion(e.Time, bullets_per_slider_reverse, sliderEventPosition, slider_angle_per_span * (repeatCount + 1)));
+                        converted.AddRange(generateExplosion(e.Time, bullets_per_slider_reverse, buzzPosition, slider_angle_per_span * (repeatCount + 1)));
                         break;
                 }
             }
 
             for (int i = 0; i < totalRepeats; i++)
-                converted.AddRange(generateExplosion(obj.StartTime + (i + 1) * repeatDuration, bullets_per_slider_reverse, sliderEventPosition, slider_angle_per_span * (i + 1)));
+                converted.AddRange(generateExplosion(obj.StartTime + (i + 1) * repeatDuration, bullets_per_slider_reverse, buzzPosition, slider_angle_per_span * (i + 1)));
 
             return converted;
         }
 
         public static IEnumerable<BosuHitObject> GenerateSliderBody(double startTime, IHasPathWithRepeats curve, Vector2 originalPosition)
         {
+            List<InstantCherry> bodyCherries = new List<InstantCherry>();
+
             var bodyCherriesCount = Math.Min(curve.Distance * (curve.RepeatCount + 1) / 10, max_visuals_per_slider_span * (curve.RepeatCount + 1));
 
             for (int i = 0; i < bodyCherriesCount; i++)
@@ -141,13 +146,24 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
                 if (withinPlayfield(position))
                 {
-                    yield return new InstantCherry
+                    bodyCherries.Add(new InstantCherry
                     {
                         StartTime = startTime + curve.Duration * progress,
                         Position = position
-                    };
+                    });
                 }
             }
+
+            if (!bodyCherries.Any())
+            {
+                bodyCherries.Add(new InstantCherry
+                {
+                    StartTime = startTime,
+                    Position = Vector2.Zero
+                });
+            }
+
+            return bodyCherries;
         }
 
         public static IEnumerable<BosuHitObject> ConvertSpinner(double startTime, IHasDuration endTime, double beatLength)
@@ -186,29 +202,23 @@ namespace osu.Game.Rulesets.Bosu.Extensions
 
         private static IEnumerable<BosuHitObject> generateExplosion(double startTime, int bulletCount, Vector2 position, float angleOffset = 0, float angleRange = 360f)
         {
-            if (withinPlayfield(position))
+            for (int i = 0; i < bulletCount; i++)
             {
-                for (int i = 0; i < bulletCount; i++)
+                yield return new AngeledCherry
                 {
-                    yield return new AngeledCherry
-                    {
-                        Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i, angleOffset),
-                        StartTime = startTime,
-                        Position = position,
-                    };
-                }
+                    Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i, angleOffset),
+                    StartTime = startTime,
+                    Position = position,
+                };
             }
         }
 
         private static IEnumerable<BosuHitObject> generatePolygonExplosion(double startTime, int bullets_per_side, int verticesCount, Vector2 position, float angleOffset = 0)
         {
-            if (withinPlayfield(position))
+            for (int i = 0; i < verticesCount; i++)
             {
-                for (int i = 0; i < verticesCount; i++)
-                {
-                    foreach (var h in generatePolygonLine(startTime, bullets_per_side, verticesCount, position, i * (360f / verticesCount) + angleOffset))
-                        yield return h;
-                }
+                foreach (var h in generatePolygonLine(startTime, bullets_per_side, verticesCount, position, i * (360f / verticesCount) + angleOffset))
+                    yield return h;
             }
         }
 

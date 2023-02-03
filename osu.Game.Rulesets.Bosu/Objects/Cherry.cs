@@ -1,4 +1,5 @@
 ﻿using osu.Framework.Bindables;
+using osu.Game.Rulesets.Objects;
 using osu.Game.Rulesets.Objects.Types;
 
 namespace osu.Game.Rulesets.Bosu.Objects
@@ -7,48 +8,56 @@ namespace osu.Game.Rulesets.Bosu.Objects
     {
         public double TimePreempt { get; set; } = 400;
 
-        public readonly Bindable<int> IndexInBeatmapBindable = new Bindable<int>();
-
-        public int IndexInBeatmap
-        {
-            get => IndexInBeatmapBindable.Value;
-            set => IndexInBeatmapBindable.Value = value;
-        }
-
-        public Bindable<int> IndexInCurrentComboBindable { get; } = new Bindable<int>();
-
-        public int IndexInCurrentCombo
-        {
-            get => IndexInCurrentComboBindable.Value;
-            set => IndexInCurrentComboBindable.Value = value;
-        }
-
-        public Bindable<int> ComboIndexBindable { get; } = new Bindable<int>();
-
-        public int ComboIndex
-        {
-            get => ComboIndexBindable.Value;
-            set => ComboIndexBindable.Value = value;
-        }
-
         public virtual bool NewCombo { get; set; }
 
-        public Bindable<bool> LastInComboBindable { get; } = new Bindable<bool>();
+        private HitObjectProperty<int> comboOffset;
 
-        public virtual bool LastInCombo
+        public Bindable<int> ComboOffsetBindable => comboOffset.Bindable;
+
+        public int ComboOffset
         {
-            get => LastInComboBindable.Value;
-            set => LastInComboBindable.Value = value;
+            get => comboOffset.Value;
+            set => comboOffset.Value = value;
         }
 
-        public int ComboOffset { get; set; }
+        private HitObjectProperty<int> indexInCurrentCombo;
 
-        public Bindable<int> ComboIndexWithOffsetsBindable { get; } = new Bindable<int>();
+        public Bindable<int> IndexInCurrentComboBindable => indexInCurrentCombo.Bindable;
+
+        public virtual int IndexInCurrentCombo
+        {
+            get => indexInCurrentCombo.Value;
+            set => indexInCurrentCombo.Value = value;
+        }
+
+        private HitObjectProperty<int> comboIndex;
+
+        public Bindable<int> ComboIndexBindable => comboIndex.Bindable;
+
+        public virtual int ComboIndex
+        {
+            get => comboIndex.Value;
+            set => comboIndex.Value = value;
+        }
+
+        private HitObjectProperty<int> comboIndexWithOffsets;
+
+        public Bindable<int> ComboIndexWithOffsetsBindable => comboIndexWithOffsets.Bindable;
 
         public int ComboIndexWithOffsets
         {
-            get => ComboIndexWithOffsetsBindable.Value;
-            set => ComboIndexWithOffsetsBindable.Value = value;
+            get => comboIndexWithOffsets.Value;
+            set => comboIndexWithOffsets.Value = value;
+        }
+
+        private HitObjectProperty<bool> lastInCombo;
+
+        public Bindable<bool> LastInComboBindable => lastInCombo.Bindable;
+
+        public bool LastInCombo
+        {
+            get => lastInCombo.Value;
+            set => lastInCombo.Value = value;
         }
     }
 }

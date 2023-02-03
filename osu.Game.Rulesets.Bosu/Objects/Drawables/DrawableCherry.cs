@@ -11,14 +11,13 @@ using osu.Framework.Utils;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public abstract class DrawableCherry<T> : DrawableBosuHitObject<T>
+    public abstract partial class DrawableCherry<T> : DrawableBosuHitObject<T>
         where T : Cherry
     {
         private const int hidden_distance = 70;
         private const int hidden_distance_buffer = 50;
 
         public readonly IBindable<Vector2> PositionBindable = new Bindable<Vector2>();
-        public readonly Bindable<int> IndexInBeatmap = new Bindable<int>();
 
         protected abstract bool CanHitPlayer { get; }
 
@@ -44,8 +43,14 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             Size = new Vector2(IWannaExtensions.CHERRY_DIAMETER);
             AddInternal(piece = new CherryPiece());
 
-            AccentColour.BindValueChanged(c => piece.Colour = c.NewValue);
             PositionBindable.BindValueChanged(p => Position = p.NewValue);
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            AccentColour.BindValueChanged(c => piece.Colour = c.NewValue, true);
         }
 
         protected override void UpdateInitialTransforms()
@@ -117,7 +122,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             base.OnApply();
 
             PositionBindable.BindTo(HitObject.PositionBindable);
-            IndexInBeatmap.BindTo(HitObject.IndexInBeatmapBindable);
         }
 
         protected override void OnFree()
@@ -125,7 +129,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             base.OnFree();
 
             PositionBindable.UnbindFrom(HitObject.PositionBindable);
-            IndexInBeatmap.UnbindFrom(HitObject.IndexInBeatmapBindable);
         }
 
         protected override double InitialLifetimeOffset => HitObject.TimePreempt;

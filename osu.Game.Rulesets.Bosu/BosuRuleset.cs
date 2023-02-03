@@ -42,8 +42,7 @@ namespace osu.Game.Rulesets.Bosu
 
         public override IBeatmapConverter CreateBeatmapConverter(IBeatmap beatmap) => new BosuBeatmapConverter(beatmap, this);
 
-        // Not sure why overriding bp makes combo colours work
-        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BosuBeatmapProcessor(beatmap);
+        public override IBeatmapProcessor CreateBeatmapProcessor(IBeatmap beatmap) => new BeatmapProcessor(beatmap);
 
         public override IConvertibleReplayFrame CreateConvertibleReplayFrame() => new BosuReplayFrame();
 
