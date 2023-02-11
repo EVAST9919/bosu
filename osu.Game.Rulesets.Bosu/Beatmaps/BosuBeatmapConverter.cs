@@ -8,6 +8,7 @@ using osu.Game.Rulesets.Bosu.Objects;
 using osu.Game.Rulesets.Bosu.Extensions;
 using osuTK;
 using osu.Framework.Utils;
+using System;
 
 namespace osu.Game.Rulesets.Bosu.Beatmaps
 {
@@ -79,7 +80,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 if (h is AngeledCherry m)
                 {
                     var bpm = beatmap.ControlPointInfo.TimingPointAt(h.StartTime).BPM;
-                    m.SpeedMultiplier *= Interpolation.ValueAt(bpm, 0.8f, 1.3f, 60, 300);
+                    m.SpeedMultiplier *= Interpolation.ValueAt(Math.Clamp(bpm, 60, 300), 0.8f, 1.5f, 60, 300);
                 }
 
                 if (first)
