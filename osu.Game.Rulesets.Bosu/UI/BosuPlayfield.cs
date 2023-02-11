@@ -57,7 +57,7 @@ namespace osu.Game.Rulesets.Bosu.UI
         private void load()
         {
             RegisterPool<AngeledCherry, DrawableAngeledCherry>(300, 1500);
-            RegisterPool<InstantCherry, DrawableInstantCherry>(300, 600);
+            RegisterPool<InstantCherry, DrawableInstantCherry>(500, 1500);
 
             config?.BindWith(BosuRulesetSetting.TransparentBackground, transparentBackground);
         }

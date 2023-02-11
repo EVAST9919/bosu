@@ -21,7 +21,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         private const int hitcircle_angle_offset = 5;
         private const float slider_angle_per_span = 2f;
         private const int bullets_per_slider_reverse = 5;
-        private const int max_visuals_per_slider_span = 100;
+        private const int max_visuals_per_slider_span = 200;
 
         private const int bullets_per_spinner_span = 20;
         private const float spinner_rotation_duration = 2000;
@@ -136,7 +136,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             List<InstantCherry> bodyCherries = new List<InstantCherry>();
 
-            var bodyCherriesCount = Math.Min(curve.Distance * (curve.RepeatCount + 1) / 10, max_visuals_per_slider_span * (curve.RepeatCount + 1));
+            var bodyCherriesCount = Math.Min(curve.Distance * (curve.RepeatCount + 1) / 15, max_visuals_per_slider_span * (curve.RepeatCount + 1));
 
             for (int i = 0; i < bodyCherriesCount; i++)
             {
