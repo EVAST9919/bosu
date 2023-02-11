@@ -1,7 +1,6 @@
 ﻿using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Graphics;
-using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Game.Beatmaps.ControlPoints;
@@ -34,26 +33,26 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
         public CherryPiece()
         {
             Size = new Vector2(IWannaExtensions.CHERRY_DIAMETER);
-            Add(new Container
+            AddRange(new Drawable[]
             {
-                Anchor = Anchor.BottomCentre,
-                Origin = Anchor.BottomCentre,
-                Size = IWannaExtensions.CHERRY_FULL_SIZE,
-                Children = new Drawable[]
+                cherryBase = new Sprite
                 {
-                    cherryBase = new Sprite
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
-                    overlay = new Sprite
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
-                    flash = new Sprite
-                    {
-                        RelativeSizeAxes = Axes.Both,
-                        Alpha = 0
-                    }
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    Size = IWannaExtensions.CHERRY_FULL_SIZE,
+                },
+                overlay = new Sprite
+                {
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    Size = IWannaExtensions.CHERRY_FULL_SIZE,
+                },
+                flash = new Sprite
+                {
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    Size = IWannaExtensions.CHERRY_FULL_SIZE,
+                    Alpha = 0
                 }
             });
         }
