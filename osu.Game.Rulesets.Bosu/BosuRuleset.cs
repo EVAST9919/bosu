@@ -90,7 +90,8 @@ namespace osu.Game.Rulesets.Bosu
                     return new Mod[]
                     {
                         new MultiMod(new ModWindUp(), new ModWindDown()),
-                        new BosuModBarrelRoll()
+                        new BosuModBarrelRoll(),
+                        new BosuModZoomIn()
                     };
 
                 default:
