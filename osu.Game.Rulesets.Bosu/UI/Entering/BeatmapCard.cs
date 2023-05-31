@@ -41,14 +41,13 @@ namespace osu.Game.Rulesets.Bosu.UI.Entering
                     {
                         s.Font = OsuFont.GetFont(size: 20, weight: FontWeight.SemiBold);
                         s.Shadow = true;
-                        s.Anchor = Anchor.BottomCentre;
-                        s.Origin = Anchor.BottomCentre;
                     })
                     {
                         AutoSizeAxes = Axes.Y,
                         RelativeSizeAxes = Axes.X,
                         Anchor = Anchor.BottomCentre,
-                        Origin = Anchor.BottomCentre
+                        Origin = Anchor.BottomCentre,
+                        TextAnchor = Anchor.BottomCentre
                     }
                 }
             };

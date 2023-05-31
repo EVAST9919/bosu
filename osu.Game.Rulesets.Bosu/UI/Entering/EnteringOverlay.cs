@@ -15,6 +15,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Entering
 
         public EnteringOverlay()
         {
+            Masking = true;
             RelativeSizeAxes = Axes.Both;
             InternalChildren = new Drawable[]
             {
