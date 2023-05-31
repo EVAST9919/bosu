@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Bosu.Edit.Blueprints
 {
-    public class BosuSelectionHandler : EditorSelectionHandler
+    public partial class BosuSelectionHandler : EditorSelectionHandler
     {
     }
 }

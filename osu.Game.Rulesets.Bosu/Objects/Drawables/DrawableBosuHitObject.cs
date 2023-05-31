@@ -3,7 +3,7 @@ using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public abstract class DrawableBosuHitObject<T> : DrawableHitObject<BosuHitObject>
+    public abstract partial class DrawableBosuHitObject<T> : DrawableHitObject<BosuHitObject>
         where T : BosuHitObject
     {
         protected new T HitObject => (T)base.HitObject;

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Bosu.Edit
 {
-    public class BosuHitObjectComposer : HitObjectComposer<BosuHitObject>
+    public partial class BosuHitObjectComposer : HitObjectComposer<BosuHitObject>
     {
         public BosuHitObjectComposer(Ruleset ruleset)
             : base(ruleset)

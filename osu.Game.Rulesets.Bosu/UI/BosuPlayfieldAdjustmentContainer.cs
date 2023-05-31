@@ -5,7 +5,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.UI
 {
-    public class BosuPlayfieldAdjustmentContainer : PlayfieldAdjustmentContainer
+    public partial class BosuPlayfieldAdjustmentContainer : PlayfieldAdjustmentContainer
     {
         protected override Container<Drawable> Content => content;
         private readonly Container content;
@@ -29,7 +29,7 @@ namespace osu.Game.Rulesets.Bosu.UI
             };
         }
 
-        private class ScalingContainer : Container
+        private partial class ScalingContainer : Container
         {
             protected override void Update()
             {

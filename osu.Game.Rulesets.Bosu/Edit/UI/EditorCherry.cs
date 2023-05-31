@@ -6,7 +6,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.Edit.UI
 {
-    public class EditorCherry : Circle
+    public partial class EditorCherry : Circle
     {
         public EditorCherry()
         {

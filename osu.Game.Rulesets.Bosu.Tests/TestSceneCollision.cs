@@ -8,7 +8,7 @@ using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.Tests
 {
-    public class TestSceneCollision : OsuTestScene
+    public partial class TestSceneCollision : OsuTestScene
     {
         private const int radius = 50;
 

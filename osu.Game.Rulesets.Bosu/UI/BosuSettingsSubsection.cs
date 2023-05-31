@@ -6,7 +6,7 @@ using osu.Game.Rulesets.Bosu.Configuration;
 
 namespace osu.Game.Rulesets.Bosu.UI
 {
-    public class BosuSettingsSubsection : RulesetSettingsSubsection
+    public partial class BosuSettingsSubsection : RulesetSettingsSubsection
     {
         protected override LocalisableString Header => "bosu!";
 

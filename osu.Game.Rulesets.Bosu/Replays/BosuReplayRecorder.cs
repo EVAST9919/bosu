@@ -7,7 +7,7 @@ using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.Replays
 {
-    public class BosuReplayRecorder : ReplayRecorder<BosuAction>
+    public partial class BosuReplayRecorder : ReplayRecorder<BosuAction>
     {
         private readonly BosuPlayfield playfield;
 

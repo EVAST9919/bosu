@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Bosu.Scoring
 {
-    public class BosuHealthProcessor : HealthProcessor
+    public partial class BosuHealthProcessor : HealthProcessor
     {
     }
 }

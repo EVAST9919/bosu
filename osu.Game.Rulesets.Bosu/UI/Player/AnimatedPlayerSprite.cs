@@ -5,7 +5,7 @@ using osu.Framework.Graphics.Textures;
 
 namespace osu.Game.Rulesets.Bosu.UI.Player
 {
-    public class AnimatedPlayerSprite : TextureAnimation
+    public partial class AnimatedPlayerSprite : TextureAnimation
     {
         private const double duration = 100;
 

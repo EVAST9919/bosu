@@ -14,7 +14,7 @@ using osu.Framework.Audio.Sample;
 
 namespace osu.Game.Rulesets.Bosu.UI.Death
 {
-    public class DeathOverlay : CompositeDrawable
+    public partial class DeathOverlay : CompositeDrawable
     {
         private Box tint;
         private Box blackFlash;

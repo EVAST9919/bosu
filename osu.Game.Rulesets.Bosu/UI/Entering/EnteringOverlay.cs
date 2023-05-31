@@ -7,7 +7,7 @@ using osu.Framework.Allocation;
 
 namespace osu.Game.Rulesets.Bosu.UI.Entering
 {
-    public class EnteringOverlay : CompositeDrawable
+    public partial class EnteringOverlay : CompositeDrawable
     {
         private readonly Box box;
         private readonly BeatmapCard card;

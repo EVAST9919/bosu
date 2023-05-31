@@ -2,7 +2,7 @@
 
 namespace osu.Game.Rulesets.Bosu.Edit
 {
-    public class EditorBosuPlayfield : BosuPlayfield
+    public partial class EditorBosuPlayfield : BosuPlayfield
     {
         protected override bool EditMode => true;
     }

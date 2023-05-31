@@ -2,15 +2,12 @@
 using osu.Framework.Graphics;
 using osu.Game.Rulesets.Bosu.UI;
 using osu.Game.Rulesets.Bosu.UI.Death;
-using osu.Game.Tests.Visual;
 using osuTK;
 
 namespace osu.Game.Rulesets.Bosu.Tests
 {
-    public class TestSceneDeathOverlay : OsuTestScene
+    public partial class TestSceneDeathOverlay : RulesetTestScene
     {
-        protected override Ruleset CreateRuleset() => new BosuRuleset();
-
         private Container content;
         private DeathOverlay deathOverlay;
 

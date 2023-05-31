@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace osu.Game.Rulesets.Bosu
 {
-    public class BosuInputManager : RulesetInputManager<BosuAction>
+    public partial class BosuInputManager : RulesetInputManager<BosuAction>
     {
         public BosuInputManager(RulesetInfo ruleset)
             : base(ruleset, 0, SimultaneousBindingMode.Unique)

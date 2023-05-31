@@ -7,7 +7,7 @@ using osu.Game.Beatmaps;
 
 namespace osu.Game.Rulesets.Bosu.UI.Entering
 {
-    public class BeatmapBackgroundSprite : BufferedContainer
+    public partial class BeatmapBackgroundSprite : BufferedContainer
     {
         [Resolved]
         private TextureStore textures { get; set; }

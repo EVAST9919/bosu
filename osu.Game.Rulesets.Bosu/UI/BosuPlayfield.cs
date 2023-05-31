@@ -15,6 +15,7 @@ using osu.Game.Rulesets.Bosu.Configuration;
 using osu.Framework.Bindables;
 using osu.Game.Rulesets.Mods;
 using System.Linq;
+using osu.Framework.Graphics.Containers;
 
 namespace osu.Game.Rulesets.Bosu.UI
 {
@@ -38,11 +39,18 @@ namespace osu.Game.Rulesets.Bosu.UI
         {
             Origin = Anchor.Centre;
             Anchor = Anchor.Centre;
-            Masking = true;
             InternalChildren = new Drawable[]
             {
-                bg = new PlayfieldBackground(),
-                HitObjectContainer,
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Masking = true,
+                    Children = new Drawable[]
+                    {
+                        bg = new PlayfieldBackground(),
+                        HitObjectContainer,
+                    }
+                },
                 new BosuPlayfieldBorder(),
                 Player = new BosuPlayer(),
                 enteringOverlay = new EnteringOverlay

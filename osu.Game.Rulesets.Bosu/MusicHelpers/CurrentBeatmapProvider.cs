@@ -5,7 +5,7 @@ using osu.Game.Beatmaps;
 
 namespace osu.Game.Rulesets.Bosu.MusicHelpers
 {
-    public class CurrentBeatmapProvider : CompositeDrawable
+    public partial class CurrentBeatmapProvider : CompositeDrawable
     {
         [Resolved]
         private Bindable<WorkingBeatmap> working { get; set; }

@@ -6,7 +6,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.Edit.UI
 {
-    public class EditorCherryPath : Box
+    public partial class EditorCherryPath : Box
     {
         public EditorCherryPath(Vector2 startPosition, Vector2 endPosition)
         {

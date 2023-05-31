@@ -6,7 +6,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.UI.Death
 {
-    public class LetterboxOverlay : CompositeDrawable
+    public partial class LetterboxOverlay : CompositeDrawable
     {
         private static readonly Color4 transparent_black = new Color4(0, 0, 0, 0);
 

@@ -8,7 +8,7 @@ using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.UI
 {
-    public class PlayfieldBackground : CurrentBeatmapProvider
+    public partial class PlayfieldBackground : CurrentBeatmapProvider
     {
         private const int blind_transform_duration = 50;
         private const int blind_count = 20;

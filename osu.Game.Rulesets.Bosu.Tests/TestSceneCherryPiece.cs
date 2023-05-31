@@ -1,14 +1,11 @@
 ﻿using osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces;
-using osu.Game.Tests.Visual;
 using osu.Framework.Graphics;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.Tests
 {
-    public class TestSceneCherryPiece : OsuTestScene
+    public partial class TestSceneCherryPiece : RulesetTestScene
     {
-        protected override Ruleset CreateRuleset() => new BosuRuleset();
-
         private readonly CherryPiece piece;
 
         private float red;

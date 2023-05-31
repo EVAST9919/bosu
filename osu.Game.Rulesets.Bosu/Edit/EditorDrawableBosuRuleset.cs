@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace osu.Game.Rulesets.Bosu.Edit
 {
-    public class EditorDrawableBosuRuleset : DrawableBosuRuleset
+    public partial class EditorDrawableBosuRuleset : DrawableBosuRuleset
     {
         public EditorDrawableBosuRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             : base(ruleset, beatmap, mods)

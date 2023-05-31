@@ -10,7 +10,7 @@ using osu.Game.Rulesets.Bosu.Extensions;
 
 namespace osu.Game.Rulesets.Bosu.UI.Death
 {
-    public class DeathParticle : CompositeDrawable
+    public partial class DeathParticle : CompositeDrawable
     {
         private const int duration = 1500;
         private const double gravity = 0.3;

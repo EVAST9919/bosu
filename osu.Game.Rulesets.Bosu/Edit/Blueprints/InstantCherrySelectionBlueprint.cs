@@ -4,7 +4,7 @@ using osu.Game.Rulesets.Bosu.Objects;
 
 namespace osu.Game.Rulesets.Bosu.Edit.Blueprints
 {
-    public class InstantCherrySelectionBlueprint : HitObjectSelectionBlueprint<InstantCherry>
+    public partial class InstantCherrySelectionBlueprint : HitObjectSelectionBlueprint<InstantCherry>
     {
         public InstantCherrySelectionBlueprint(InstantCherry instant)
             : base(instant)

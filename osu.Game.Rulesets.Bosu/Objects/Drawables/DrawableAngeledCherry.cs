@@ -4,7 +4,7 @@ using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableAngeledCherry : DrawableCherry<AngeledCherry>
+    public partial class DrawableAngeledCherry : DrawableCherry<AngeledCherry>
     {
         protected override bool CanHitPlayer => true;
 

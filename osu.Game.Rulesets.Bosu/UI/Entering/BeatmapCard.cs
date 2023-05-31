@@ -10,7 +10,7 @@ using osu.Game.Beatmaps;
 
 namespace osu.Game.Rulesets.Bosu.UI.Entering
 {
-    public class BeatmapCard : CurrentBeatmapProvider
+    public partial class BeatmapCard : CurrentBeatmapProvider
     {
         public static readonly Vector2 SIZE = new Vector2(290, 150);
 

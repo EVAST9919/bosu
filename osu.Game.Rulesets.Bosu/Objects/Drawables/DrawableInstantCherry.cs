@@ -5,7 +5,7 @@ using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public class DrawableInstantCherry : DrawableCherry<InstantCherry>
+    public partial class DrawableInstantCherry : DrawableCherry<InstantCherry>
     {
         protected override bool CanHitPlayer => false;
 

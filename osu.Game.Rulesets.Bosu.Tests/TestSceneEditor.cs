@@ -4,7 +4,7 @@ using osu.Game.Tests.Visual;
 namespace osu.Game.Rulesets.Bosu.Tests
 {
     [TestFixture]
-    public class TestSceneEditor : EditorTestScene
+    public partial class TestSceneEditor : EditorTestScene
     {
         protected override Ruleset CreateEditorRuleset() => new BosuRuleset();
     }

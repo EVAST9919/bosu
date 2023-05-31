@@ -6,7 +6,7 @@ using osu.Game.Screens.Edit.Compose.Components;
 
 namespace osu.Game.Rulesets.Bosu.Edit
 {
-    public class BosuBlueprintContainer : ComposeBlueprintContainer
+    public partial class BosuBlueprintContainer : ComposeBlueprintContainer
     {
         public BosuBlueprintContainer(BosuHitObjectComposer composer)
             : base(composer)

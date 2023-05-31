@@ -5,7 +5,7 @@ using osu.Game.Rulesets.Edit;
 
 namespace osu.Game.Rulesets.Bosu.Edit.Blueprints
 {
-    public class AngeledCherrySelectionBlueprint : HitObjectSelectionBlueprint<AngeledCherry>
+    public partial class AngeledCherrySelectionBlueprint : HitObjectSelectionBlueprint<AngeledCherry>
     {
         private readonly EditorCherry circle;
 
