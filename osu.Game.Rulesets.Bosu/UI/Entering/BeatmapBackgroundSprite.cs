@@ -30,7 +30,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Entering
 
         public void SetBeatmap(WorkingBeatmap beatmap)
         {
-            sprite.Texture = beatmap?.Background ?? textures.Get(@"Backgrounds/bg4");
+            sprite.Texture = beatmap?.GetBackground() ?? textures.Get(@"Backgrounds/bg4");
         }
     }
 }

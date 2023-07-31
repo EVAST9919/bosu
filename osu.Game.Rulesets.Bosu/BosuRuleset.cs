@@ -27,7 +27,7 @@ using osu.Framework.Platform;
 
 namespace osu.Game.Rulesets.Bosu
 {
-    public class BosuRuleset : Ruleset
+    public partial class BosuRuleset : Ruleset
     {
         private DrawableBosuRuleset drawableRuleset;
 
