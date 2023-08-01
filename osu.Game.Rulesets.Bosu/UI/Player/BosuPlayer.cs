@@ -76,24 +76,18 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
             if (isDead)
                 return;
 
+            horizontalSpeed = 0;
+
+            if (horizontalDirection != 0)
+            {
+                rightwards = horizontalDirection > 0;
+                horizontalSpeed = 3 * (rightwards ? 1 : -1);
+
+                updateSpriteDirection();
+            }
+
             var elapsedFrameTime = Clock.ElapsedFrameTime;
             var timeDifference = elapsedFrameTime / 21;
-
-            if (horizontalDirection > 0)
-            {
-                horizontalSpeed = 3;
-                rightwards = true;
-            }
-            else if (horizontalDirection < 0)
-            {
-                rightwards = false;
-                horizontalSpeed = -3;
-            }
-            else
-                horizontalSpeed = 0;
-
-            if (horizontalSpeed != 0)
-                updateSpriteDirection();
 
             if (midAir)
             {
@@ -110,8 +104,7 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
 
             if (replayState?.Position.Value != null)
             {
-                movingPlayer.X = replayState.Position.Value.X;
-                movingPlayer.Y = replayState.Position.Value.Y;
+                movingPlayer.Position = replayState.Position.Value;
 
                 // Required for accurate jump sounds
                 if (verticalSpeed <= 0 && Precision.AlmostEquals(movingPlayer.Y + IWannaExtensions.PLAYER_HALF_HEIGHT, BosuPlayfield.BASE_SIZE.Y - IWannaExtensions.TILE_SIZE, 0.01f))
@@ -182,14 +175,8 @@ namespace osu.Game.Rulesets.Bosu.UI.Player
 
         private void updateSpriteDirection()
         {
-            var newScale = new Vector2(rightwards ? 1 : -1, 1);
-            var newX = rightwards ? -1.5f : 1.5f;
-
-            if (spriteContainer.Scale != newScale)
-                spriteContainer.Scale = newScale;
-
-            if (spriteContainer.X != newX)
-                spriteContainer.X = newX;
+            spriteContainer.Scale = new Vector2(rightwards ? 1 : -1, 1);
+            spriteContainer.X = rightwards ? -1.5f : 1.5f;
         }
 
         public bool OnPressed(KeyBindingPressEvent<BosuAction> e)
