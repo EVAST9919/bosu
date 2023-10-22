@@ -1,12 +1,14 @@
 ﻿using osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces;
 using osu.Framework.Graphics;
+using osu.Framework.Testing;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Game.Rulesets.Bosu.Tests
 {
     public partial class TestSceneCherryPiece : RulesetTestScene
     {
-        private readonly CherryPiece piece;
+        private const int count = 40;
 
         private float red;
         private float green;
@@ -14,11 +16,18 @@ namespace osu.Game.Rulesets.Bosu.Tests
 
         public TestSceneCherryPiece()
         {
-            Add(piece = new CherryPiece
+            for (int i = 0; i < count; i++)
             {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre
-            });
+                for (int j = 0; j < count; j++)
+                {
+                    Add(new CherryPiece
+                    {
+                        Origin = Anchor.Centre,
+                        RelativePositionAxes = Axes.Both,
+                        Position = new Vector2((float)i / count, (float)j / count) + new Vector2(1f / count) * 0.5f
+                    });
+                }
+            }
         }
 
         protected override void LoadComplete()
@@ -40,11 +49,21 @@ namespace osu.Game.Rulesets.Bosu.Tests
                 blue = b;
                 updateColour();
             });
+            AddStep("Flash", () =>
+            {
+                foreach (var c in this.ChildrenOfType<CherryPiece>())
+                {
+                    c.Flash(200);
+                }
+            });
         }
 
         private void updateColour()
         {
-            piece.Colour = new Color4(red, green, blue, 1);
+            foreach (var c in this.ChildrenOfType<CherryPiece>())
+            {
+                c.Colour = new Color4(red, green, blue, 1);
+            }
         }
     }
 }
