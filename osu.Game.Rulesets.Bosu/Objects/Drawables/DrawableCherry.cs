@@ -41,7 +41,11 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
             Origin = Anchor.Centre;
             Size = new Vector2(IWannaExtensions.CHERRY_DIAMETER);
-            AddInternal(piece = new CherryPiece());
+            AddInternal(piece = new CherryPiece
+            {
+                Origin = Anchor.BottomCentre,
+                Anchor = Anchor.BottomCentre
+            });
 
             PositionBindable.BindValueChanged(p => Position = p.NewValue);
         }
@@ -50,7 +54,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.LoadComplete();
 
-            AccentColour.BindValueChanged(c => piece.Colour = c.NewValue, true);
+            AccentColour.BindValueChanged(c => piece.CherryColour = c.NewValue, true);
         }
 
         protected override void UpdateInitialTransforms()
@@ -101,7 +105,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             {
                 missTime = timeOffset;
                 ApplyResult(h => h.Type = h.Judgement.MinResult);
-                return;
             }
         }
 

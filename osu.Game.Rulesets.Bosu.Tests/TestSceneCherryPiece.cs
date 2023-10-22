@@ -62,7 +62,7 @@ namespace osu.Game.Rulesets.Bosu.Tests
         {
             foreach (var c in this.ChildrenOfType<CherryPiece>())
             {
-                c.Colour = new Color4(red, green, blue, 1);
+                c.CherryColour = new Color4(red, green, blue, 1);
             }
         }
     }
