@@ -80,7 +80,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                 if (h is AngeledCherry m)
                 {
                     var bpm = beatmap.ControlPointInfo.TimingPointAt(h.StartTime).BPM;
-                    m.SpeedMultiplier *= Interpolation.ValueAt(Math.Clamp(bpm, 60, 300), 0.8f, 1.5f, 60, 300);
+                    m.SpeedMultiplier *= Interpolation.ValueAt(Math.Clamp(bpm, 0, 300), 0.625f, 1.5f, 0, 300);
                 }
 
                 if (first)
