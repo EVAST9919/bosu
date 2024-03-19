@@ -77,7 +77,7 @@ namespace osu.Game.Rulesets.Bosu.Beatmaps
                     c.ComboOffset = comboData?.ComboOffset ?? 0;
                 }
 
-                if (h is AngeledCherry m)
+                if (h is AngledCherry m)
                 {
                     var bpm = beatmap.ControlPointInfo.TimingPointAt(h.StartTime).BPM;
                     m.SpeedMultiplier *= Interpolation.ValueAt(Math.Clamp(bpm, 0, 300), 0.625f, 1.5f, 0, 300);

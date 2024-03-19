@@ -22,8 +22,8 @@ namespace osu.Game.Rulesets.Bosu.Edit
                 case InstantCherry instant:
                     return new InstantCherrySelectionBlueprint(instant);
 
-                case AngeledCherry angeled:
-                    return new AngeledCherrySelectionBlueprint(angeled);
+                case AngledCherry angled:
+                    return new AngledCherrySelectionBlueprint(angled);
             }
 
             return base.CreateHitObjectBlueprintFor(hitObject);

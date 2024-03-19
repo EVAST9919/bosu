@@ -10,7 +10,7 @@ using System;
 
 namespace osu.Game.Rulesets.Bosu.Objects
 {
-    public class AngeledCherry : Cherry
+    public class AngledCherry : Cherry
     {
         public readonly Bindable<float> SpeedMultiplierBindable = new Bindable<float>(1);
 

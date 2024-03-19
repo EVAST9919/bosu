@@ -88,7 +88,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
                 return;
             }
 
-            piece.Alpha = Interpolation.ValueAt((float)distance - hidden_distance, 0f, 1f, 0, hidden_distance_buffer);
+            piece.Alpha = Interpolation.ValueAt(distance - hidden_distance, 0f, 1f, 0, hidden_distance_buffer);
         }
 
         private double missTime;
@@ -104,7 +104,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             if (CheckHit?.Invoke(Position) ?? false)
             {
                 missTime = timeOffset;
-                ApplyResult(h => h.Type = h.Judgement.MinResult);
+                ApplyMinResult();
             }
         }
 

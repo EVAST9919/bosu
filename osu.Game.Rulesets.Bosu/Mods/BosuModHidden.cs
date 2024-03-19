@@ -15,7 +15,7 @@ namespace osu.Game.Rulesets.Bosu.Mods
         {
             base.ApplyToDrawableHitObject(dho);
 
-            if (dho is DrawableAngeledCherry c)
+            if (dho is DrawableAngledCherry c)
                 c.HiddenApplied = true;
         }
 

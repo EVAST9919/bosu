@@ -186,7 +186,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                     var rotatedXPos = originPosition.X + (spinner_ring_distance * Math.Sin(angle * Math.PI / 180));
                     var rotatedYPos = originPosition.Y + (spinner_ring_distance * -Math.Cos(angle * Math.PI / 180));
 
-                    yield return new AngeledCherry
+                    yield return new AngledCherry
                     {
                         Angle = angle,
                         StartTime = startTime + spinnerProgress * endTime.Duration,
@@ -200,7 +200,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             for (int i = 0; i < bulletCount; i++)
             {
-                yield return new AngeledCherry
+                yield return new AngledCherry
                 {
                     Angle = MathExtensions.BulletDistribution(bulletCount, angleRange, i, angleOffset),
                     StartTime = startTime,
@@ -232,7 +232,7 @@ namespace osu.Game.Rulesets.Bosu.Extensions
                 var missingAngle = c == 0 ? 0 : Math.Acos((MathExtensions.Pow((float)side) + MathExtensions.Pow((float)length) - MathExtensions.Pow(c)) / (2 * side * length)) * 180 / Math.PI;
                 var currentAngle = 180 + (90 - partialAngle) - missingAngle;
 
-                yield return new AngeledCherry
+                yield return new AngledCherry
                 {
                     Angle = (float)currentAngle + additionalOffset,
                     SpeedMultiplier = (float)(length / side * 1.2f),

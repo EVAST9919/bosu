@@ -4,16 +4,16 @@ using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
-    public partial class DrawableAngeledCherry : DrawableCherry<AngeledCherry>
+    public partial class DrawableAngledCherry : DrawableCherry<AngledCherry>
     {
         protected override bool CanHitPlayer => true;
 
-        public DrawableAngeledCherry()
+        public DrawableAngledCherry()
             : this(null)
         {
         }
 
-        public DrawableAngeledCherry([CanBeNull] AngeledCherry h = null)
+        public DrawableAngledCherry([CanBeNull] AngledCherry h = null)
             : base(h)
         {
         }
@@ -47,7 +47,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             if (timeOffset < HitObject.Duration)
                 return;
 
-            ApplyResult(r => r.Type = r.Judgement.MaxResult);
+            ApplyMaxResult();
         }
     }
 }

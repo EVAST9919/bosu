@@ -64,7 +64,7 @@ namespace osu.Game.Rulesets.Bosu.UI
         [BackgroundDependencyLoader]
         private void load()
         {
-            RegisterPool<AngeledCherry, DrawableAngeledCherry>(300, 1500);
+            RegisterPool<AngledCherry, DrawableAngledCherry>(300, 1500);
             RegisterPool<InstantCherry, DrawableInstantCherry>(500, 1500);
 
             config?.BindWith(BosuRulesetSetting.TransparentBackground, transparentBackground);
@@ -104,7 +104,7 @@ namespace osu.Game.Rulesets.Bosu.UI
 
             switch (drawableHitObject)
             {
-                case DrawableAngeledCherry cherry:
+                case DrawableAngledCherry cherry:
                     cherry.CheckHit += checkHit;
                     cherry.DistanceToPlayer += getDistanceToPlayer;
                     break;

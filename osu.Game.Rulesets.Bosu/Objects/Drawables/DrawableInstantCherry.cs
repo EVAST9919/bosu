@@ -26,7 +26,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             if (timeOffset < 0)
                 return;
 
-            ApplyResult(r => r.Type = HitResult.IgnoreHit);
+            ApplyResult(HitResult.IgnoreHit);
         }
 
         protected override void UpdateHitStateTransforms(ArmedState state)

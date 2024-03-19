@@ -5,16 +5,16 @@ using osu.Game.Rulesets.Edit;
 
 namespace osu.Game.Rulesets.Bosu.Edit.Blueprints
 {
-    public partial class AngeledCherrySelectionBlueprint : HitObjectSelectionBlueprint<AngeledCherry>
+    public partial class AngledCherrySelectionBlueprint : HitObjectSelectionBlueprint<AngledCherry>
     {
         private readonly EditorCherry circle;
 
-        public AngeledCherrySelectionBlueprint(AngeledCherry angeled)
-            : base(angeled)
+        public AngledCherrySelectionBlueprint(AngledCherry angled)
+            : base(angled)
         {
             InternalChildren = new Drawable[]
             {
-                new EditorCherryPath(angeled.Position, angeled.EndPosition),
+                new EditorCherryPath(angled.Position, angled.EndPosition),
                 circle = new EditorCherry()
             };
         }
