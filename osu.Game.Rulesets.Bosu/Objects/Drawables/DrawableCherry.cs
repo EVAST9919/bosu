@@ -71,9 +71,15 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.Update();
 
-            if (IsHit || !HiddenApplied)
+            if (IsHit)
                 return;
 
+            if (HiddenApplied)
+                updateHidden();
+        }
+
+        private void updateHidden()
+        {
             var distance = DistanceToPlayer.Invoke(Position);
 
             if (distance > hidden_distance + hidden_distance_buffer)
