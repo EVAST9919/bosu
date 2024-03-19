@@ -36,8 +36,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         [BackgroundDependencyLoader]
         private void load()
         {
-            Scale = Vector2.Zero;
-
             Origin = Anchor.Centre;
             Size = new Vector2(IWannaExtensions.CHERRY_DIAMETER);
             AddInternal(piece = new CherryPiece
@@ -59,7 +57,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override void UpdateInitialTransforms()
         {
             base.UpdateInitialTransforms();
-            this.ScaleTo(Vector2.One, HitObject.TimePreempt);
 
             using (piece.BeginDelayedSequence(HitObject.TimePreempt))
                 piece.Flash(300);
@@ -69,12 +66,27 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.Update();
 
+            Scale = new Vector2(getScale(Clock.CurrentTime));
+
             if (Judged)
                 return;
 
             if (HiddenApplied)
                 updateHidden();
         }
+
+        private float getScale(double time)
+        {
+            if (time < HitObject.StartTime)
+            {
+                return Interpolation.ValueAt(Math.Clamp(time, HitObject.StartTime - HitObject.TimePreempt, HitObject.StartTime), 0f, 1f,
+                    HitObject.StartTime - HitObject.TimePreempt, HitObject.StartTime);
+            }
+
+            return GetScaleDuringLifetime(time);
+        }
+
+        protected virtual float GetScaleDuringLifetime(double time) => 1f;
 
         private void updateHidden()
         {

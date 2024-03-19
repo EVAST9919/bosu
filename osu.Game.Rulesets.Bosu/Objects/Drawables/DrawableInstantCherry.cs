@@ -1,5 +1,7 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using osu.Framework.Graphics;
+using osu.Framework.Utils;
 using osu.Game.Rulesets.Objects.Drawables;
 using osu.Game.Rulesets.Scoring;
 
@@ -29,12 +31,17 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             ApplyResult(HitResult.IgnoreHit);
         }
 
+        protected override float GetScaleDuringLifetime(double time)
+        {
+            return Interpolation.ValueAt(Math.Clamp(time, HitObject.StartTime, HitObject.StartTime + 150), 1f, 0f, HitObject.StartTime, HitObject.StartTime + 150);
+        }
+
         protected override void UpdateHitStateTransforms(ArmedState state)
         {
             switch (state)
             {
                 case ArmedState.Hit:
-                    this.ScaleTo(0, 150);
+                    this.Delay(150).FadeOut();
                     break;
             }
         }
