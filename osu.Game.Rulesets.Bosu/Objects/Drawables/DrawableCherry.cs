@@ -54,25 +54,25 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             AccentColour.BindValueChanged(c => piece.CherryColour = c.NewValue, true);
         }
 
-        protected override void UpdateInitialTransforms()
-        {
-            base.UpdateInitialTransforms();
-
-            using (piece.BeginDelayedSequence(HitObject.TimePreempt))
-                piece.Flash(300);
-        }
-
         protected override void Update()
         {
             base.Update();
 
             Scale = new Vector2(getScale(Clock.CurrentTime));
+            updateFlash(Clock.CurrentTime);
 
             if (Judged)
                 return;
 
             if (HiddenApplied)
                 updateHidden();
+        }
+
+        private void updateFlash(double time)
+        {
+            piece.FlashStrength = time < HitObject.StartTime
+                ? 0
+                : Interpolation.ValueAt(Math.Clamp(time, HitObject.StartTime, HitObject.StartTime + 300), 1f, 0f, HitObject.StartTime, HitObject.StartTime + 300);
         }
 
         private float getScale(double time)
