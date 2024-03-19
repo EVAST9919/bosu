@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             switch (state)
             {
                 case ArmedState.Hit:
-                    this.ScaleTo(0, 150).Then().FadeOut();
+                    this.ScaleTo(0, 150);
                     break;
             }
         }

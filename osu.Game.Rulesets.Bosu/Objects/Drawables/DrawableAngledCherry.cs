@@ -1,6 +1,5 @@
 ﻿using JetBrains.Annotations;
 using osu.Framework.Graphics;
-using osu.Game.Rulesets.Objects.Drawables;
 
 namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 {
@@ -25,18 +24,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             using (BeginDelayedSequence(HitObject.TimePreempt))
             {
                 this.MoveTo(HitObject.EndPosition, HitObject.Duration);
-            }
-        }
-
-        protected override void UpdateHitStateTransforms(ArmedState state)
-        {
-            base.UpdateHitStateTransforms(state);
-
-            switch (state)
-            {
-                case ArmedState.Hit:
-                    this.Delay(HitObject.Duration).FadeOut();
-                    break;
             }
         }
 

@@ -36,7 +36,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         [BackgroundDependencyLoader]
         private void load()
         {
-            Alpha = 0;
             Scale = Vector2.Zero;
 
             Origin = Anchor.Centre;
@@ -60,7 +59,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         protected override void UpdateInitialTransforms()
         {
             base.UpdateInitialTransforms();
-            this.FadeInFromZero();
             this.ScaleTo(Vector2.One, HitObject.TimePreempt);
 
             using (piece.BeginDelayedSequence(HitObject.TimePreempt))
@@ -71,7 +69,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         {
             base.Update();
 
-            if (IsHit)
+            if (Judged)
                 return;
 
             if (HiddenApplied)
