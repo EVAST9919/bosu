@@ -1,5 +1,4 @@
-﻿using System;
-using osu.Framework.Allocation;
+﻿using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
 using osu.Framework.Graphics.Sprites;
 using osu.Game.Beatmaps;
@@ -14,25 +13,6 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
         private TimingControlPoint? lastTimingPoint { get; set; }
 
         protected bool IsKiaiTime { get; private set; }
-
-        /// <summary>
-        /// The amount of time before a beat we should fire <see cref="OnNewBeat(int, TimingControlPoint, EffectControlPoint, ChannelAmplitudes)"/>.
-        /// This allows for adding easing to animations that may be synchronised to the beat.
-        /// </summary>
-        protected double EarlyActivationMilliseconds;
-
-        /// <summary>
-        /// While this container automatically applied an animation delay (meaning any animations inside a <see cref="OnNewBeat"/> implementation will
-        /// always be correctly timed), the event itself can potentially fire away from the related beat.
-        ///
-        /// By setting this to false, cases where the event is to be fired more than <see cref="MISTIMED_ALLOWANCE"/> from the related beat will be skipped.
-        /// </summary>
-        protected bool AllowMistimedEventFiring = true;
-
-        /// <summary>
-        /// The maximum deviance from the actual beat that an <see cref="OnNewBeat"/> can fire when <see cref="AllowMistimedEventFiring"/> is set to false.
-        /// </summary>
-        public const double MISTIMED_ALLOWANCE = 16;
 
         /// <summary>
         /// The time in milliseconds until the next beat.
@@ -77,7 +57,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
 
             if (IsBeatSyncedWithTrack)
             {
-                currentTrackTime = BeatSyncSource.Clock.CurrentTime + EarlyActivationMilliseconds;
+                currentTrackTime = BeatSyncSource.Clock.CurrentTime;
 
                 timingPoint = BeatSyncSource.ControlPoints?.TimingPointAt(currentTrackTime) ?? TimingControlPoint.DEFAULT;
                 effectPoint = BeatSyncSource.ControlPoints?.EffectPointAt(currentTrackTime) ?? EffectControlPoint.DEFAULT;
@@ -86,7 +66,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
             {
                 // this may be the case where the beat syncing clock has been paused.
                 // we still want to show an idle animation, so use this container's time instead.
-                currentTrackTime = Clock.CurrentTime + EarlyActivationMilliseconds;
+                currentTrackTime = Clock.CurrentTime;
 
                 timingPoint = TimingControlPoint.DEFAULT;
                 effectPoint = EffectControlPoint.DEFAULT;
@@ -112,13 +92,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
             if (ReferenceEquals(timingPoint, lastTimingPoint) && beatIndex == lastBeat)
                 return;
 
-            // as this event is sometimes used for sound triggers where `BeginDelayedSequence` has no effect, avoid firing it if too far away from the beat.
-            // this can happen after a seek operation.
-            if (AllowMistimedEventFiring || Math.Abs(TimeSinceLastBeat) < MISTIMED_ALLOWANCE)
-            {
-                using (BeginDelayedSequence(-TimeSinceLastBeat))
-                    OnNewBeat(beatIndex, timingPoint, effectPoint, BeatSyncSource.CurrentAmplitudes);
-            }
+            OnNewBeat(beatIndex, timingPoint, effectPoint, BeatSyncSource.CurrentAmplitudes);
 
             lastBeat = beatIndex;
             lastTimingPoint = timingPoint;
