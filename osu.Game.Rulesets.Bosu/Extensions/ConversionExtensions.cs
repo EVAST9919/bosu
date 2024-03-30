@@ -132,13 +132,22 @@ namespace osu.Game.Rulesets.Bosu.Extensions
         {
             List<InstantCherry> bodyCherries = new List<InstantCherry>();
 
-            var bodyCherriesCount = Math.Min(curve.Distance * (curve.RepeatCount + 1) / 15, max_visuals_per_slider_span * (curve.RepeatCount + 1));
+            var bodyCherriesCount = (int)(curve.Distance * (curve.RepeatCount + 1) / 15);
+
+            Vector2 lastPosition = new Vector2(-10000, -10000);
 
             for (int i = 0; i < bodyCherriesCount; i++)
             {
-                var progress = i / bodyCherriesCount;
-                var position = curve.CurvePositionAt(progress) + originalPosition;
-                position = toPlayfieldSpace(position * new Vector2(1, 0.4f));
+                var progress = i / (float)bodyCherriesCount;
+                Vector2 position = toPlayfieldSpace((curve.CurvePositionAt(progress) + originalPosition) * new Vector2(1, 0.4f));
+
+                if (i != 0 && i != bodyCherriesCount - 1)
+                {
+                    if (Vector2.Distance(position, lastPosition) < 5)
+                        continue;
+                }
+
+                lastPosition = position;
 
                 if (withinPlayfield(position))
                 {
