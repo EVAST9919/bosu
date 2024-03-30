@@ -16,6 +16,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
     {
         private const int hidden_distance = 70;
         private const int hidden_distance_buffer = 50;
+        private const int flash_duration = 300;
 
         public readonly IBindable<Vector2> PositionBindable = new Bindable<Vector2>();
 
@@ -27,6 +28,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         public bool HiddenApplied { get; set; }
 
         private CherryPiece piece;
+        protected double StartTime;
+        protected double TimePreempt;
 
         protected DrawableCherry([CanBeNull] Cherry h = null)
             : base(h)
@@ -70,17 +73,22 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
 
         private void updateFlash(double time)
         {
-            piece.FlashStrength = time < HitObject.StartTime
-                ? 0
-                : Interpolation.ValueAt(Math.Clamp(time, HitObject.StartTime, HitObject.StartTime + 300), 1f, 0f, HitObject.StartTime, HitObject.StartTime + 300);
+            if (time < StartTime)
+            {
+                piece.FlashStrength = 0;
+                return;
+            }
+
+            double timeOffset = Math.Clamp(time, StartTime, StartTime + flash_duration) - StartTime;
+            piece.FlashStrength = 1f - (float)(timeOffset / flash_duration);
         }
 
         private float getScale(double time)
         {
-            if (time < HitObject.StartTime)
+            if (time < StartTime)
             {
-                return Interpolation.ValueAt(Math.Clamp(time, HitObject.StartTime - HitObject.TimePreempt, HitObject.StartTime), 0f, 1f,
-                    HitObject.StartTime - HitObject.TimePreempt, HitObject.StartTime);
+                double timeOffset = Math.Clamp(time, StartTime - TimePreempt, StartTime) - StartTime + TimePreempt;
+                return (float)(timeOffset / TimePreempt);
             }
 
             return GetScaleDuringLifetime(time);
@@ -91,20 +99,7 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
         private void updateHidden()
         {
             var distance = DistanceToPlayer.Invoke(Position);
-
-            if (distance > hidden_distance + hidden_distance_buffer)
-            {
-                piece.Alpha = 1;
-                return;
-            }
-
-            if (distance < hidden_distance)
-            {
-                piece.Alpha = 0;
-                return;
-            }
-
-            piece.Alpha = Interpolation.ValueAt(distance - hidden_distance, 0f, 1f, 0, hidden_distance_buffer);
+            piece.Alpha = Interpolation.ValueAt(Math.Clamp(distance, hidden_distance, hidden_distance + hidden_distance_buffer) - hidden_distance, 0f, 1f, 0, hidden_distance_buffer);
         }
 
         private double missTime;
@@ -141,6 +136,8 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables
             base.OnApply();
 
             PositionBindable.BindTo(HitObject.PositionBindable);
+            StartTime = HitObject.StartTime;
+            TimePreempt = HitObject.TimePreempt;
         }
 
         protected override void OnFree()
