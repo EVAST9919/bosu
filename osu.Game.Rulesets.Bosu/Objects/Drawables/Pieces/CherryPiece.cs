@@ -44,6 +44,9 @@ namespace osu.Game.Rulesets.Bosu.Objects.Drawables.Pieces
             get => flashStrength;
             set
             {
+                if (flashStrength == value)
+                    return;
+
                 flashStrength = value;
                 Invalidate(Invalidation.DrawNode);
             }
