@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Bosu.Edit
         {
         }
 
-        protected override IReadOnlyList<HitObjectCompositionTool> CompositionTools => Array.Empty<HitObjectCompositionTool>();
+        protected override IReadOnlyList<CompositionTool> CompositionTools => Array.Empty<CompositionTool>();
 
         protected override DrawableRuleset<BosuHitObject> CreateDrawableRuleset(Ruleset ruleset, IBeatmap beatmap, IReadOnlyList<Mod> mods = null)
             => new EditorDrawableBosuRuleset(ruleset, beatmap, mods);
