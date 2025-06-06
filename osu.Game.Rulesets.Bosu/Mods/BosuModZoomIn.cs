@@ -27,8 +27,6 @@ namespace osu.Game.Rulesets.Bosu.Mods
             Precision = 0.1f,
         };
 
-        public override string SettingDescription => $"Zoom: {ZoomLevel}";
-
         public void ApplyToDrawableRuleset(DrawableRuleset<BosuHitObject> drawableRuleset)
         {
             var bp = (BosuPlayfield)((DrawableBosuRuleset)drawableRuleset).Playfield;
