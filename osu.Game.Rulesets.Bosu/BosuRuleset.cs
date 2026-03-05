@@ -107,7 +107,7 @@ namespace osu.Game.Rulesets.Bosu
 
         public override Drawable CreateIcon() => new BosuIcon(this);
 
-        protected override IEnumerable<HitResult> GetValidHitResults() => new[]
+        public override IEnumerable<HitResult> GetValidHitResults() => new[]
         {
             HitResult.Perfect
         };
