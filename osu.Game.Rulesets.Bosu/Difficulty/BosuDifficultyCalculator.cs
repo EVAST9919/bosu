@@ -7,6 +7,7 @@ using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Utils;
 
 namespace osu.Game.Rulesets.Bosu.Difficulty
 {
@@ -17,10 +18,10 @@ namespace osu.Game.Rulesets.Bosu.Difficulty
         {
         }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills)
         {
             var objectCount = beatmap.HitObjects.Count(h => h is Cherry);
-            var calculatedLength = beatmap.BeatmapInfo.Length / 1000 / clockRate;
+            var calculatedLength = beatmap.BeatmapInfo.Length / 1000 / ModUtils.CalculateRateWithMods(mods);
 
             var sr = 0.0;
             if (objectCount != 0 && calculatedLength != 0.0)
@@ -34,9 +35,8 @@ namespace osu.Game.Rulesets.Bosu.Difficulty
             };
         }
 
-        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, double clockRate)
-            => Array.Empty<DifficultyHitObject>();
+        protected override IEnumerable<DifficultyHitObject> CreateDifficultyHitObjects(IBeatmap beatmap, Mod[] mods) => Array.Empty<DifficultyHitObject>();
 
-        protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => Array.Empty<Skill>();
+        protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods) => Array.Empty<Skill>();
     }
 }
